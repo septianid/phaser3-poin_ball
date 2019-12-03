@@ -31,6 +31,7 @@ export class Loading extends Phaser.Scene{
     this.load.image('game-title', "./src/assets/title.png");
     this.load.image('close_button', "./src/assets/close_button.png");
     this.load.image('detail_button', "./src/assets/detail_button.png");
+    this.load.image('detail_panel', "./src/assets/detail_panel.png");
     this.load.image('tnc_button', "./src/assets/tnc_button.png");
     this.load.image('tnc_panel', "./src/assets/tnc_panel.png");
     this.load.image('life', "./src/assets/life.png");
@@ -124,7 +125,7 @@ export class Loading extends Phaser.Scene{
       title_loading = this.add.sprite(360, 350, 'game-title').setScale(.7);
       title_loading.setOrigin(0.5, 0.5);
 
-      tapSign = this.add.sprite(360, 900, 'tap_sign').setScale(.5);
+      tapSign = this.add.sprite(360, 900, 'tap_sign').setScale(.6);
 
       this.anims.create({
         key: 'blink',

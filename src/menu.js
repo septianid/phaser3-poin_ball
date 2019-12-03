@@ -14,15 +14,16 @@ var quitButton;
 var agreeButton;
 var disagreeButton;
 var okButton;
-var detail_button;
+var detailButton;
 
 var clickSFX;
 var closeSFX;
 var bgSound;
 
+var detailPanel;
 var leaderboardPanel;
 var hintPanel;
-var confirmPanel;
+var confilButton
 var tncPanel;
 var noPoinWarnPanel;
 var limitWarnPanel;
@@ -38,6 +39,7 @@ var playerStatus;
 var tempUserPoin;
 
 var musicStatus;
+var detailStatus;
 
 var urlParams = new URLSearchParams(window.location.search);
 var myParam = urlParams.get('session');
@@ -91,18 +93,8 @@ export class Mainmenu extends Phaser.Scene {
     musicButton.on('pointerdown', () => {
 
       musicStatus = !musicStatus;
-      this.toogleSound();
+      this.toggleSound();
     });
-
-    // musicButtonOff = this.add.sprite(360, 1030, 'music_button off').setScale(.7);
-    // musicButtonOff.setOrigin(0.5, 0.5);
-    // musicButtonOff.setInteractive();
-    // musicButtonOff.on('pointerdown', () => {
-    //
-    //   this.sound.play();
-    //   musicButtonOff.visible = false;
-    //   musicButton.visible = true;
-    // });
 
     tncButton = this.add.sprite(130, 1230, 'tnc_button').setScale(.7);
     tncButton.setOrigin(0.5, 0.5);
@@ -113,7 +105,7 @@ export class Mainmenu extends Phaser.Scene {
     // quitButton.setInteractive();
     // quitButton.on('pointerdown', () => this.quitGame());
 
-    this.toogleSound();
+    this.toggleSound();
 
     document.addEventListener('visibilitychange', function(){
       console.log('blur');
@@ -126,7 +118,7 @@ export class Mainmenu extends Phaser.Scene {
 
   }
 
-  toogleSound(){
+  toggleSound(){
 
     if(musicStatus == true){
 
@@ -304,14 +296,23 @@ export class Mainmenu extends Phaser.Scene {
 
   showLeaderboard(){
 
-    var startPosId1 = 390;
-    var startPosScore1 = 383;
-    var startPosId2 = 710;
-    var startPosScore2 = 700;
+    var startPosId1 = 395;
+    var startPosScore1 = 392;
+    var startPosId2 = 711;
+    var startPosScore2 = 710;
 
     clickSFX.play();
     leaderboardPanel = this.add.sprite(360, 600, 'leaderboard_panel').setScale(.7);
     leaderboardPanel.setOrigin(0.5, 0.5);
+
+    detailButton = this.add.sprite(580, 250, 'detail_button').setScale(.5);
+    detailButton.setOrigin(0.5, 0.5);
+    detailButton.setInteractive();
+    detailButton.on('pointerdown', () => {
+
+      detailStatus = !detailStatus;
+      this.toggleDetail();
+    });
 
     closeButton = this.add.sprite(600, 150, 'close_button').setScale(.7);
     closeButton.setOrigin(0.5, 0.5);
@@ -347,7 +348,23 @@ export class Mainmenu extends Phaser.Scene {
 
     leaderboardPanel.destroy();
     closeButton.destroy();
+    detailButton.destroy();
     this.enableMainButton();
+  }
+
+  toggleDetail(){
+
+    if (detailStatus == true){
+
+      detailPanel = this.add.sprite(365, 470, 'detail_panel').setScale(.6);
+      detailPanel.setOrigin(0.5, 0.5);
+      closeButton.disableInteractive();
+    }
+    else {
+
+      closeButton.setInteractive();
+      detailPanel.destroy();
+    }
   }
 
   getMobileOperatingSystem() {
@@ -451,13 +468,21 @@ export class Mainmenu extends Phaser.Scene {
           posScore += 47;
         }
 
-        idTextArr[i] = this.add.text(190, posId, ''+data.result.rows[i].user.name, {
-          font: 'bold 16px Arial',
+        let shortname = '';
+        let name = data.result.rows[i].user.name;
+        if(name.length > 25){
+          shortname = name.substring(0, 25)+"...";
+        }
+        else{
+          shortname = name;
+        }
+        idTextArr[i] = this.add.text(190, posId, ''+shortname, {
+          font: '20px Arial',
           fill: 'white'
         });
 
-        scoreTextArr[i] = this.add.text(510, posScore, ''+data.result.rows[i].user_highscore, {
-          font: 'bold 24px Arial',
+        scoreTextArr[i] = this.add.text(515, posScore, ''+data.result.rows[i].user_highscore, {
+          font: 'bold 26px Arial',
           fill: 'white',
           align: 'right'
         });
@@ -495,13 +520,22 @@ export class Mainmenu extends Phaser.Scene {
           posScore2 += 47;
         }
 
-        idCumTextArr[i] = this.add.text(190, posId2, ''+data.result.rows[i].user.name, {
-          font: 'bold 26px Arial',
+        let shortname = '';
+        let name = data.result.rows[i].user.name;
+        if(name.length > 25){
+          shortname = name.substring(0, 25)+"...";
+        }
+        else{
+          shortname = name;
+        }
+
+        idCumTextArr[i] = this.add.text(190, posId2, ''+shortname, {
+          font: '20px Arial',
           fill: 'white'
         });
 
-        scoreCumTextArr[i] = this.add.text(510, posScore2, ''+data.result.rows[i].total_score, {
-          font: 'bold 40px Arial',
+        scoreCumTextArr[i] = this.add.text(500, posScore2, ''+data.result.rows[i].total_score, {
+          font: 'bold 26px Arial',
           fill: 'white',
           align: 'right'
         });

@@ -50,15 +50,13 @@ export class Mainmenu extends Phaser.Scene {
   }
 
   preload(){
-
-
+    bgSound = this.sound.add('music_menu');
   }
 
   create(){
 
     clickSFX = this.sound.add('button_click');
     closeSFX = this.sound.add('close_section');
-    bgSound = this.sound.add('music_menu');
 
     bgSound.play();
     bgSound.loop = true;

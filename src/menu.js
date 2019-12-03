@@ -23,7 +23,7 @@ var bgSound;
 var detailPanel;
 var leaderboardPanel;
 var hintPanel;
-var confilButton
+var confirmPanel;
 var tncPanel;
 var noPoinWarnPanel;
 var limitWarnPanel;
@@ -94,7 +94,7 @@ export class Mainmenu extends Phaser.Scene {
       this.toggleSound();
     });
 
-    tncButton = this.add.sprite(130, 1230, 'tnc_button').setScale(.7);
+    tncButton = this.add.sprite(130, 1150, 'tnc_button').setScale(.7);
     tncButton.setOrigin(0.5, 0.5);
     tncButton.on('pointerdown', () => this.showTnC());
 
@@ -459,7 +459,12 @@ export class Mainmenu extends Phaser.Scene {
 
     }).then(data => {
 
-      console.log(data.result);
+      console.log(data.result.rows.length);
+      if(data.result.rows.length >= 0){
+
+        closeButton.setInteractive();
+      }
+
       for(let i=0; i<5; i++){
 
         if (i == 0){
@@ -475,6 +480,7 @@ export class Mainmenu extends Phaser.Scene {
 
         let shortname = '';
         let name = data.result.rows[i].user.name;
+
         if(name.length > 25){
           shortname = name.substring(0, 25)+"...";
         }
@@ -492,7 +498,7 @@ export class Mainmenu extends Phaser.Scene {
           align: 'right'
         });
 
-        closeButton.setInteractive();
+        //closeButton.setInteractive();
       }
 
     }).catch(error => {

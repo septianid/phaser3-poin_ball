@@ -16,7 +16,7 @@ export class Loading extends Phaser.Scene{
 
   preload(){
     this.cameras.main.setBackgroundColor('#222E61');
-    this.load.audio('music_menu', "./src/assets/audio/menu-music.mp3");
+    this.load.audio('music_menu', "./src/assets/audio/menu-music.ogg");
     //this.load.image('loading-background', "./src/assets/background-loading.jpg");
     this.load.image('quit_button', "./src/assets/quit_button.png");
     this.load.image('play_button', "./src/assets/play_button.png");
@@ -52,10 +52,10 @@ export class Loading extends Phaser.Scene{
     this.load.image('exit_button', "./src/assets/exit_button.png");
     this.load.image('score', "./src/assets/score.png");
 
-    this.load.audio('button_click', "./src/assets/audio/button_click.mp3");
-    this.load.audio('close_section', "./src/assets/audio/close_click.mp3");
-    this.load.audio('pop-ball', "./src/assets/audio/ball_pop.mp3");
-    this.load.audio('lose-ball', "./src/assets/audio/ball_fail.mp3");
+    this.load.audio('button_click', "./src/assets/audio/button_click.ogg");
+    this.load.audio('close_section', "./src/assets/audio/close_click.ogg");
+    this.load.audio('pop-ball', "./src/assets/audio/ball_pop.ogg");
+    this.load.audio('lose-ball', "./src/assets/audio/ball_fail.ogg");
 
     progressBar = this.add.graphics();
     progressBox = this.add.graphics();
@@ -151,7 +151,7 @@ export class Loading extends Phaser.Scene{
       })
 
       this.sound.on('decoded',  ()=> {
-        console.log('AUDIO BERHASIL DI LOAD CUX')
+        console.log('AUDIO BERHASIL DI LOAD CUX');
       });
     });
   }

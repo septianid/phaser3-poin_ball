@@ -89,8 +89,9 @@ export class Mainmenu extends Phaser.Scene {
     musicButton.setOrigin(0.5, 0.5);
     musicButton.setInteractive();
     musicButton.on('pointerdown', () => {
-      musicStatus = !musicStatus;
-      this.toogleSound();
+
+      //musicStatus = !musicStatus;
+      this.toggleSound();
     });
 
     tncButton = this.add.sprite(130, 1230, 'tnc_button').setScale(.7);

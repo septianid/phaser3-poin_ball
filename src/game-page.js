@@ -73,6 +73,16 @@ export class GamePlay extends Phaser.Scene {
 
   create() {
 
+    game.events.on('hidden',function(){
+      console.log('hidden');
+    },this);
+  
+    game.events.on('hidden',function(){
+      console.log('Visible cok')
+        this.sound.play('music_menu');
+    },this);
+
+    
     popBall = this.sound.add('pop-ball');
     collideBall = this.sound.add('lose-ball');
 

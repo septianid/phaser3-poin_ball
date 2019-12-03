@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import {GamePlay} from "./game-page.js";
+import {Boot} from "./boot.js";
 import {Loading} from './loading.js';
 import {Mainmenu} from './menu.js';
 
@@ -12,10 +13,15 @@ window.onload = function(){
     scale:{
       mode: Phaser.Scale.ENVELOP,
       autoCenter: Phaser.Scale.CENTER_BOTH,
+      width: 720,
+      height: 1280,
     },
-    width: 720,
-    height: 1280,
-    scene: [Mainmenu, Loading, GamePlay],
+    files: {
+      type: 'image',
+      key:'loading-background',
+      url: 'src/assets/background-loading.jpg'
+    },
+    scene: [Loading, Mainmenu, GamePlay],
     audio:{
       disableWebAudio:true,
     }

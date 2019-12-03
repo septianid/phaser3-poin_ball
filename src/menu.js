@@ -6,23 +6,38 @@ var title;
 var playButton;
 var hintButton;
 var leaderButton;
+var tncButton;
 var closeButton;
 var musicButton;
+var musicButtonOff;
+var quitButton;
+var agreeButton;
+var disagreeButton;
+var okButton;
+var detail_button;
 
 var clickSFX;
 var closeSFX;
-var backsound
+var bgSound;
 
 var leaderboardPanel;
 var hintPanel;
+var confirmPanel;
+var tncPanel;
+var noPoinWarnPanel;
+var limitWarnPanel;
 
 var idTextArr = [];
 var scoreTextArr = [];
 var idCumTextArr = [];
 var scoreCumTextArr = [];
+var lifeRemaining = [];
 var playLimitText;
 var tempLimit;
 var playerStatus;
+var tempUserPoin;
+
+var musicStatus;
 
 var urlParams = new URLSearchParams(window.location.search);
 var myParam = urlParams.get('session');
@@ -36,27 +51,17 @@ export class Mainmenu extends Phaser.Scene {
 
   preload(){
 
-    this.load.image('play_button', "./src/assets/play_button.png");
-    this.load.image('hint_button', "./src/assets/hint_button.png");
-    this.load.image('leaderboard_button', "./src/assets/leaderboard_button.png");
-    this.load.image('music_button', "./src/assets/sound_button_on.png");
-    this.load.image('close_button', "./src/assets/close_button.png");
-    this.load.image('menu-background', './src/assets/background-menu.png');
-    this.load.image('leaderboard_panel', "./src/assets/leaderboard_panel.png");
-    this.load.image('hint_panel', "./src/assets/instruction_panel.png");
-    this.load.image('game-title', "./src/assets/title.png");
 
-    this.load.audio('music_menu', "./src/assets/audio/menu-music.mp3");
-    this.load.audio('button_click', "./src/assets/audio/button_click.mp3");
-    this.load.audio('close_section', "./src/assets/audio/close_click.mp3");
   }
 
   create(){
 
-    console.log(myParam);
     clickSFX = this.sound.add('button_click');
     closeSFX = this.sound.add('close_section');
-    backsound = this.sound.add('music_menu');
+    bgSound = this.sound.add('music_menu');
+
+    bgSound.play();
+    bgSound.loop = true;
 
     background_menu = this.add.sprite(360, 640, 'menu-background');
     background_menu.scaleX = 0.68;
@@ -70,25 +75,50 @@ export class Mainmenu extends Phaser.Scene {
 
     playButton = this.add.sprite(357, 650, 'play_button').setScale(.6);
     playButton.setOrigin(0.5, 0.5);
-    //playButton.setInteractive();
     playButton.on('pointerdown', () => this.startGame());
 
-    hintButton = this.add.sprite(360, 830, 'hint_button').setScale(.7);
+    hintButton = this.add.image(360, 830, 'hint_button').setScale(.7);
     hintButton.setOrigin(0.5, 0.5);
-    hintButton.setInteractive();
     hintButton.on('pointerdown', () => this.showHint());
 
     leaderButton = this.add.sprite(360, 930, 'leaderboard_button').setScale(.7);
     leaderButton.setOrigin(0.5, 0.5);
-    leaderButton.setInteractive();
     leaderButton.on('pointerdown', () => this.showLeaderboard());
 
-    musicButton = this.add.sprite(364, 1030, 'music_button').setScale(.7);
+    musicButton = this.add.sprite(360, 1030, 'music_button on').setScale(.7);
     musicButton.setOrigin(0.5, 0.5);
+    musicButton.setInteractive();
+    musicButton.on('pointerdown', () => {
 
-    backsound.play();
-    backsound.loop = true;
+      musicStatus = !musicStatus;
+      this.toogleSound();
+    });
 
+    // musicButtonOff = this.add.sprite(360, 1030, 'music_button off').setScale(.7);
+    // musicButtonOff.setOrigin(0.5, 0.5);
+    // musicButtonOff.setInteractive();
+    // musicButtonOff.on('pointerdown', () => {
+    //
+    //   this.sound.play();
+    //   musicButtonOff.visible = false;
+    //   musicButton.visible = true;
+    // });
+
+    tncButton = this.add.sprite(130, 1230, 'tnc_button').setScale(.7);
+    tncButton.setOrigin(0.5, 0.5);
+    tncButton.on('pointerdown', () => this.showTnC());
+
+    // quitButton = this.add.sprite(670, 70, 'quit_button').setScale(3);
+    // quitButton.setOrigin(0.5, 0.5);
+    // quitButton.setInteractive();
+    // quitButton.on('pointerdown', () => this.quitGame());
+
+    this.toogleSound();
+
+    document.addEventListener('visibilitychange', function(){
+      console.log('blur');
+      bgSound.pause();
+    }, false);
   }
 
   update(){
@@ -96,13 +126,113 @@ export class Mainmenu extends Phaser.Scene {
 
   }
 
+  toogleSound(){
+
+    if(musicStatus == true){
+
+      musicButton.setTexture('music_button off');
+      bgSound.pause();
+    }
+    else {
+      musicButton.setTexture('music_button on')
+      bgSound.resume();
+    }
+  }
+
+  quitGame(){
+
+    // switch(this.getMobileOperatingSystem()){
+    //
+    //   case 'Android':
+    //     urlLink1 = "linipoin://";
+    //     window.location.href = urlLink1;
+    //     break;
+    //   case 'iOS':
+    //     urlLink1 = "linipoin://";
+    //     window.location.href = urlLink1;
+    //     break;
+    //   default:
+    //     top.location.href = urlLink1;
+    //     console.log(urlLink1);
+    //     break;
+    //   }
+
+    window.open("linipoin://tabs/home");
+    //ttes.writeHead(302, { Location: 'linipoin://tabs/home' });
+  }
+
+  enableMainButton(){
+
+    playButton.setInteractive();
+    leaderButton.setInteractive();
+    hintButton.setInteractive();
+    tncButton.setInteractive()
+  }
+
+  disableMainButton(){
+
+    playButton.disableInteractive();
+    leaderButton.disableInteractive();
+    hintButton.disableInteractive();
+    tncButton.disableInteractive();
+  }
+
   startGame(){
+
+    this.disableMainButton();
 
     clickSFX.play();
 
-    if(tempLimit == 0){
+    if(tempLimit == 0 && playerStatus == false){
 
-      console.log("Bayar 10 Poin");
+      if (tempUserPoin < 10) {
+
+        noPoinWarnPanel = this.add.sprite(360, 640, 'poin-warn-panel').setScale(.7);
+        noPoinWarnPanel.setOrigin(0.5, 0.5);
+        okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
+        okButton.setOrigin(0.5, 0.5);
+        okButton.setInteractive();
+        okButton.on('pointerdown', () => {
+
+          closeSFX.play();
+          noPoinWarnPanel.destroy();
+          okButton.destroy();
+          this.enableMainButton();
+        });
+        console.log("Poin tidak mencukupi");
+      }
+      else {
+
+        confirmPanel = this.add.sprite(360, 640, 'confirm-panel').setScale(.7);
+        confirmPanel.setOrigin(0.5, 0.5);
+
+        agreeButton = this.add.sprite(230, 830, 'ok_button').setScale(.7);
+        agreeButton.setOrigin(0.5, 0.5);
+        agreeButton.setInteractive();
+        agreeButton.on('pointerdown', () => this.agreeToPay());
+
+        disagreeButton = this.add.sprite(490, 835, 'no_button').setScale(.7);
+        disagreeButton.setOrigin(0.5, 0.5);
+        disagreeButton.setInteractive();
+        disagreeButton.on('pointerdown', () => this.disagreeToPay());
+      }
+
+    }
+    else if(playerStatus == true){
+
+      limitWarnPanel = this.add.sprite(360, 640, 'limit-warn-panel').setScale(.7);
+      limitWarnPanel.setOrigin(0.5, 0.5);
+      okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
+      okButton.setOrigin(0.5, 0.5);
+      okButton.setInteractive();
+      okButton.on('pointerdown', () => {
+
+        closeSFX.play()
+        limitWarnPanel.destroy();
+        okButton.destroy();
+        this.enableMainButton();
+      });
+      console.log("Telah mencapai limit harian");
     }
     else {
 
@@ -110,9 +240,50 @@ export class Mainmenu extends Phaser.Scene {
     }
   }
 
+  agreeToPay(){
+
+    clickSFX.play();
+    this.scene.start("PlayGame", {session: myParam});
+    console.log("Bayar 10 Poin");
+  }
+
+  disagreeToPay(){
+
+    closeSFX.play();
+    confirmPanel.destroy();
+    agreeButton.destroy();
+    disagreeButton.destroy();
+
+    this.enableMainButton();
+  }
+
+  showTnC(){
+
+    clickSFX.play();
+    tncPanel = this.add.sprite(360, 640, 'tnc_panel').setScale(.7);
+    tncPanel.setOrigin(0.5, 0.5);
+
+    closeButton = this.add.sprite(600, 190, 'close_button').setScale(.7);
+    closeButton.setOrigin(0.5, 0.5);
+    closeButton.setInteractive();
+    closeButton.on('pointerdown', () => this.destroyTnCPanel());
+    tncButton.disableInteractive();
+    this.disableMainButton();
+  }
+
+  destroyTnCPanel(){
+
+    closeSFX.play();
+    tncPanel.destroy();
+    closeButton.destroy();
+    tncButton.setInteractive();
+    this.enableMainButton();
+  }
+
   showHint(){
 
     clickSFX.play();
+
     hintPanel = this.add.sprite(360, 600, 'hint_panel').setScale(.7);
     hintPanel.setOrigin(0.5, 0.5);
 
@@ -120,138 +291,7 @@ export class Mainmenu extends Phaser.Scene {
     closeButton.setOrigin(0.5, 0.5);
     closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyHintPanel());
-    playButton.disableInteractive();
-    hintButton.disableInteractive();
-    leaderButton.disableInteractive();
-  }
-
-  showLeaderboard(){
-
-    var startPosId1 = 460;
-    var startPosScore1 = 448;
-    var startPosId2 = 710;
-    var startPosScore2 = 700;
-
-    clickSFX.play();
-    leaderboardPanel = this.add.sprite(360, 600, 'leaderboard_panel').setScale(.7);
-    leaderboardPanel.setOrigin(0.5, 0.5);
-
-    closeButton = this.add.sprite(620, 140, 'close_button').setScale(.6);
-    closeButton.setOrigin(0.5, 0.5);
-    closeButton.setInteractive();
-    closeButton.on('pointerdown', () => this.destroyLeaderBoardPanel());
-
-    this.getLeaderboardData(startPosId1, startPosScore1);
-    this.getCumulativeLeaderboardData(startPosId2, startPosScore2);
-    playButton.disableInteractive();
-    leaderButton.disableInteractive();
-    hintButton.disableInteractive();
-  }
-
-
-  getUserData(){
-
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-
-      method:"GET",
-    }).then(response => {
-
-      return response.json();
-    }).then(data => {
-
-      this.playLimitText = this.add.text(357, 645, data.result.lifePlay+'x', {
-        font: 'bold 45px Arial',
-        fill: 'white'
-      });
-      this.playLimitText.setOrigin(0.5, 0.5);
-      tempLimit = data.result.lifePlay;
-      playerStatus = data.result.isLimit;
-      playButton.setInteractive();
-    });
-  }
-
-  getLeaderboardData(posId, posScore){
-
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=user_highscore&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true", {
-    //fetch("http://192.168.0.107:7646/api/v1.0/leaderboard?pagination=false&order_by=score&user_id=11&order_type=desc&lang=en&limit=10&include_user=true", {
-
-      method: "GET",
-    }).then(response => {
-
-      return response.json();
-
-    }).then(data => {
-
-      console.log(data.result);
-      for(let i=0; i<5; i++){
-
-        if (i == 0){
-
-          posId += 0;
-          posScore += 0
-        }
-        else{
-
-          posId += 50;
-          posScore += 50;
-        }
-
-        idTextArr[i] = this.add.text(190, posId, ''+data.result.rows[i].user.name, {
-          font: 'bold 26px Arial',
-          fill: '#8f4426'
-        });
-
-        scoreTextArr[i] = this.add.text(510, posScore, ''+data.result.rows[i].user_highscore, {
-          font: 'bold 40px Arial',
-          fill: '#8f4426',
-          align: 'right'
-        });
-      }
-    }).catch(error => {
-
-      console.log(error);
-    });
-
-  }
-
-  getCumulativeLeaderboardData(posId2, posScore2){
-
-     fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true", {
-
-       method:"GET"
-     }).then(response => {
-
-      return response.json();
-    }).then(data => {
-
-      for(let i=0; i < 5; i++){
-
-        if(i == 0){
-
-          posId2 += 0;
-          posScore2 += 0;
-        }
-        else {
-
-          posId2 += 50;
-          posScore2 += 50;
-        }
-
-        idCumTextArr[i] = this.add.text(190, posId2, ''+data.result.rows[i].user.name, {
-          font: 'bold 26px Arial',
-          fill: '#8f4426'
-        });
-
-        scoreCumTextArr[i] = this.add.text(510, posScore2, ''+data.result.rows[i].total_score, {
-          font: 'bold 40px Arial',
-          fill: '#8f4426',
-          align: 'right'
-        });
-      }
-    }).catch(error => {
-
-      console.log(error);
-    });
+    this.disableMainButton();
   }
 
   destroyHintPanel(){
@@ -259,9 +299,28 @@ export class Mainmenu extends Phaser.Scene {
     closeSFX.play();
     hintPanel.destroy();
     closeButton.destroy();
-    playButton.setInteractive()
-    hintButton.setInteractive();
-    leaderButton.setInteractive();
+    this.enableMainButton();
+  }
+
+  showLeaderboard(){
+
+    var startPosId1 = 390;
+    var startPosScore1 = 383;
+    var startPosId2 = 710;
+    var startPosScore2 = 700;
+
+    clickSFX.play();
+    leaderboardPanel = this.add.sprite(360, 600, 'leaderboard_panel').setScale(.7);
+    leaderboardPanel.setOrigin(0.5, 0.5);
+
+    closeButton = this.add.sprite(600, 150, 'close_button').setScale(.7);
+    closeButton.setOrigin(0.5, 0.5);
+    //closeButton.setInteractive();
+    closeButton.on('pointerdown', () => this.destroyLeaderBoardPanel());
+
+    this.getLeaderboardData(startPosId1, startPosScore1);
+    this.getCumulativeLeaderboardData(startPosId2, startPosScore2);
+    this.disableMainButton();
   }
 
   destroyLeaderBoardPanel(){
@@ -288,8 +347,169 @@ export class Mainmenu extends Phaser.Scene {
 
     leaderboardPanel.destroy();
     closeButton.destroy();
-    playButton.setInteractive();
-    leaderButton.setInteractive();
-    hintButton.setInteractive();
+    this.enableMainButton();
   }
+
+  getMobileOperatingSystem() {
+      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+      if( userAgent.match( /iPad/i ) || userAgent.match( /iPhone/i ) || userAgent.match( /iPod/i ) ){
+
+          return 'iOS';
+      }
+      else if( userAgent.match( /Android/i ) ){
+
+          return 'Android';
+      }
+      else{
+
+          return 'unknown';
+      }
+  }
+
+  drawHeart(remainingLife){
+
+    let startPos = 710;
+
+    if(remainingLife != 0){
+
+      for(let i = 1; i <= remainingLife; i++){
+
+        if(i == 1){
+
+          startPos -= 0;
+        }
+        else {
+
+          startPos -= 60;
+        }
+
+        lifeRemaining = this.add.image(210, startPos, 'life').setScale(2);
+        lifeRemaining.setOrigin(0.5, 0.5);
+      }
+    }
+  }
+
+  getUserData(){
+
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+
+      method:"GET",
+    }).then(response => {
+
+      return response.json();
+    }).then(data => {
+
+      if(data.response == 200){
+
+        tempLimit = data.result.lifePlay;
+        playerStatus = data.result.isLimit;
+        tempUserPoin = data.result.userPoin;
+        this.drawHeart(tempLimit);
+        this.enableMainButton();
+      }
+
+      else if(data.response == 400){
+
+        console.log(data.result.message);
+      }
+
+      else if(data.response == 422) {
+
+        console.log(data.result.message);
+      }
+
+    }).catch(error => {
+
+      console.log(error);;
+    });
+  }
+
+  getLeaderboardData(posId, posScore){
+
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=user_highscore&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
+    //fetch("http://192.168.0.107:7646/api/v1.0/leaderboard?pagination=false&order_by=score&user_id=11&order_type=desc&lang=en&limit=10&include_user=true", {
+
+      method: "GET",
+    }).then(response => {
+
+      return response.json();
+
+    }).then(data => {
+
+      console.log(data.result);
+      for(let i=0; i<5; i++){
+
+        if (i == 0){
+
+          posId += 0;
+          posScore += 0
+        }
+        else{
+
+          posId += 47;
+          posScore += 47;
+        }
+
+        idTextArr[i] = this.add.text(190, posId, ''+data.result.rows[i].user.name, {
+          font: 'bold 16px Arial',
+          fill: 'white'
+        });
+
+        scoreTextArr[i] = this.add.text(510, posScore, ''+data.result.rows[i].user_highscore, {
+          font: 'bold 24px Arial',
+          fill: 'white',
+          align: 'right'
+        });
+
+        closeButton.setInteractive();
+      }
+
+    }).catch(error => {
+
+      console.log(error);
+    });
+
+  }
+
+  getCumulativeLeaderboardData(posId2, posScore2){
+
+     fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
+
+       method:"GET"
+     }).then(response => {
+
+      return response.json();
+    }).then(data => {
+
+      for(let i=0; i < 5; i++){
+
+        if(i == 0){
+
+          posId2 += 0;
+          posScore2 += 0;
+        }
+        else {
+
+          posId2 += 47;
+          posScore2 += 47;
+        }
+
+        idCumTextArr[i] = this.add.text(190, posId2, ''+data.result.rows[i].user.name, {
+          font: 'bold 26px Arial',
+          fill: 'white'
+        });
+
+        scoreCumTextArr[i] = this.add.text(510, posScore2, ''+data.result.rows[i].total_score, {
+          font: 'bold 40px Arial',
+          fill: 'white',
+          align: 'right'
+        });
+      }
+    }).catch(error => {
+
+      console.log(error);
+    });
+  }
+
 }

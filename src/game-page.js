@@ -11,6 +11,9 @@ var endPanel;
 // var retryButton;
 var exitButton;
 
+var popBall;
+var collideBall;
+
 var startTime;
 var tempID;
 var tempSession;
@@ -61,17 +64,18 @@ export class GamePlay extends Phaser.Scene {
 
 
   preload() {
-    this.load.image('game_background', "./src/assets/background-game.jpg");
-    this.load.image('ball', "./src/assets/ball.png");
-    this.load.image('gameover_panel', "./src/assets/end_panel.png");
-    //this.load.image('retry_button', "./src/assets/retry_button.png");
-    this.load.image('exit_button', "./src/assets/exit_button.png");
-    this.load.image('score', "./src/assets/score.png");
+    // this.load.image('game_background', "./src/assets/background-game.jpg");
+    // this.load.image('ball', "./src/assets/ball.png");
+    // this.load.image('gameover_panel', "./src/assets/end_panel.png");
+    // this.load.image('exit_button', "./src/assets/exit_button.png");
+    // this.load.image('score', "./src/assets/score.png");
   }
 
   create() {
 
-    console.log(tempSession);
+    popBall = this.sound.add('pop-ball');
+    collideBall = this.sound.add('lose-ball');
+
     startTime = new Date();
 
     this.score = 0;
@@ -83,16 +87,14 @@ export class GamePlay extends Phaser.Scene {
 
     this.postDataOnStart(startTime, tempSession);
 
-    scoreSign = this.add.sprite(500, 50, 'score').setScale(.8);
-    this.scoreText = this.add.text(600, 30, '', {
+    scoreSign = this.add.sprite(480, 50, 'score').setScale(.8);
+    this.scoreText = this.add.text(580, 30, '0', {
       font: 'bold 42px Arial',
       fill: 'white',
       align: 'right'
     });
-
-
-    scoreSign.visible = false;
-    this.scoreText.visible = false;
+    // scoreSign.visible = false;
+    // this.scoreText.visible = false;
 
     // group which will contain the ball, all circles and landing spots
     this.stuffGroup = this.add.group();
@@ -228,22 +230,22 @@ export class GamePlay extends Phaser.Scene {
     // this way it will range from 1/0.3 to 1/0.5 seconds
 
     if(this.score >= 0){
-      this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.1, 0.2);
+      this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.15, 0.28);
       // console.log(this.arcTweens[i].timeScale);
     }
 
     if (this.score >= 75){
-      this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.4, 0.5);
+      this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.35, 0.48);
       // console.log(this.arcTweens[i].timeScale);
     }
 
     if(this.score >= 150){
-      this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.6, 0.7);
+      this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.55, 0.68);
       // console.log(this.arcTweens[i].timeScale);
     }
 
     if(this.score >= 250){
-      this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.7, 0.8);
+      this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.72, 0.85);
       // console.log(this.arcTweens[i].timeScale);
     }
   }
@@ -260,6 +262,7 @@ export class GamePlay extends Phaser.Scene {
     // if the player can shoot...
     if (this.canShoot) {
 
+      popBall.play();
       // can't shoot anymore at the moment
       this.canShoot = false;
 
@@ -336,7 +339,7 @@ export class GamePlay extends Phaser.Scene {
 
     // if the difference between the distance and the radius is less than ball radius,
     // this means the ball could collide with an arc and we have to investigate
-    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 6) {
+    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 5) {
 
       // determine the angle between the ball and the circle
       let angle = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.circles[i].x, this.circles[i].y, this.ball.x, this.ball.y));
@@ -368,6 +371,7 @@ export class GamePlay extends Phaser.Scene {
 
           // shake the camera
           this.cameras.main.shake(500, 0.01);
+          collideBall.play();
 
           // restart the game in two seconds
           this.time.addEvent({
@@ -376,6 +380,7 @@ export class GamePlay extends Phaser.Scene {
             callback: function() {
               //this.scene.pause("PlayGame")
               let endTime = new Date();
+
               this.postDataOnFinal(endTime, tempSession);
               this.showDialogBox();
             }
@@ -412,10 +417,10 @@ export class GamePlay extends Phaser.Scene {
 
   }
 
-  retryGame(){
-
-    this.scene.start("PlayGame");
-  }
+  // retryGame(){
+  //
+  //   this.scene.start("PlayGame");
+  // }
 
   exitGame(){
 
@@ -479,7 +484,7 @@ export class GamePlay extends Phaser.Scene {
 
     }).catch(error => {
 
-      console.log(error);
+      console.log(error.json());
     });
   }
 }

@@ -15,7 +15,6 @@ export class Loading extends Phaser.Scene{
   }
 
   preload(){
-
     this.cameras.main.setBackgroundColor('#222E61');
     this.load.audio('music_menu', "./src/assets/audio/menu-music.mp3");
     //this.load.image('loading-background', "./src/assets/background-loading.jpg");
@@ -114,8 +113,8 @@ export class Loading extends Phaser.Scene{
 
     });
 
-    this.load.on('complete', () => {
-
+    this.load.once('complete', () => {
+      // this.sound.play('music_menu');
       loadingText.destroy();
       progressBox.setDepth(1);
       progressBar.fillStyle(0xffffff, 1)
@@ -149,10 +148,15 @@ export class Loading extends Phaser.Scene{
 
         this.scene.start("Menu");
       })
+
+      this.sound.on('decoded',  ()=> {
+        console.log('AUDIO BERHASIL DI LOAD CUX')
+      });
     });
   }
 
   create(){
+
 
     // background_loading = this.add.image(360, 640, 'loading-background');
     // background_loading.scaleX = 0.8;

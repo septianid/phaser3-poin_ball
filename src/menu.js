@@ -89,8 +89,7 @@ export class Mainmenu extends Phaser.Scene {
     musicButton.setOrigin(0.5, 0.5);
     musicButton.setInteractive();
     musicButton.on('pointerdown', () => {
-
-      musicStatus = !musicStatus;
+      // musicStatus = !musicStatus;
       this.toogleSound();
     });
 
@@ -115,9 +114,15 @@ export class Mainmenu extends Phaser.Scene {
 
     this.toogleSound();
 
-    document.addEventListener('visibilitychange', function(){
+    document.addEventListener('blur', function(){
       console.log('blur');
       bgSound.pause();
+    }, false);
+
+    document.addEventListener('focus', function(){
+      console.log('focus');
+      if(musicStatus)
+      bgSound.resume();
     }, false);
   }
 
@@ -127,13 +132,13 @@ export class Mainmenu extends Phaser.Scene {
   }
 
   toogleSound(){
-
     if(musicStatus == true){
-
+      musicStatus = false;
       musicButton.setTexture('music_button off');
       bgSound.pause();
     }
     else {
+      musicStatus = true;
       musicButton.setTexture('music_button on')
       bgSound.resume();
     }

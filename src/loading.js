@@ -15,6 +15,7 @@ export class Loading extends Phaser.Scene{
   }
 
   preload(){
+
     this.cameras.main.setBackgroundColor('#222E61');
     this.load.audio('music_menu', "./src/assets/audio/menu-music.ogg");
     //this.load.image('loading-background', "./src/assets/background-loading.jpg");
@@ -139,12 +140,6 @@ export class Loading extends Phaser.Scene{
       tapSign.anims.play('blink', true);
 
 
-      // tapSign = this.add.text(360, 900, 'TAP TO START', {
-      //   font: '42px monospace',
-      //   fill: 'white',
-      //   align: 'center'
-      // }).setOrigin(0.5, 0.5);
-
       this.input.on("pointerdown", () => {
 
         this.scene.start("Menu");
@@ -158,25 +153,33 @@ export class Loading extends Phaser.Scene{
 
   create(){
 
+    // var PhaserGlobal = {
+    //   stopFocus: true
+    // }
+    // if (window['focus']) {
+    //
+    //   if (!window['PhaserGlobal'] || (window['PhaserGlobal'] && !window['PhaserGlobal'].stopFocus)){
+    //
+    //     window.focus();
+    //   }
+    // }
+
+    document.addEventListener('touchstart',() => {
+
+      //console.log('test');
+      window.focus();
+    });
+    // window.addEventListener('load', function () {
+    // window.focus();
+    // document.body.addEventListener('click',function(e) {
+    //     window.focus();
+    //   },false);
+    // });
 
     // background_loading = this.add.image(360, 640, 'loading-background');
     // background_loading.scaleX = 0.8;
     // background_loading.scaleY = 0.8;
     // background_loading.setOrigin(0.5, 0.5);
-  }
-
-  loadComplete(){
-
-    // background_loading = this.add.image(360, 640, 'loading-background');
-    // background_loading.scaleX = 0.8;
-    // background_loading.scaleY = 0.8;
-    // background_loading.setOrigin(0.5, 0.5);
-
-    // title_loading = this.add.sprite(360, 350, 'game-title').setScale(.7);
-    // title_loading.setOrigin(0.5, 0.5);
-
-
-
   }
 
 }

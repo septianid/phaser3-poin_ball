@@ -14,10 +14,12 @@ var exitButton;
 var popBall;
 var collideBall;
 
-var startTime;
-var tempID;
+//var startTime;
+var tempDataID;
 var tempSession;
 var lastHighScore;
+
+var isCollide;
 
 
 // global object containing all configurable options
@@ -60,6 +62,7 @@ export class GamePlay extends Phaser.Scene {
   init(data){
 
     tempSession = data.session;
+    tempDataID = data.id;
   }
 
 
@@ -72,6 +75,18 @@ export class GamePlay extends Phaser.Scene {
   }
 
   create() {
+
+    // var PhaserGlobal = {
+    //   stopFocus: true
+    // }
+    // if (window['focus']) {
+    //
+    //   if (!window['PhaserGlobal'] || (window['PhaserGlobal'] && !window['PhaserGlobal'].stopFocus)){
+    //
+    //     window.focus();
+    //   }
+    // }
+    isCollide = false;
 
     this.game.events.on('hidden',function(){
       console.log('hidden');
@@ -86,16 +101,12 @@ export class GamePlay extends Phaser.Scene {
     popBall = this.sound.add('pop-ball');
     collideBall = this.sound.add('lose-ball');
 
-    startTime = new Date();
-
     this.score = 0;
 
     background_game = this.add.sprite(360, 640, 'game_background');
     background_game.scaleX = 0.8;
     background_game.scaleY = 0.8;
     background_game.setOrigin(0.5, 0.5);
-
-    this.postDataOnStart(startTime, tempSession);
 
     scoreSign = this.add.sprite(480, 50, 'score').setScale(.8);
     this.scoreText = this.add.text(580, 30, '0', {
@@ -297,6 +308,14 @@ export class GamePlay extends Phaser.Scene {
         onUpdate: function() {
           this.checkCollision(this.bottomCircle);
           this.checkCollision(Phaser.Math.Wrap(this.bottomCircle + 1, 0, gameOptions.numCircles));
+          if(isCollide === true){
+
+            console.log('test');
+            console.log(tempDataID);
+            let endTime = new Date();
+            this.postDataOnFinal(endTime, tempSession);
+            this.showDialogBox();
+          }
         },
 
         // once the tween is completed
@@ -344,12 +363,13 @@ export class GamePlay extends Phaser.Scene {
   // method to check collision between the ball and the arcs on the i-th circle
   checkCollision(i) {
 
+    //console.log(i);
     // calculate the distance between the circle and the ball
     let distance = Phaser.Math.Distance.Between(this.circles[i].x, this.circles[i].y, this.ball.x, this.ball.y);
 
     // if the difference between the distance and the radius is less than ball radius,
     // this means the ball could collide with an arc and we have to investigate
-    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 5) {
+    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 4) {
 
       // determine the angle between the ball and the circle
       let angle = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.circles[i].x, this.circles[i].y, this.ball.x, this.ball.y));
@@ -367,6 +387,7 @@ export class GamePlay extends Phaser.Scene {
 
           // stop tweens
           this.ballTween.stop();
+
           //this.arcTweens[i].stop();
           if(this.arcTweens[i+1] != null){
 
@@ -382,6 +403,10 @@ export class GamePlay extends Phaser.Scene {
           // shake the camera
           this.cameras.main.shake(500, 0.01);
           collideBall.play();
+          isCollide = true;
+
+
+
 
           // restart the game in two seconds
           this.time.addEvent({
@@ -389,10 +414,7 @@ export class GamePlay extends Phaser.Scene {
             callbackScope: this,
             callback: function() {
               //this.scene.pause("PlayGame")
-              let endTime = new Date();
 
-              this.postDataOnFinal(endTime, tempSession);
-              this.showDialogBox();
             }
           });
         }
@@ -422,6 +444,7 @@ export class GamePlay extends Phaser.Scene {
     });
     this.finalScoreText.setOrigin(0.5, 0.5);
 
+
     //retryButton.on('pointerdown', () => this.retryGame());
     exitButton.on('pointerdown', () => this.exitGame());
 
@@ -434,35 +457,36 @@ export class GamePlay extends Phaser.Scene {
 
   exitGame(){
 
+    tempDataID = 0;
     this.scene.start("Menu");
   }
 
-  postDataOnStart(start, userSession){
-
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
-    //fetch("https://1f584819.ngrok.io/api/v1.0/leaderboard/",{
-
-      method:"POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
-        session: userSession,
-        score: 0,
-        game_start: start,
-        user_highscore: 0,
-        total_score: 0,
-      }),
-    }).then(response => response.json()).then(res => {
-
-      tempID = res.result.id;
-    }).catch(error => {
-
-      console.log(error.json());
-    });
-  }
+  // postDataOnStart(start, userSession){
+  //
+  //   fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
+  //   //fetch("https://1f584819.ngrok.io/api/v1.0/leaderboard/",{
+  //
+  //     method:"POST",
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //       linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
+  //       session: userSession,
+  //       score: 0,
+  //       game_start: start,
+  //       user_highscore: 0,
+  //       total_score: 0,
+  //     }),
+  //   }).then(response => response.json()).then(res => {
+  //
+  //     tempID = res.result.id;
+  //   }).catch(error => {
+  //
+  //     console.log(error.json());
+  //   });
+  // }
 
   postDataOnFinal(end, userSession){
 
@@ -477,7 +501,7 @@ export class GamePlay extends Phaser.Scene {
       body: JSON.stringify({
 
         linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
-        id: tempID,
+        id: tempDataID,
         session: userSession,
         game_end: end,
         score: this.score,
@@ -485,12 +509,25 @@ export class GamePlay extends Phaser.Scene {
     }).then(response => response.json()).then(res => {
 
       //console.log(res.result.user_highscore);
-      this.userHighScore = this.add.text(360, 700, ''+res.result.user_highscore, {
-        font: 'bold 62px Arial',
-        fill: 'white',
-        align: 'center'
-      });
-      this.userHighScore.setOrigin(0.5, 0.5);
+      if(res.result.user_highscore !== undefined){
+
+        this.userHighScore = this.add.text(360, 700, ''+res.result.user_highscore, {
+          font: 'bold 62px Arial',
+          fill: 'white',
+          align: 'center'
+        });
+        this.userHighScore.setOrigin(0.5, 0.5);
+      }
+      else if(res.result.user_highscore === undefined){
+
+        this.userHighScore = this.add.text(360, 700, '', {
+          font: 'bold 62px Arial',
+          fill: 'white',
+          align: 'center'
+        });
+        this.userHighScore.setOrigin(0.5, 0.5);
+      }
+
 
     }).catch(error => {
 

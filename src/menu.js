@@ -37,6 +37,15 @@ var playLimitText;
 var tempLimit;
 var playerStatus;
 var tempUserPoin;
+var tempID;
+
+var startTime;
+
+var graphics;
+var text;
+var zone;
+var mask;
+var content;
 
 var musicStatus;
 var detailStatus;
@@ -94,16 +103,21 @@ export class Mainmenu extends Phaser.Scene {
       this.toggleSound();
     });
 
-    tncButton = this.add.sprite(130, 1150, 'tnc_button').setScale(.7);
+    tncButton = this.add.sprite(600, 1180, 'tnc_button').setScale(.7);
     tncButton.setOrigin(0.5, 0.5);
     tncButton.on('pointerdown', () => this.showTnC());
 
-    // quitButton = this.add.sprite(670, 70, 'quit_button').setScale(3);
-    // quitButton.setOrigin(0.5, 0.5);
-    // quitButton.setInteractive();
-    // quitButton.on('pointerdown', () => this.quitGame());
-
     this.toggleSound();
+    // var PhaserGlobal = {
+    //   stopFocus: true
+    // }
+    // if (window['focus']) {
+    //
+    //   if (!window['PhaserGlobal'] || (window['PhaserGlobal'] && !window['PhaserGlobal'].stopFocus)){
+    //
+    //     window.focus();
+    //   }
+    // }
 
     document.addEventListener('blur', function(){
       console.log('blur');
@@ -233,14 +247,24 @@ export class Mainmenu extends Phaser.Scene {
     }
     else {
 
-      this.scene.start("PlayGame", {session: myParam});
+      playButton.disableInteractive();
+      startTime = new Date();
+      this.postDataOnStart(startTime, myParam);
+      // this.scene.start("PlayGame", {
+      //   session: myParam
+      // });
     }
   }
 
   agreeToPay(){
 
+    startTime = new Date();
     clickSFX.play();
-    this.scene.start("PlayGame", {session: myParam});
+    agreeButton.disableInteractive();
+    this.postDataOnStart(startTime, myParam);
+    // this.scene.start("PlayGame", {
+    //   session: myParam
+    // });
     console.log("Bayar 10 Poin");
   }
 
@@ -256,11 +280,51 @@ export class Mainmenu extends Phaser.Scene {
 
   showTnC(){
 
+    content = [
+      "1. Periode event LINIGAMES berlangsung pada tanggal 10 Desember 2019 sampai 02 Januari 2020",
+      "2. Kesempatan bermain hanya diberikan gratis sebanyak 3 (tiga) kali per pengguna per hari selama periode event",
+      "3. Jika ingin bermain lebih dari 3 (tiga) kali per hari, maka dikenakan pemotongan sebanyak 10 poin per 1 (satu) kali main",
+      "4. Pemenang akan diambil berdasarkan ketentuan sebagai berikut.",
+      "   1. 5 orang dengan skor tertinggi selama periode event",
+      "   2. 5 orang dengan skor akumulasi tertinggi selama periode event",
+      "5. Pengundian dan pengumuman pemenang akan diadakan pada tanggal 02 Januari 2020",
+      "6. LINIPOIN berhak membatalkan seluruh hadiah jika terbukti adanya indikasi kecurangan dalam bentuk apapun",
+      "7. Jika ada pertanyaan lebih lanjut silahkan ajukan ke ‘Pusat Bantuan’, DM Via Instagram @linipoin.id, atau email ke info@linipoin.com",
+      "8. Selamat bermain LINIGAME",
+    ];
+
     clickSFX.play();
-    tncPanel = this.add.sprite(360, 640, 'tnc_panel').setScale(.7);
+    tncPanel = this.add.sprite(360, 640, 'tnc_panel').setScale(.4);
     tncPanel.setOrigin(0.5, 0.5);
 
-    closeButton = this.add.sprite(600, 190, 'close_button').setScale(.7);
+    graphics = this.make.graphics();
+
+    graphics.fillStyle(0xffffff);
+    graphics.fillRect(110, 400, 500, 610);
+
+    mask = new Phaser.Display.Masks.GeometryMask(this, graphics);
+    text = this.add.text(110, 400, content, {
+      font: '30px Arial',
+      color: '#ffffff',
+      align: 'justify',
+      wordWrap: {
+        width: 500 } }).setOrigin(0);
+    text.setMask(mask);
+
+    zone = this.add.zone(110, 400, 500, 610).setOrigin(0).setInteractive();
+
+    zone.on('pointermove', function (pointer) {
+
+        if (pointer.isDown)
+        {
+            text.y += (pointer.velocity.y / 10);
+
+            text.y = Phaser.Math.Clamp(text.y, -200, 450);
+        }
+
+    });
+
+    closeButton = this.add.sprite(640, 150, 'close_button').setScale(.7);
     closeButton.setOrigin(0.5, 0.5);
     closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyTnCPanel());
@@ -273,6 +337,12 @@ export class Mainmenu extends Phaser.Scene {
     closeSFX.play();
     tncPanel.destroy();
     closeButton.destroy();
+
+    text.destroy();
+    graphics.destroy();
+    mask.destroy();
+    zone.destroy();
+
     tncButton.setInteractive();
     this.enableMainButton();
   }
@@ -444,6 +514,42 @@ export class Mainmenu extends Phaser.Scene {
     }).catch(error => {
 
       console.log(error);;
+    });
+  }
+
+  postDataOnStart(start, userSession){
+
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
+    //fetch("https://1f584819.ngrok.io/api/v1.0/leaderboard/",{
+
+      method:"POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
+        session: userSession,
+        score: 0,
+        game_start: start,
+        user_highscore: 0,
+        total_score: 0,
+      }),
+    }).then(response => response.json()).then(res => {
+
+      tempID = res.result.id;
+      console.log(tempID);
+      if(res.result.id != 0){
+
+        this.scene.start("PlayGame", {
+          session: myParam,
+          id: tempID
+        });
+      }
+
+    }).catch(error => {
+
+      console.log(error.json());
     });
   }
 

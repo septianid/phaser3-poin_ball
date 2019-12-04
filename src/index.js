@@ -11,7 +11,7 @@ window.onload = function(){
     type: Phaser.AUTO,
     parent: 'game',
     scale:{
-      mode: Phaser.Scale.ENVELOP,
+      mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
       width: 720,
       height: 1280,
@@ -30,3 +30,5 @@ window.onload = function(){
   let game = new Phaser.Game(config);
   window.focus();
 }
+
+//this.game.stage.disableVisibilityChange = true;

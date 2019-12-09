@@ -22,6 +22,7 @@ export class Loading extends Phaser.Scene{
     this.load.image('quit_button', "./src/assets/quit_button.png");
     this.load.image('play_button', "./src/assets/play_button.png");
     this.load.image('hint_button', "./src/assets/hint_button.png");
+    this.load.image('error_panel', "./src/assets/error_panel.png");
     this.load.image('leaderboard_button', "./src/assets/leaderboard_button.png");
     this.load.image('music_button on', "./src/assets/sound_button_on.png");
     this.load.image('music_button off', "./src/assets/sound_button_off.png");
@@ -47,7 +48,7 @@ export class Loading extends Phaser.Scene{
     this.load.image('poin-warn-panel', "./src/assets/no_poin_panel.png");
     this.load.image('limit-warn-panel', "./src/assets/play_limit_panel.png");
 
-    this.load.image('game_background', "./src/assets/background-game.jpg");
+    this.load.image('game_background', "./src/assets/background-game 2.jpg");
     this.load.image('ball', "./src/assets/ball.png");
     this.load.image('gameover_panel', "./src/assets/end_panel.png");
     this.load.image('exit_button', "./src/assets/exit_button.png");
@@ -115,7 +116,7 @@ export class Loading extends Phaser.Scene{
 
     });
 
-    this.load.once('complete', () => {
+    this.load.on('complete', () => {
       // this.sound.play('music_menu');
       loadingText.destroy();
       progressBox.setDepth(1);
@@ -143,6 +144,17 @@ export class Loading extends Phaser.Scene{
       this.input.on("pointerdown", () => {
 
         this.scene.start("Menu");
+        // var PhaserGlobal = {
+        //   stopFocus: true
+        // }
+        // if (window['focus']) {
+        //
+        //   if (!window['PhaserGlobal'] || (window['PhaserGlobal'] && !window['PhaserGlobal'].stopFocus)){
+        //
+        //     window.focus();
+        //     console.log("Focus");
+        //   }
+        // }
       })
 
       this.sound.on('decoded',  ()=> {
@@ -153,22 +165,20 @@ export class Loading extends Phaser.Scene{
 
   create(){
 
-    // var PhaserGlobal = {
-    //   stopFocus: true
-    // }
-    // if (window['focus']) {
+    // document.addEventListener('touchstart',() => {
     //
-    //   if (!window['PhaserGlobal'] || (window['PhaserGlobal'] && !window['PhaserGlobal'].stopFocus)){
-    //
-    //     window.focus();
-    //   }
-    // }
+    //   console.log('test');
+    //   window.focus();
+    // });
 
-    document.addEventListener('touchstart',() => {
 
-      //console.log('test');
+
+    document.addEventListener('webkitendfullscreen', () => {
+
+      consol.log('Focus');
       window.focus();
     });
+
     // window.addEventListener('load', function () {
     // window.focus();
     // document.body.addEventListener('click',function(e) {

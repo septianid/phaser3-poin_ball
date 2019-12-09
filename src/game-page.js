@@ -17,7 +17,7 @@ var collideBall;
 //var startTime;
 var tempDataID;
 var tempSession;
-var lastHighScore;
+//var lastHighScore;
 
 var isCollide;
 
@@ -88,14 +88,17 @@ export class GamePlay extends Phaser.Scene {
     // }
     isCollide = false;
 
-    this.game.events.on('hidden',function(){
-      console.log('hidden');
-    },this);
+    this.finalScoreText = '';
+    this.userHighScore = '';
 
-    this.game.events.on('hidden',function(){
-      console.log('Visible cok')
-        this.sound.play('music_menu');
-    },this);
+    // this.game.events.on('hidden',function(){
+    //   console.log('hidden');
+    // },this);
+
+    // this.game.events.on('hidden',function(){
+    //   console.log('Visible cok')
+    //     this.sound.resume('music_menu');
+    // },this);
 
 
     popBall = this.sound.add('pop-ball');
@@ -104,16 +107,17 @@ export class GamePlay extends Phaser.Scene {
     this.score = 0;
 
     background_game = this.add.sprite(360, 640, 'game_background');
-    background_game.scaleX = 0.8;
-    background_game.scaleY = 0.8;
+    background_game.scaleX = 0.9;
+    background_game.scaleY = 0.9;
     background_game.setOrigin(0.5, 0.5);
 
-    scoreSign = this.add.sprite(480, 50, 'score').setScale(.8);
-    this.scoreText = this.add.text(580, 30, '0', {
+    scoreSign = this.add.sprite(520, 50, 'score').setScale(.8);
+    this.scoreText = this.add.text(660, 55, '0', {
       font: 'bold 42px Arial',
       fill: 'white',
-      align: 'right'
+      align: 'right',
     });
+    this.scoreText.setOrigin(0.5, 0.5);
     // scoreSign.visible = false;
     // this.scoreText.visible = false;
 
@@ -255,17 +259,17 @@ export class GamePlay extends Phaser.Scene {
       // console.log(this.arcTweens[i].timeScale);
     }
 
-    if (this.score >= 75){
+    if (this.score >= 74){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.35, 0.48);
       // console.log(this.arcTweens[i].timeScale);
     }
 
-    if(this.score >= 150){
+    if(this.score >= 148){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.55, 0.68);
       // console.log(this.arcTweens[i].timeScale);
     }
 
-    if(this.score >= 250){
+    if(this.score >= 248){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.72, 0.85);
       // console.log(this.arcTweens[i].timeScale);
     }
@@ -310,8 +314,8 @@ export class GamePlay extends Phaser.Scene {
           this.checkCollision(Phaser.Math.Wrap(this.bottomCircle + 1, 0, gameOptions.numCircles));
           if(isCollide === true){
 
-            console.log('test');
-            console.log(tempDataID);
+            //console.log('test');
+            //console.log(tempDataID);
             let endTime = new Date();
             this.postDataOnFinal(endTime, tempSession);
             this.showDialogBox();
@@ -323,6 +327,8 @@ export class GamePlay extends Phaser.Scene {
 
           // determine the amount of pixels to scroll to make top circle move down to the bottom of the canvas
           let yScroll = this.game.config.height - this.circles[targetIndex].radius - gameOptions.bottomDistance - this.circles[targetIndex].y
+
+          //background_game.tilePositionY += yScroll;
 
           // add a tween to all stuffGroup children to move them down by yScroll pixels
           this.tweens.add({
@@ -369,7 +375,7 @@ export class GamePlay extends Phaser.Scene {
 
     // if the difference between the distance and the radius is less than ball radius,
     // this means the ball could collide with an arc and we have to investigate
-    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 4) {
+    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 7) {
 
       // determine the angle between the ball and the circle
       let angle = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.circles[i].x, this.circles[i].y, this.ball.x, this.ball.y));
@@ -414,7 +420,6 @@ export class GamePlay extends Phaser.Scene {
             callbackScope: this,
             callback: function() {
               //this.scene.pause("PlayGame")
-
             }
           });
         }
@@ -433,7 +438,6 @@ export class GamePlay extends Phaser.Scene {
     //retryButton.setOrigin(0.5, 0.5);
     exitButton.setOrigin(0.5, 0.5);
     //retryButton.setInteractive();
-    exitButton.setInteractive();
     this.scoreText.visible = false;
     scoreSign.visible = false;
 
@@ -444,16 +448,17 @@ export class GamePlay extends Phaser.Scene {
     });
     this.finalScoreText.setOrigin(0.5, 0.5);
 
-
-    //retryButton.on('pointerdown', () => this.retryGame());
     exitButton.on('pointerdown', () => this.exitGame());
 
   }
 
-  // retryGame(){
-  //
-  //   this.scene.start("PlayGame");
-  // }
+  destroyDialogBox(){
+
+    endPanel.destroy();
+    exitButton.destroy();
+    this.finalScoreText.text = ''
+    this.userHighScore.text = ''
+  }
 
   exitGame(){
 
@@ -490,8 +495,8 @@ export class GamePlay extends Phaser.Scene {
 
   postDataOnFinal(end, userSession){
 
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
     fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
-    //fetch("https://1f584819.ngrok.io/api/v1.0/leaderboard/score",{
 
       method:"PUT",
       headers: {
@@ -509,7 +514,16 @@ export class GamePlay extends Phaser.Scene {
     }).then(response => response.json()).then(res => {
 
       //console.log(res.result.user_highscore);
-      if(res.result.user_highscore !== undefined){
+      if(res.result.user_highscore === undefined){
+
+        this.userHighScore = this.add.text(360, 700, '', {
+          font: 'bold 62px Arial',
+          fill: 'white',
+          align: 'center'
+        });
+        //exitButton.setInteractive();
+      }
+      else if(res.result.user_highscore !== undefined){
 
         this.userHighScore = this.add.text(360, 700, ''+res.result.user_highscore, {
           font: 'bold 62px Arial',
@@ -517,17 +531,11 @@ export class GamePlay extends Phaser.Scene {
           align: 'center'
         });
         this.userHighScore.setOrigin(0.5, 0.5);
-      }
-      else if(res.result.user_highscore === undefined){
-
-        this.userHighScore = this.add.text(360, 700, '', {
-          font: 'bold 62px Arial',
-          fill: 'white',
-          align: 'center'
-        });
-        this.userHighScore.setOrigin(0.5, 0.5);
+        exitButton.setInteractive();
       }
 
+      this.userHighScore.setOrigin(0.5, 0.5);
+      this.userHighScore.setDepth(1);
 
     }).catch(error => {
 

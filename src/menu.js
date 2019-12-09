@@ -20,6 +20,7 @@ var clickSFX;
 var closeSFX;
 var bgSound;
 
+var errorPanel;
 var detailPanel;
 var leaderboardPanel;
 var hintPanel;
@@ -62,6 +63,8 @@ export class Mainmenu extends Phaser.Scene {
 
   preload(){
     bgSound = this.sound.add('music_menu');
+
+
   }
 
   create(){
@@ -72,9 +75,26 @@ export class Mainmenu extends Phaser.Scene {
     bgSound.play();
     bgSound.loop = true;
 
+    // document.addEventListener('focus', function(){
+    //   console.log('focus');
+    //   bgSound.resume();
+    // }, false);
+
+    this.game.events.on('hidden',function(){
+      //console.log('Hidden');
+      bgSound.pause();
+    },this);
+
+    this.game.events.on('visible', function(){
+
+      //console.log('Visible');
+      bgSound.resume();
+    })
+
+
     background_menu = this.add.sprite(360, 640, 'menu-background');
-    background_menu.scaleX = 0.68;
-    background_menu.scaleY = 0.68;
+    background_menu.scaleX = 0.34;
+    background_menu.scaleY = 0.34;
     background_menu.setOrigin(0.5, 0.5);
 
     title = this.add.sprite(360, 350, 'game-title').setScale(.7);
@@ -96,39 +116,26 @@ export class Mainmenu extends Phaser.Scene {
 
     musicButton = this.add.sprite(360, 1030, 'music_button on').setScale(.7);
     musicButton.setOrigin(0.5, 0.5);
-    musicButton.setInteractive();
+    //musicButton.setInteractive();
     musicButton.on('pointerdown', () => {
 
       //musicStatus = !musicStatus;
       this.toggleSound();
     });
 
-    tncButton = this.add.sprite(600, 1180, 'tnc_button').setScale(.7);
+    tncButton = this.add.sprite(620, 1200, 'tnc_button').setScale(.7);
     tncButton.setOrigin(0.5, 0.5);
     tncButton.on('pointerdown', () => this.showTnC());
 
     this.toggleSound();
-    // var PhaserGlobal = {
-    //   stopFocus: true
-    // }
-    // if (window['focus']) {
-    //
-    //   if (!window['PhaserGlobal'] || (window['PhaserGlobal'] && !window['PhaserGlobal'].stopFocus)){
-    //
-    //     window.focus();
-    //   }
-    // }
+    
 
-    document.addEventListener('blur', function(){
-      console.log('blur');
-      bgSound.pause();
-    }, false);
+    // document.addEventListener('blur', function(){
+    //   console.log('blur');
+    //   bgSound.pause();
+    // }, false);
 
-    document.addEventListener('focus', function(){
-      console.log('focus');
-      if(musicStatus)
-      bgSound.resume();
-    }, false);
+
   }
 
   update(){
@@ -170,6 +177,7 @@ export class Mainmenu extends Phaser.Scene {
 
     window.open("linipoin://tabs/home");
     //ttes.writeHead(302, { Location: 'linipoin://tabs/home' });
+
   }
 
   enableMainButton(){
@@ -177,7 +185,8 @@ export class Mainmenu extends Phaser.Scene {
     playButton.setInteractive();
     leaderButton.setInteractive();
     hintButton.setInteractive();
-    tncButton.setInteractive()
+    tncButton.setInteractive();
+    musicButton.setInteractive();
   }
 
   disableMainButton(){
@@ -186,6 +195,7 @@ export class Mainmenu extends Phaser.Scene {
     leaderButton.disableInteractive();
     hintButton.disableInteractive();
     tncButton.disableInteractive();
+    musicButton.disableInteractive();
   }
 
   startGame(){
@@ -281,54 +291,78 @@ export class Mainmenu extends Phaser.Scene {
   showTnC(){
 
     content = [
-      "1. Periode event LINIGAMES berlangsung pada tanggal 10 Desember 2019 sampai 02 Januari 2020",
-      "2. Kesempatan bermain hanya diberikan gratis sebanyak 3 (tiga) kali per pengguna per hari selama periode event",
-      "3. Jika ingin bermain lebih dari 3 (tiga) kali per hari, maka dikenakan pemotongan sebanyak 10 poin per 1 (satu) kali main",
-      "4. Pemenang akan diambil berdasarkan ketentuan sebagai berikut.",
-      "   1. 5 orang dengan skor tertinggi selama periode event",
-      "   2. 5 orang dengan skor akumulasi tertinggi selama periode event",
-      "5. Pengundian dan pengumuman pemenang akan diadakan pada tanggal 02 Januari 2020",
-      "6. LINIPOIN berhak membatalkan seluruh hadiah jika terbukti adanya indikasi kecurangan dalam bentuk apapun",
-      "7. Jika ada pertanyaan lebih lanjut silahkan ajukan ke ‘Pusat Bantuan’, DM Via Instagram @linipoin.id, atau email ke info@linipoin.com",
+      "1. Periode event LINIGAMES ",
+      "    berlangsung pada tanggal 10",
+      "    Desember 2019 sampai 31 ",
+      "    Desember 2019",
+      "2. Kesempatan bermain hanya ",
+      "    diberikan gratis sebanyak",
+      "    3 (tiga) kali per pengguna",
+      "    per hari selama periode event",
+      "3. Jika ingin bermain lebih dari 3",
+      "    (tiga) kali per hari, maka",
+      "    dikenakan pemotongan sebanyak",
+      "    10 poin per 1 (satu) kali main",
+      "4. Pemenang akan diambil",
+      "    berdasarkan ketentuan sebagai",
+      "    berikut.",
+      "     1. 5 orang dengan skor tertinggi",
+      "         selama periode event",
+      "     2. 5 orang dengan skor",
+      "         akumulasi tertinggi selama",
+      "         periode event",
+      "5. Pengundian dan pengumuman",
+      "    pemenang akan diadakan pada",
+      "    tanggal 02 Januari 2020",
+      "6. LINIPOIN berhak membatalkan",
+      "    seluruh hadiah jika terbukti",
+      "    adanya indikasi kecurangan",
+      "    dalam bentuk apapun",
+      "7. Jika ada pertanyaan lebih lanjut",
+      "    silahkan ajukan ke ‘Pusat",
+      "    Bantuan’, DM Via Instagram",
+      "    @linipoin.id, atau email",
+      "    ke info@linipoin.com",
       "8. Selamat bermain LINIGAME",
     ];
 
     clickSFX.play();
-    tncPanel = this.add.sprite(360, 640, 'tnc_panel').setScale(.4);
+    tncPanel = this.add.sprite(360, 640, 'tnc_panel').setScale(0.35);
     tncPanel.setOrigin(0.5, 0.5);
 
     graphics = this.make.graphics();
 
     graphics.fillStyle(0xffffff);
-    graphics.fillRect(110, 400, 500, 610);
+    graphics.fillRect(130, 420, 500, 550);
 
     mask = new Phaser.Display.Masks.GeometryMask(this, graphics);
-    text = this.add.text(110, 400, content, {
-      font: '30px Arial',
+    text = this.add.text(140, 420, content, {
+      font: '26px Arial',
       color: '#ffffff',
-      align: 'justify',
+      align: 'left',
       wordWrap: {
         width: 500 } }).setOrigin(0);
     text.setMask(mask);
 
-    zone = this.add.zone(110, 400, 500, 610).setOrigin(0).setInteractive();
+    zone = this.add.zone(130, 420, 600, 750).setOrigin(0).setInteractive();
 
     zone.on('pointermove', function (pointer) {
 
-        if (pointer.isDown)
-        {
-            text.y += (pointer.velocity.y / 10);
+        if (pointer.isDown){
 
-            text.y = Phaser.Math.Clamp(text.y, -200, 450);
+          text.y += (pointer.velocity.y / 6);
+
+          text.y = Phaser.Math.Clamp(text.y, -130, 420);
         }
+
 
     });
 
-    closeButton = this.add.sprite(640, 150, 'close_button').setScale(.7);
+    closeButton = this.add.sprite(600, 200, 'close_button').setScale(.7);
     closeButton.setOrigin(0.5, 0.5);
     closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyTnCPanel());
-    tncButton.disableInteractive();
+    //tncButton.disableInteractive();
     this.disableMainButton();
   }
 
@@ -351,10 +385,12 @@ export class Mainmenu extends Phaser.Scene {
 
     clickSFX.play();
 
-    hintPanel = this.add.sprite(360, 600, 'hint_panel').setScale(.7);
+    hintPanel = this.add.sprite(360, 640, 'hint_panel');
+    hintPanel.scaleX = 0.35;
+    hintPanel.scaleY = 0.35;
     hintPanel.setOrigin(0.5, 0.5);
 
-    closeButton = this.add.sprite(620, 140, 'close_button').setScale(.6);
+    closeButton = this.add.sprite(610, 200, 'close_button').setScale(.7);
     closeButton.setOrigin(0.5, 0.5);
     closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyHintPanel());
@@ -371,16 +407,16 @@ export class Mainmenu extends Phaser.Scene {
 
   showLeaderboard(){
 
-    var startPosId1 = 395;
-    var startPosScore1 = 392;
-    var startPosId2 = 711;
-    var startPosScore2 = 710;
+    var startPosId1 = 415;
+    var startPosScore1 = 412;
+    var startPosId2 = 729;
+    var startPosScore2 = 726;
 
     clickSFX.play();
-    leaderboardPanel = this.add.sprite(360, 600, 'leaderboard_panel').setScale(.7);
+    leaderboardPanel = this.add.sprite(360, 620, 'leaderboard_panel').setScale(.7);
     leaderboardPanel.setOrigin(0.5, 0.5);
 
-    detailButton = this.add.sprite(580, 250, 'detail_button').setScale(.5);
+    detailButton = this.add.sprite(595, 260, 'detail_button').setScale(.5);
     detailButton.setOrigin(0.5, 0.5);
     detailButton.setInteractive();
     detailButton.on('pointerdown', () => {
@@ -389,7 +425,7 @@ export class Mainmenu extends Phaser.Scene {
       this.toggleDetail();
     });
 
-    closeButton = this.add.sprite(600, 150, 'close_button').setScale(.7);
+    closeButton = this.add.sprite(600, 160, 'close_button').setScale(.7);
     closeButton.setOrigin(0.5, 0.5);
     //closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyLeaderBoardPanel());
@@ -404,21 +440,30 @@ export class Mainmenu extends Phaser.Scene {
     closeSFX.play();
     for(let i = 0; i < 5; i++){
 
-      if(idTextArr[i] === undefined || scoreTextArr[i] === undefined){
+      if(((idTextArr[i] === undefined) || (idTextArr[i] === null)) || scoreTextArr[i] === undefined){
 
       }
 
-      if(idCumTextArr[i] === undefined || scoreCumTextArr[i] === undefined){
+      else {
+
+        idTextArr[i].destroy();
+        scoreTextArr[i].destroy();
+      }
+
+    }
+
+    for(let i = 0; i < 5; i++){
+
+      if(((idCumTextArr[i] === undefined) || (idCumTextArr[i] === null)) || scoreCumTextArr[i] === undefined){
 
 
       }
       else {
 
-        idTextArr[i].destroy();
-        scoreTextArr[i].destroy();
         idCumTextArr[i].destroy();
         scoreCumTextArr[i].destroy();
       }
+
     }
 
     leaderboardPanel.destroy();
@@ -433,6 +478,7 @@ export class Mainmenu extends Phaser.Scene {
 
       detailPanel = this.add.sprite(365, 470, 'detail_panel').setScale(.6);
       detailPanel.setOrigin(0.5, 0.5);
+      detailPanel.setDepth(1);
       closeButton.disableInteractive();
     }
     else {
@@ -484,6 +530,7 @@ export class Mainmenu extends Phaser.Scene {
 
   getUserData(){
 
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
     fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
@@ -501,13 +548,10 @@ export class Mainmenu extends Phaser.Scene {
         this.enableMainButton();
       }
 
-      else if(data.response == 400){
+      else {
 
-        console.log(data.result.message);
-      }
-
-      else if(data.response == 422) {
-
+        errorPanel = this.add.sprite(420, 640, 'error_panel').setScale(.3);
+        errorPanel.setOrigin(0.5, 0.5);
         console.log(data.result.message);
       }
 
@@ -519,8 +563,8 @@ export class Mainmenu extends Phaser.Scene {
 
   postDataOnStart(start, userSession){
 
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
     fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
-    //fetch("https://1f584819.ngrok.io/api/v1.0/leaderboard/",{
 
       method:"POST",
       headers: {
@@ -538,12 +582,12 @@ export class Mainmenu extends Phaser.Scene {
     }).then(response => response.json()).then(res => {
 
       tempID = res.result.id;
-      console.log(tempID);
-      if(res.result.id != 0){
+      //console.log(tempID);
+      if(res.result.id >= 0){
 
         this.scene.start("PlayGame", {
           session: myParam,
-          id: tempID
+          id: tempID,
         });
       }
 
@@ -555,8 +599,8 @@ export class Mainmenu extends Phaser.Scene {
 
   getLeaderboardData(posId, posScore){
 
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=user_highscore&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
-    //fetch("http://192.168.0.107:7646/api/v1.0/leaderboard?pagination=false&order_by=score&user_id=11&order_type=desc&lang=en&limit=10&include_user=true", {
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=user_highscore&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
+    fetch("https://linipoin-dev/api/v1.0/leaderboard?pagination=false&order_by=score&user_id=11&order_type=desc&lang=en&limit=10&include_user=true", {
 
       method: "GET",
     }).then(response => {
@@ -565,7 +609,6 @@ export class Mainmenu extends Phaser.Scene {
 
     }).then(data => {
 
-      console.log(data.result.rows.length);
       if(data.result.rows.length >= 0){
 
         closeButton.setInteractive();
@@ -585,7 +628,7 @@ export class Mainmenu extends Phaser.Scene {
         }
 
         let shortname = '';
-        let name = data.result.rows[i].user.name;
+        let name = data.result.rows[i].user !== null ? data.result.rows[i].user.name : 'No Name';
 
         if(name.length > 25){
           shortname = name.substring(0, 25)+"...";
@@ -616,6 +659,7 @@ export class Mainmenu extends Phaser.Scene {
 
   getCumulativeLeaderboardData(posId2, posScore2){
 
+     //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
      fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
 
        method:"GET"
@@ -638,7 +682,8 @@ export class Mainmenu extends Phaser.Scene {
         }
 
         let shortname = '';
-        let name = data.result.rows[i].user.name;
+        let name = data.result.rows[i].user !== null ? data.result.rows[i].user.name : 'No Name';
+
         if(name.length > 25){
           shortname = name.substring(0, 25)+"...";
         }

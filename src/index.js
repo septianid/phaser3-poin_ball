@@ -7,6 +7,8 @@ import {Mainmenu} from './menu.js';
 
 window.onload = function(){
 
+  console.log(this.device.os)
+
   const config = {
     // width: "100%",
     // height: "100%",

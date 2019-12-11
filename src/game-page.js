@@ -111,8 +111,8 @@ export class GamePlay extends Phaser.Scene {
     background_game.scaleY = 0.9;
     background_game.setOrigin(0.5, 0.5);
 
-    scoreSign = this.add.sprite(520, 50, 'score').setScale(.8);
-    this.scoreText = this.add.text(660, 55, '0', {
+    scoreSign = this.add.sprite(520, 77, 'score').setScale(.8);
+    this.scoreText = this.add.text(660, 82, '0', {
       font: 'bold 42px Arial',
       fill: 'white',
       align: 'right',
@@ -495,8 +495,8 @@ export class GamePlay extends Phaser.Scene {
 
   postDataOnFinal(end, userSession){
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
 
       method:"PUT",
       headers: {

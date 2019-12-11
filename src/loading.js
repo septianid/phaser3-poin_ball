@@ -156,7 +156,6 @@ export class Loading extends Phaser.Scene{
 
       tapSign.anims.play('blink', true);
 
-
       this.input.on("pointerdown", () => {
 
         this.scene.start("Menu");

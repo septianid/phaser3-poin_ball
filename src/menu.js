@@ -614,8 +614,8 @@ export class Mainmenu extends Phaser.Scene {
 
   postDataOnStart(start, userSession){
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
 
       method:"POST",
       headers: {
@@ -650,8 +650,8 @@ export class Mainmenu extends Phaser.Scene {
 
   getUserData(){
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
 
@@ -686,8 +686,8 @@ export class Mainmenu extends Phaser.Scene {
 
   getUserRank(){
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam, {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam, {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam, {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam, {
 
       method:"GET",
     }).then(response => {
@@ -727,8 +727,8 @@ export class Mainmenu extends Phaser.Scene {
 
   getLeaderboardData(posId, posScore){
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=user_highscore&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=user_highscore&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=user_highscore&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=user_highscore&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
 
       method: "GET",
     }).then(response => {
@@ -787,8 +787,8 @@ export class Mainmenu extends Phaser.Scene {
 
   getCumulativeLeaderboardData(posId2, posScore2){
 
-     //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
-     fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
+     fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
+     //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
 
        method:"GET"
      }).then(response => {

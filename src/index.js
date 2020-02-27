@@ -7,32 +7,84 @@ import {Mainmenu} from './menu.js';
 window.onload = function(){
 
   //console.log(this.device.os)
+  var config;
+  var game;
+  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-  const config = {
-    // width: "100%",
-    // height: "100%",
-    type: Phaser.CANVAS,
-    parent: 'game',
-    scale:{
-      mode: Phaser.Scale.FIT,
-      autoCenter: Phaser.Scale.CENTER_BOTH,
-      width: 720,
-      height: 1280,
-    },
-    // files: {
-    //   type: 'image',
-    //   key:'loading-background',
-    //   url: 'src/assets/background-loading.jpg'
-    // },
-    scene: [Loading, Mainmenu, GamePlay],
-    audio:{
-      disableWebAudio:true,
-    }
-  };
+      // Windows Phone must come first because its UA also contains "Android"
+  if (/windows phone/i.test(userAgent)) {
+    console.log("Windows Phone");
 
-  let game = new Phaser.Game(config);
+    config = {
+
+      type: Phaser.CANVAS,
+      parent: 'game',
+      scale:{
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 720,
+        height: 1280,
+      },
+      scene: [Loading, Mainmenu, GamePlay],
+      audio:{
+        disableWebAudio:true,
+      }
+    };
+
+    game = new Phaser.Game(config);
+  }
+
+  if (/android/i.test(userAgent)) {
+    console.log("Android");
+
+    config = {
+
+      type: Phaser.CANVAS,
+      parent: 'game',
+      scale:{
+        mode: Phaser.Scale.ENVELOP,
+        autoCenter: Phaser.Scale.NO_CENTER,
+        width: 720,
+        height: 1280,
+      },
+      scene: [Loading, Mainmenu, GamePlay],
+      audio:{
+        disableWebAudio:true,
+      }
+    };
+
+    game = new Phaser.Game(config);
+  }
+
+  // iOS detection from: http://stackoverflow.com/a/9039885/177710
+  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    console.log("iOS");
+
+    config = {
+
+      type: Phaser.CANVAS,
+      parent: 'game',
+      scale:{
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 720,
+        height: 1280,
+      },
+      scene: [Loading, Mainmenu, GamePlay],
+      audio:{
+        disableWebAudio:true,
+      }
+    };
+
+    game = new Phaser.Game(config);
+  }
+
+  return "unknown";
+
   window.focus();
 }
+
+
 
 
 //this.game.stage.disableVisibilityChange = true;

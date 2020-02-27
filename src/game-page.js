@@ -17,6 +17,7 @@ var collideBall;
 //var startTime;
 var tempDataID;
 var tempSession;
+var tempDataScore;
 //var lastHighScore;
 
 var isCollide;
@@ -44,13 +45,18 @@ var gameOptions = {
   speed: 1000,
 
   // possible arc colors
-  circleColors: [0xf7c144],
+  circleColors: [0x212f61],
 
   // arc length, in degrees
   arcLength: [10, 90],
 
   // amount of arcs on each circle
   arcsOnCircle: 3
+}
+
+window.onbeforeunload = () => {
+
+  return "Do you really want to leave our application?";
 }
 
 export class GamePlay extends Phaser.Scene {
@@ -63,6 +69,7 @@ export class GamePlay extends Phaser.Scene {
 
     tempSession = data.session;
     tempDataID = data.id;
+    tempDataScore = data.score;
   }
 
 
@@ -107,8 +114,8 @@ export class GamePlay extends Phaser.Scene {
     this.score = 0;
 
     background_game = this.add.sprite(360, 640, 'game_background');
-    background_game.scaleX = 0.9;
-    background_game.scaleY = 0.9;
+    background_game.scaleX = 0.68;
+    background_game.scaleY = 0.68;
     background_game.setOrigin(0.5, 0.5);
 
     scoreSign = this.add.sprite(520, 77, 'score').setScale(.8);
@@ -196,7 +203,7 @@ export class GamePlay extends Phaser.Scene {
     this.circles[i].clear();
 
     // set graphic line style choosing a random color
-    this.circles[i].lineStyle(8, 0xf7c144, 1);
+    this.circles[i].lineStyle(8, 0x212f61, 1);
 
     // define a random radius
     let radius = this.randomOption(gameOptions.circleRadiusRange);
@@ -259,17 +266,17 @@ export class GamePlay extends Phaser.Scene {
       // console.log(this.arcTweens[i].timeScale);
     }
 
-    if (this.score >= 74){
+    if (this.score >= 15){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.35, 0.48);
       // console.log(this.arcTweens[i].timeScale);
     }
 
-    if(this.score >= 148){
+    if(this.score >= 30){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.55, 0.68);
       // console.log(this.arcTweens[i].timeScale);
     }
 
-    if(this.score >= 248){
+    if(this.score >= 50){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.72, 0.85);
       // console.log(this.arcTweens[i].timeScale);
     }
@@ -354,7 +361,7 @@ export class GamePlay extends Phaser.Scene {
               // player can shoot again
               this.canShoot = true;
 
-              this.score += 5;
+              this.score += tempDataScore;
 
               scoreSign.visible = true;
               this.scoreText.visible = true;
@@ -375,7 +382,7 @@ export class GamePlay extends Phaser.Scene {
 
     // if the difference between the distance and the radius is less than ball radius,
     // this means the ball could collide with an arc and we have to investigate
-    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 7) {
+    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 11) {
 
       // determine the angle between the ball and the circle
       let angle = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.circles[i].x, this.circles[i].y, this.ball.x, this.ball.y));

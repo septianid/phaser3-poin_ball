@@ -28,6 +28,7 @@ export class Loading extends Phaser.Scene{
     this.load.image('leaderboard_panel', "./src/assets/leaderboard_panel.png");
     this.load.image('hint_panel', "./src/assets/instruction_panel.png");
     this.load.image('game-title', "./src/assets/title.png");
+    this.load.image('linipoin-banner', "./src/assets/linipoin_banner.png");
     this.load.image('close_button', "./src/assets/close_button.png");
     this.load.image('detail_button', "./src/assets/detail_button.png");
     this.load.image('detail_panel', "./src/assets/detail_panel.png");
@@ -47,8 +48,8 @@ export class Loading extends Phaser.Scene{
 
     this.load.image('poin-warn-panel', "./src/assets/no_poin_panel.png");
     this.load.image('limit-warn-panel', "./src/assets/play_limit_panel.png");
-
-    this.load.image('game_background', "./src/assets/background-game 2.jpg");
+    this.load.image('email_verify', './src/assets/email_verify.png');
+    this.load.image('game_background', "./src/assets/background-game 2.png");
     this.load.image('ball', "./src/assets/ball.png");
     this.load.image('gameover_panel', "./src/assets/end_panel.png");
     this.load.image('exit_button', "./src/assets/exit_button.png");
@@ -79,11 +80,6 @@ export class Loading extends Phaser.Scene{
     progressBox = this.add.graphics();
     progressBox.fillStyle(0xffffff, 0.8);
     progressBox.fillRect(200, 640, 320, 50);
-
-    // background_loading = this.add.image(360, 640, 'loading-background');
-    // background_loading.scaleX = 0.68;
-    // background_loading.scaleY = 0.68;
-    // background_loading.setOrigin(0.5, 0.5);
 
     var width = this.cameras.main.width;
     var height = this.cameras.main.height;
@@ -139,38 +135,8 @@ export class Loading extends Phaser.Scene{
       progressBar.fillStyle(0xffffff, 1)
       progressBar.fillRect(210, 650, 300, 30).setDepth(1);
 
-      title_loading = this.add.sprite(360, 350, 'game-title').setScale(.7);
+      title_loading = this.add.sprite(370, 350, 'game-title').setScale(.7);
       title_loading.setOrigin(0.5, 0.5);
-
-      tapSign = this.add.sprite(360, 900, 'tap_sign').setScale(.6);
-
-      this.anims.create({
-        key: 'blink',
-        frames: this.anims.generateFrameNames('tap_sign', {
-          start: 0,
-          end: 1
-        }),
-        frameRate: 10,
-        repeat: -1
-      });
-
-      tapSign.anims.play('blink', true);
-
-      this.input.on("pointerdown", () => {
-
-        this.scene.start("Menu");
-        // var PhaserGlobal = {
-        //   stopFocus: true
-        // }
-        // if (window['focus']) {
-        //
-        //   if (!window['PhaserGlobal'] || (window['PhaserGlobal'] && !window['PhaserGlobal'].stopFocus)){
-        //
-        //     window.focus();
-        //     console.log("Focus");
-        //   }
-        // }
-      })
 
       this.sound.on('decoded',  ()=> {
         console.log('AUDIO BERHASIL DI LOAD CUX');
@@ -180,31 +146,30 @@ export class Loading extends Phaser.Scene{
 
   create(){
 
-    // document.addEventListener('touchstart',() => {
-    //
-    //   console.log('test');
-    //   window.focus();
-    // });
+    tapSign = this.add.sprite(360, 900, 'tap_sign').setScale(.6);
 
+    this.anims.create({
+      key: 'blink',
+      frames: this.anims.generateFrameNumbers('tap_sign', {
+        start: 0,
+        end: 1
+      }),
+      frameRate: 10,
+      repeat: -1
+    });
 
+    tapSign.anims.play('blink', true);
 
-    // document.addEventListener('webkitendfullscreen', () => {
-    //
-    //   consol.log('Focus');
-    //   window.focus();
-    // });
+    this.input.on("pointerdown", () => {
 
+      this.scene.start("Menu");
+    })
     // window.addEventListener('load', function () {
     // window.focus();
     // document.body.addEventListener('click',function(e) {
     //     window.focus();
     //   },false);
     // });
-
-    // background_loading = this.add.image(360, 640, 'loading-background');
-    // background_loading.scaleX = 0.8;
-    // background_loading.scaleY = 0.8;
-    // background_loading.setOrigin(0.5, 0.5);
   }
 
 }

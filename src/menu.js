@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 var background_menu;
 var title;
+var banner;
 
 var playButton;
 var hintButton;
@@ -37,8 +38,11 @@ var lifeRemaining = [];
 var playLimitText;
 var userRankText;
 var userCumRankText;
+var userHighScoreText;
+var userCumHighScoreText;
 
 var tempLimit;
+var tempScore;
 var playerStatus;
 var tempUserPoin;
 var tempID;
@@ -94,30 +98,32 @@ export class Mainmenu extends Phaser.Scene {
       bgSound.resume();
     })
 
-
     background_menu = this.add.sprite(360, 640, 'menu-background');
-    background_menu.scaleX = 0.34;
-    background_menu.scaleY = 0.34;
+    background_menu.scaleX = 0.7;
+    background_menu.scaleY = 0.7;
     background_menu.setOrigin(0.5, 0.5);
 
-    title = this.add.sprite(360, 350, 'game-title').setScale(.7);
+    title = this.add.sprite(370, 350, 'game-title').setScale(.7);
     title.setOrigin(0.5, 0.5);
+
+    banner = this.add.sprite(360, 100, 'linipoin-banner').setScale(.5);
+    banner.setOrigin(0.5, 0.5);
 
     this.getUserData();
 
-    playButton = this.add.sprite(357, 650, 'play_button').setScale(.6);
+    playButton = this.add.sprite(360, 580, 'play_button').setScale(.6);
     playButton.setOrigin(0.5, 0.5);
     playButton.on('pointerdown', () => this.startGame());
 
-    hintButton = this.add.image(360, 830, 'hint_button').setScale(.7);
+    hintButton = this.add.image(240, 830, 'hint_button').setScale(.7);
     hintButton.setOrigin(0.5, 0.5);
     hintButton.on('pointerdown', () => this.showHint());
 
-    leaderButton = this.add.sprite(360, 930, 'leaderboard_button').setScale(.7);
+    leaderButton = this.add.sprite(238, 920, 'leaderboard_button').setScale(.7);
     leaderButton.setOrigin(0.5, 0.5);
     leaderButton.on('pointerdown', () => this.showLeaderboard());
 
-    musicButton = this.add.sprite(360, 1030, 'music_button on').setScale(.7);
+    musicButton = this.add.sprite(477, 920, 'music_button on').setScale(.7);
     musicButton.setOrigin(0.5, 0.5);
     //musicButton.setInteractive();
     musicButton.on('pointerdown', () => {
@@ -126,7 +132,7 @@ export class Mainmenu extends Phaser.Scene {
       this.toggleSound();
     });
 
-    tncButton = this.add.sprite(620, 1200, 'tnc_button').setScale(.7);
+    tncButton = this.add.sprite(480, 835, 'tnc_button').setScale(.7);
     tncButton.setOrigin(0.5, 0.5);
     tncButton.on('pointerdown', () => this.showTnC());
 
@@ -209,108 +215,106 @@ export class Mainmenu extends Phaser.Scene {
 
     if(tempLimit == 0 && playerStatus == false){
 
-      if(userPlayTime >= 10 && userPlayTime < 20){
+      // if(userPlayTime >= 10 && userPlayTime < 20){
+      //
+      //   if (tempUserPoin < 100) {
+      //
+      //     noPoinWarnPanel = this.add.sprite(360, 640, 'poin-warn-panel').setScale(.7);
+      //     noPoinWarnPanel.setOrigin(0.5, 0.5);
+      //     okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
+      //     okButton.setOrigin(0.5, 0.5);
+      //     okButton.setInteractive();
+      //     okButton.on('pointerdown', () => {
+      //
+      //       closeSFX.play();
+      //       noPoinWarnPanel.destroy();
+      //       okButton.destroy();
+      //       this.enableMainButton();
+      //     });
+      //     console.log("Poin tidak mencukupi");
+      //   }
+      //   else {
+      //
+      //     confirmPanel = this.add.sprite(360, 640, 'confirm-panel-2').setScale(.7);
+      //     confirmPanel.setOrigin(0.5, 0.5);
+      //
+      //     agreeButton = this.add.sprite(230, 830, 'ok_button').setScale(.7);
+      //     agreeButton.setOrigin(0.5, 0.5);
+      //     agreeButton.setInteractive();
+      //     agreeButton.on('pointerdown', () => this.agreeToPay());
+      //
+      //     disagreeButton = this.add.sprite(490, 835, 'no_button').setScale(.7);
+      //     disagreeButton.setOrigin(0.5, 0.5);
+      //     disagreeButton.setInteractive();
+      //     disagreeButton.on('pointerdown', () => this.disagreeToPay());
+      //   }
+      // }
 
-        if (tempUserPoin < 100) {
+      // else if(userPlayTime >= 20){
+      //
+      //   if (tempUserPoin < 200) {
+      //
+      //     noPoinWarnPanel = this.add.sprite(360, 640, 'poin-warn-panel').setScale(.7);
+      //     noPoinWarnPanel.setOrigin(0.5, 0.5);
+      //     okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
+      //     okButton.setOrigin(0.5, 0.5);
+      //     okButton.setInteractive();
+      //     okButton.on('pointerdown', () => {
+      //
+      //       closeSFX.play();
+      //       noPoinWarnPanel.destroy();
+      //       okButton.destroy();
+      //       this.enableMainButton();
+      //     });
+      //     console.log("Poin tidak mencukupi");
+      //   }
+      //   else {
+      //
+      //     confirmPanel = this.add.sprite(360, 640, 'confirm-panel-3').setScale(.7);
+      //     confirmPanel.setOrigin(0.5, 0.5);
+      //
+      //     agreeButton = this.add.sprite(230, 830, 'ok_button').setScale(.7);
+      //     agreeButton.setOrigin(0.5, 0.5);
+      //     agreeButton.setInteractive();
+      //     agreeButton.on('pointerdown', () => this.agreeToPay());
+      //
+      //     disagreeButton = this.add.sprite(490, 835, 'no_button').setScale(.7);
+      //     disagreeButton.setOrigin(0.5, 0.5);
+      //     disagreeButton.setInteractive();
+      //     disagreeButton.on('pointerdown', () => this.disagreeToPay());
+      //   }
+      // }
 
-          noPoinWarnPanel = this.add.sprite(360, 640, 'poin-warn-panel').setScale(.7);
-          noPoinWarnPanel.setOrigin(0.5, 0.5);
-          okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
-          okButton.setOrigin(0.5, 0.5);
-          okButton.setInteractive();
-          okButton.on('pointerdown', () => {
+      if (tempUserPoin < 10) {
 
-            closeSFX.play();
-            noPoinWarnPanel.destroy();
-            okButton.destroy();
-            this.enableMainButton();
-          });
-          console.log("Poin tidak mencukupi");
-        }
-        else {
+        noPoinWarnPanel = this.add.sprite(360, 690, 'poin-warn-panel').setScale(.7);
+        noPoinWarnPanel.setOrigin(0.5, 0.5);
+        okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
+        okButton.setOrigin(0.5, 0.5);
+        okButton.setInteractive();
+        okButton.on('pointerdown', () => {
 
-          confirmPanel = this.add.sprite(360, 640, 'confirm-panel-2').setScale(.7);
-          confirmPanel.setOrigin(0.5, 0.5);
-
-          agreeButton = this.add.sprite(230, 830, 'ok_button').setScale(.7);
-          agreeButton.setOrigin(0.5, 0.5);
-          agreeButton.setInteractive();
-          agreeButton.on('pointerdown', () => this.agreeToPay());
-
-          disagreeButton = this.add.sprite(490, 835, 'no_button').setScale(.7);
-          disagreeButton.setOrigin(0.5, 0.5);
-          disagreeButton.setInteractive();
-          disagreeButton.on('pointerdown', () => this.disagreeToPay());
-        }
+          closeSFX.play();
+          noPoinWarnPanel.destroy();
+          okButton.destroy();
+          this.enableMainButton();
+        });
+        //console.log("Poin tidak mencukupi");
       }
+      else {
 
-      else if(userPlayTime >= 20){
+        confirmPanel = this.add.sprite(360, 690, 'confirm-panel-1').setScale(.7);
+        confirmPanel.setOrigin(0.5, 0.5);
 
-        if (tempUserPoin < 200) {
+        agreeButton = this.add.sprite(230, 870, 'ok_button').setScale(.7);
+        agreeButton.setOrigin(0.5, 0.5);
+        agreeButton.setInteractive();
+        agreeButton.on('pointerdown', () => this.agreeToPay());
 
-          noPoinWarnPanel = this.add.sprite(360, 640, 'poin-warn-panel').setScale(.7);
-          noPoinWarnPanel.setOrigin(0.5, 0.5);
-          okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
-          okButton.setOrigin(0.5, 0.5);
-          okButton.setInteractive();
-          okButton.on('pointerdown', () => {
-
-            closeSFX.play();
-            noPoinWarnPanel.destroy();
-            okButton.destroy();
-            this.enableMainButton();
-          });
-          console.log("Poin tidak mencukupi");
-        }
-        else {
-
-          confirmPanel = this.add.sprite(360, 640, 'confirm-panel-3').setScale(.7);
-          confirmPanel.setOrigin(0.5, 0.5);
-
-          agreeButton = this.add.sprite(230, 830, 'ok_button').setScale(.7);
-          agreeButton.setOrigin(0.5, 0.5);
-          agreeButton.setInteractive();
-          agreeButton.on('pointerdown', () => this.agreeToPay());
-
-          disagreeButton = this.add.sprite(490, 835, 'no_button').setScale(.7);
-          disagreeButton.setOrigin(0.5, 0.5);
-          disagreeButton.setInteractive();
-          disagreeButton.on('pointerdown', () => this.disagreeToPay());
-        }
-      }
-      else{
-
-        if (tempUserPoin < 10) {
-
-          noPoinWarnPanel = this.add.sprite(360, 640, 'poin-warn-panel').setScale(.7);
-          noPoinWarnPanel.setOrigin(0.5, 0.5);
-          okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
-          okButton.setOrigin(0.5, 0.5);
-          okButton.setInteractive();
-          okButton.on('pointerdown', () => {
-
-            closeSFX.play();
-            noPoinWarnPanel.destroy();
-            okButton.destroy();
-            this.enableMainButton();
-          });
-          console.log("Poin tidak mencukupi");
-        }
-        else {
-
-          confirmPanel = this.add.sprite(360, 640, 'confirm-panel-1').setScale(.7);
-          confirmPanel.setOrigin(0.5, 0.5);
-
-          agreeButton = this.add.sprite(230, 830, 'ok_button').setScale(.7);
-          agreeButton.setOrigin(0.5, 0.5);
-          agreeButton.setInteractive();
-          agreeButton.on('pointerdown', () => this.agreeToPay());
-
-          disagreeButton = this.add.sprite(490, 835, 'no_button').setScale(.7);
-          disagreeButton.setOrigin(0.5, 0.5);
-          disagreeButton.setInteractive();
-          disagreeButton.on('pointerdown', () => this.disagreeToPay());
-        }
+        disagreeButton = this.add.sprite(490, 870, 'no_button').setScale(.7);
+        disagreeButton.setOrigin(0.5, 0.5);
+        disagreeButton.setInteractive();
+        disagreeButton.on('pointerdown', () => this.disagreeToPay());
       }
 
 
@@ -329,7 +333,7 @@ export class Mainmenu extends Phaser.Scene {
         okButton.destroy();
         this.enableMainButton();
       });
-      console.log("Telah mencapai limit harian");
+      //console.log("Telah mencapai limit harian");
     }
     else {
 
@@ -366,58 +370,39 @@ export class Mainmenu extends Phaser.Scene {
   showTnC(){
 
     content = [
-      "1. Periode event LINIGAMES ",
-      "    berlangsung pada tanggal 10",
-      "    Desember 2019 sampai 31 ",
-      "    Desember 2019",
-      "2. Kesempatan bermain hanya ",
+      "1. Kesempatan bermain hanya ",
       "    diberikan gratis sebanyak",
       "    3 (tiga) kali per pengguna",
       "    per hari selama periode event",
-      "3. Jika pengguna bermain lebih dari :",
-      "     -  3 kali per hari, maka dikenakan",
-      "        pemotongan sebanyak",
-      "        10 poin dari LINIPOIN",
-      "     -  10 kali per hari, maka dikenakan",
-      "        pemotongan sebanyak",
-      "        100 poin dari LINIPOIN",
-      "     -  20 kali per hari, maka dikenakan",
-      "        pemotongan sebanyak",
-      "        200 poin dari LINIPOIN",
-      "4. Pemenang akan diambil",
-      "    berdasarkan ketentuan sebagai",
-      "    berikut.",
-      "     1. 5 orang dengan skor tertinggi",
-      "         selama periode event",
-      "     2. 5 orang dengan skor",
-      "         akumulasi tertinggi selama",
-      "         periode event",
-      "5. Pengundian dan pengumuman",
-      "    pemenang akan diadakan pada",
-      "    tanggal 03 Januari 2020",
-      "6. LINIPOIN berhak membatalkan",
-      "    seluruh hadiah jika terbukti",
+      "2. Jika pengguna bermain lebih dari :",
+      "    3 kali per hari, maka dikenakan",
+      "    pemotongan sebanyak 10 poin",
+      "    dari LINIPOIN",
+      "3. Poin yang didapatkan akan",
+      "    langsung masuk ke dalam",
+      "    LINIPOIN",
+      "4. LINIPOIN berhak membatalkan",
+      "    seluruh poin jika terbukti",
       "    adanya indikasi kecurangan",
       "    dalam bentuk apapun",
-      "7. Jika ada pertanyaan lebih lanjut",
+      "5. Jika ada pertanyaan lebih lanjut",
       "    silahkan ajukan ke ‘Pusat",
       "    Bantuan’, DM Via Instagram",
       "    @linipoin.id, atau email",
       "    ke info@linipoin.com",
-      "8. Selamat bermain LINIGAME",
     ];
 
     clickSFX.play();
-    tncPanel = this.add.sprite(360, 640, 'tnc_panel').setScale(0.35);
+    tncPanel = this.add.sprite(360, 640, 'tnc_panel').setScale(0.7);
     tncPanel.setOrigin(0.5, 0.5);
 
     graphics = this.make.graphics();
 
     graphics.fillStyle(0xffffff);
-    graphics.fillRect(130, 420, 500, 550);
+    graphics.fillRect(130, 400, 500, 550);
 
     mask = new Phaser.Display.Masks.GeometryMask(this, graphics);
-    text = this.add.text(140, 420, content, {
+    text = this.add.text(140, 400, content, {
       font: '26px Arial',
       color: '#ffffff',
       align: 'left',
@@ -425,7 +410,7 @@ export class Mainmenu extends Phaser.Scene {
         width: 500 } }).setOrigin(0);
     text.setMask(mask);
 
-    zone = this.add.zone(130, 420, 600, 750).setOrigin(0).setInteractive();
+    zone = this.add.zone(130, 400, 600, 800).setOrigin(0).setInteractive();
 
     zone.on('pointermove', function (pointer) {
 
@@ -433,13 +418,13 @@ export class Mainmenu extends Phaser.Scene {
 
           text.y += (pointer.velocity.y / 6);
 
-          text.y = Phaser.Math.Clamp(text.y, -170, 420);
+          text.y = Phaser.Math.Clamp(text.y, 350, 400);
         }
 
 
     });
 
-    closeButton = this.add.sprite(600, 200, 'close_button').setScale(.7);
+    closeButton = this.add.sprite(630, 240, 'close_button').setScale(.5);
     closeButton.setOrigin(0.5, 0.5);
     closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyTnCPanel());
@@ -467,11 +452,11 @@ export class Mainmenu extends Phaser.Scene {
     clickSFX.play();
 
     hintPanel = this.add.sprite(360, 640, 'hint_panel');
-    hintPanel.scaleX = 0.35;
-    hintPanel.scaleY = 0.35;
+    hintPanel.scaleX = 0.7;
+    hintPanel.scaleY = 0.7;
     hintPanel.setOrigin(0.5, 0.5);
 
-    closeButton = this.add.sprite(610, 200, 'close_button').setScale(.7);
+    closeButton = this.add.sprite(630, 240, 'close_button').setScale(.5);
     closeButton.setOrigin(0.5, 0.5);
     closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyHintPanel());
@@ -488,10 +473,10 @@ export class Mainmenu extends Phaser.Scene {
 
   showLeaderboard(){
 
-    var startPosId1 = 345;
-    var startPosScore1 = 345;
-    var startPosId2 = 660;
-    var startPosScore2 = 660;
+    var startPosId1 = 360;
+    var startPosScore1 = startPosId1 + 15;
+    var startPosId2 = 680;
+    var startPosScore2 = startPosId2 + 15;
 
     clickSFX.play();
     leaderboardPanel = this.add.sprite(360, 620, 'leaderboard_panel').setScale(.7);
@@ -506,14 +491,16 @@ export class Mainmenu extends Phaser.Scene {
       this.toggleDetail();
     });
 
-    closeButton = this.add.sprite(600, 100, 'close_button').setScale(.7);
+    detailButton.visible = false;
+
+    closeButton = this.add.sprite(630, 220, 'close_button').setScale(.5);
     closeButton.setOrigin(0.5, 0.5);
     //closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyLeaderBoardPanel());
 
     this.getUserRank();
-    this.getLeaderboardData(startPosId1, startPosScore1);
-    this.getCumulativeLeaderboardData(startPosId2, startPosScore2);
+    this.getLeaderboardData(startPosId1, startPosScore1, startPosId2, startPosScore2);
+    //this.getCumulativeLeaderboardData(startPosId2, startPosScore2);
     this.disableMainButton();
   }
 
@@ -531,7 +518,6 @@ export class Mainmenu extends Phaser.Scene {
         idTextArr[i].destroy();
         scoreTextArr[i].destroy();
       }
-
     }
 
     for(let i = 0; i < 5; i++){
@@ -550,6 +536,8 @@ export class Mainmenu extends Phaser.Scene {
 
     userRankText.destroy();
     userCumRankText.destroy();
+    userHighScoreText.destroy();
+    userCumHighScoreText.destroy();
     leaderboardPanel.destroy();
     closeButton.destroy();
     detailButton.destroy();
@@ -572,26 +560,9 @@ export class Mainmenu extends Phaser.Scene {
     }
   }
 
-  getMobileOperatingSystem() {
-      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-      if( userAgent.match( /iPad/i ) || userAgent.match( /iPhone/i ) || userAgent.match( /iPod/i ) ){
-
-          return 'iOS';
-      }
-      else if( userAgent.match( /Android/i ) ){
-
-          return 'Android';
-      }
-      else{
-
-          return 'unknown';
-      }
-  }
-
   drawHeart(remainingLife){
 
-    let startPos = 710;
+    let startPos = 300;
 
     if(remainingLife != 0){
 
@@ -603,10 +574,10 @@ export class Mainmenu extends Phaser.Scene {
         }
         else {
 
-          startPos -= 60;
+          startPos += 60;
         }
 
-        lifeRemaining = this.add.image(210, startPos, 'life').setScale(2);
+        lifeRemaining = this.add.image(startPos, 740, 'life').setScale(0.16);
         lifeRemaining.setOrigin(0.5, 0.5);
       }
     }
@@ -639,6 +610,7 @@ export class Mainmenu extends Phaser.Scene {
         this.scene.start("PlayGame", {
           session: myParam,
           id: tempID,
+          score: tempScore,
         });
       }
 
@@ -663,31 +635,42 @@ export class Mainmenu extends Phaser.Scene {
       if(data.response == 200){
 
         //console.log(data.result);
-        userPlayTime = data.result.play_count;
-        tempLimit = data.result.lifePlay;
-        playerStatus = data.result.isLimit;
-        tempUserPoin = data.result.userPoin;
-        this.drawHeart(tempLimit);
-        this.enableMainButton();
+        if(data.result.isEmailVerif === false){
+
+          let emailPanel = this.add.sprite(360, 640, 'email_verify').setScale(0.3);
+          emailPanel.setOrigin(0.5, 0.5);
+          emailPanel.setDepth(1);
+        }
+        else {
+
+          userPlayTime = data.result.play_count;
+          tempScore = data.result.gamePoin;
+          tempLimit = data.result.lifePlay;
+          playerStatus = data.result.isLimit;
+          tempUserPoin = data.result.userPoin;
+          this.drawHeart(tempLimit);
+          this.enableMainButton();
+        }
+
       }
 
       else {
 
-        errorPanel = this.add.sprite(420, 640, 'error_panel').setScale(.3);
+        errorPanel = this.add.sprite(360, 640, 'error_panel').setScale(.7);
         errorPanel.setOrigin(0.5, 0.5);
-        console.log(data.result.message);
+        //console.log(data.result.message);
       }
 
     }).catch(error => {
 
-      console.log(error);;
+      //console.log(error);;
     });
   }
 
   getUserRank(){
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam, {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam, {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
     }).then(response => {
@@ -695,15 +678,16 @@ export class Mainmenu extends Phaser.Scene {
       return response.json();
     }).then(data => {
 
-      console.log(data.result);
-      if(data.result.rank_high_score == 0 && data.result.rank_total_score == 0){
+      //console.log(data.result);
 
-        userRankText = this.add.text(490,980, '-', {
+      if(data.result.rank_high_score === 0){
+
+        userRankText = this.add.text(150,990, '-', {
           font: 'bold 32px Arial',
           fill: 'white'
         });
 
-        userCumRankText = this.add.text(490, 1025, '-', {
+        userCumRankText = this.add.text(150, userRankText.y + 40, '-', {
           font: 'bold 32px Arial',
           fill: 'white'
         })
@@ -711,24 +695,57 @@ export class Mainmenu extends Phaser.Scene {
 
       else{
 
-        userRankText = this.add.text(490,980, '# '+data.result.rank_high_score.ranking, {
-          font: 'bold 32px Arial',
-          fill: 'white'
+        userRankText = this.add.text(145,1010, '# '+data.result.rank_high_score.ranking, {
+          font: 'bold 21px Arial',
+          fill: 'white',
+          align: 'left'
         });
+        userRankText.setOrigin(0, 0.5);
 
-        userCumRankText = this.add.text(490, 1025, '# '+data.result.rank_total_score.ranking, {
-          font: 'bold 32px Arial',
-          fill: 'white'
+        userCumRankText = this.add.text(145, userRankText.y + 40, '# '+data.result.rank_total_score.ranking, {
+          font: 'bold 21px Arial',
+          fill: 'white',
+          align: 'left'
+        })
+        userCumRankText.setOrigin(0, 0.5);
+      }
+
+      if(data.result.rank_total_score.total_score === undefined){
+
+        userHighScoreText = this.add.text(550, 995, '0', {
+          font: 'bold 24px Arial',
+          fill: 'white',
+        })
+
+        userCumHighScoreText = this.add.text(550, userHighScoreText.y + 40, '0', {
+          font: 'bold 24px Arial',
+          fill: 'white',
         })
       }
 
+      else {
+
+        userHighScoreText = this.add.text(570, 1010, ''+data.result.rank_high_score.high_score, {
+          font: 'bold 24px Arial',
+          fill: 'white',
+          align: 'right'
+        })
+        userHighScoreText.setOrigin(1, 0.5);
+
+        userCumHighScoreText = this.add.text(570, userHighScoreText.y + 40, ''+data.result.rank_total_score.total_score, {
+          font: 'bold 24px Arial',
+          fill: 'white',
+          align: 'right'
+        })
+        userCumHighScoreText.setOrigin(1, 0.5);
+      }
     })
   }
 
-  getLeaderboardData(posId, posScore){
+  getLeaderboardData(posId, posScore, posId2, posScore2){
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=user_highscore&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=user_highscore&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method: "GET",
     }).then(response => {
@@ -737,10 +754,7 @@ export class Mainmenu extends Phaser.Scene {
 
     }).then(data => {
 
-      if(data.result.rows.length >= 0){
-
-        closeButton.setInteractive();
-      }
+      //console.log(data.result);
 
       for(let i=0; i<5; i++){
 
@@ -756,7 +770,7 @@ export class Mainmenu extends Phaser.Scene {
         }
 
         let shortname = '';
-        let name = data.result.rows[i].user !== null ? data.result.rows[i].user.name : 'No Name';
+        let name = data.result.highscore_leaderboard[i]["user.name"] !== null ? data.result.highscore_leaderboard[i]["user.name"] : 'No Name';
 
         if(name.length > 25){
           shortname = name.substring(0, 25)+"...";
@@ -769,32 +783,15 @@ export class Mainmenu extends Phaser.Scene {
           fill: 'white'
         });
 
-        scoreTextArr[i] = this.add.text(515, posScore, ''+data.result.rows[i].user_highscore, {
+        scoreTextArr[i] = this.add.text(560, posScore, ''+data.result.highscore_leaderboard[i].user_highscore, {
           font: 'bold 26px Arial',
           fill: 'white',
           align: 'right'
         });
+        scoreTextArr[i].setOrigin(1, 0.5);
 
         //closeButton.setInteractive();
       }
-
-    }).catch(error => {
-
-      console.log(error);
-    });
-
-  }
-
-  getCumulativeLeaderboardData(posId2, posScore2){
-
-     fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
-     //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
-
-       method:"GET"
-     }).then(response => {
-
-      return response.json();
-    }).then(data => {
 
       for(let i=0; i < 5; i++){
 
@@ -810,7 +807,7 @@ export class Mainmenu extends Phaser.Scene {
         }
 
         let shortname = '';
-        let name = data.result.rows[i].user !== null ? data.result.rows[i].user.name : 'No Name';
+        let name = data.result.totalscore_leaderboard[i]["user.name"] !== null ? data.result.totalscore_leaderboard[i]["user.name"] : 'No Name';
 
         if(name.length > 25){
           shortname = name.substring(0, 25)+"...";
@@ -824,16 +821,43 @@ export class Mainmenu extends Phaser.Scene {
           fill: 'white'
         });
 
-        scoreCumTextArr[i] = this.add.text(495, posScore2, ''+data.result.rows[i].total_score, {
+        scoreCumTextArr[i] = this.add.text(560, posScore2, ''+data.result.totalscore_leaderboard[i].total_score, {
           font: 'bold 26px Arial',
           fill: 'white',
           align: 'right'
         });
+        scoreCumTextArr[i].setOrigin(1, 0.5);
       }
+
+      if(data.result.highscore_leaderboard.length >= 0 ||data.result.total_score_leaderboard.length >= 0){
+
+        closeButton.setInteractive();
+      }
+
     }).catch(error => {
 
-      console.log(error);
+      //console.log(error);
     });
+
   }
+
+  // getCumulativeLeaderboardData(posId2, posScore2){
+  //
+  //    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard?order_by=total_score&order_type=desc&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+  //    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
+  //
+  //      method:"GET"
+  //    }).then(response => {
+  //
+  //     return response.json();
+  //   }).then(data => {
+  //
+  //     //console.log(data.result);
+  //
+  //   }).catch(error => {
+  //
+  //     console.log(error);
+  //   });
+  // }
 
 }

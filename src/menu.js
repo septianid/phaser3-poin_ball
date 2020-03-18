@@ -682,42 +682,42 @@ export class Mainmenu extends Phaser.Scene {
 
       if(data.result.rank_high_score === 0){
 
-        userRankText = this.add.text(150,990, '-', {
+        userRankText = this.add.text(150, 990, '-', {
           font: 'bold 32px Arial',
           fill: 'white'
         });
 
-        userCumRankText = this.add.text(150, userRankText.y + 40, '-', {
-          font: 'bold 32px Arial',
-          fill: 'white'
+        userHighScoreText = this.add.text(550, userRankText.y, '0', {
+          font: 'bold 24px Arial',
+          fill: 'white',
         })
       }
 
       else{
 
-        userRankText = this.add.text(145,1010, '# '+data.result.rank_high_score.ranking, {
+        userRankText = this.add.text(145, 1010, '# '+data.result.rank_high_score.ranking, {
           font: 'bold 21px Arial',
           fill: 'white',
           align: 'left'
         });
         userRankText.setOrigin(0, 0.5);
 
-        userCumRankText = this.add.text(145, userRankText.y + 40, '# '+data.result.rank_total_score.ranking, {
-          font: 'bold 21px Arial',
-          fill: 'white',
-          align: 'left'
-        })
-        userCumRankText.setOrigin(0, 0.5);
-      }
-
-      if(data.result.rank_total_score.total_score === undefined){
-
-        userHighScoreText = this.add.text(550, 995, '0', {
+        userHighScoreText = this.add.text(570, userRankText.y, ''+data.result.rank_high_score.user_highscore, {
           font: 'bold 24px Arial',
           fill: 'white',
+          align: 'right'
+        })
+        userHighScoreText.setOrigin(1, 0.5);
+      }
+
+      if(data.result.rank_total_score === 0){
+
+        userCumRankText = this.add.text(150, 1030, '-', {
+          font: 'bold 32px Arial',
+          fill: 'white'
         })
 
-        userCumHighScoreText = this.add.text(550, userHighScoreText.y + 40, '0', {
+        userCumHighScoreText = this.add.text(550, userCumRankText.y, '0', {
           font: 'bold 24px Arial',
           fill: 'white',
         })
@@ -725,20 +725,22 @@ export class Mainmenu extends Phaser.Scene {
 
       else {
 
-        userHighScoreText = this.add.text(570, 1010, ''+data.result.rank_high_score.high_score, {
-          font: 'bold 24px Arial',
+        userCumRankText = this.add.text(145, 1050, '# '+data.result.rank_total_score.ranking, {
+          font: 'bold 21px Arial',
           fill: 'white',
-          align: 'right'
+          align: 'left'
         })
-        userHighScoreText.setOrigin(1, 0.5);
+        userCumRankText.setOrigin(0, 0.5);
 
-        userCumHighScoreText = this.add.text(570, userHighScoreText.y + 40, ''+data.result.rank_total_score.total_score, {
+        userCumHighScoreText = this.add.text(570, userCumRankText.y, ''+data.result.rank_total_score.total_score, {
           font: 'bold 24px Arial',
           fill: 'white',
           align: 'right'
         })
         userCumHighScoreText.setOrigin(1, 0.5);
       }
+
+      closeButton.setInteractive();
     })
   }
 

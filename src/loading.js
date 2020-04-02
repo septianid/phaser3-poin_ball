@@ -39,7 +39,18 @@ export class Loading extends Phaser.Scene{
       frameWidth: 672,
       frameHeight: 228
     });
-
+    this.load.spritesheet('preloader_menu', "./src/assets/preload_menu.png", {
+      frameWidth: 128,
+      frameHeight: 60
+    });
+    this.load.spritesheet('preloader_leaderboard', "./src/assets/preload_leaderboard.png", {
+      frameWidth: 128,
+      frameHeight: 128
+    });
+    this.load.spritesheet('preloader_highscore', "./src/assets/preload_game.png", {
+      frameWidth: 128,
+      frameHeight: 128
+    });
     this.load.image('confirm-panel-1', "./src/assets/confirm_panel.png");
     this.load.image('confirm-panel-2', "./src/assets/confirm_panel 2.png");
     this.load.image('confirm-panel-3', "./src/assets/confirm_panel 3.png");

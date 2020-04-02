@@ -502,8 +502,24 @@ export class GamePlay extends Phaser.Scene {
 
   postDataOnFinal(end, userSession){
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
+    let preload = this.add.sprite(360, 680, 'preloader_highscore').setOrigin(0.5 ,0.5);
+    preload.setScale(0.5);
+    preload.setDepth(1);
+
+    this.anims.create({
+      key: 'loading_highscore',
+      frames: this.anims.generateFrameNumbers('preloader_highscore', {
+        start: 1,
+        end: 8
+      }),
+      frameRate: 8,
+      repeat: -1
+    });
+
+    preload.anims.play('loading_highscore', true);
+
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
 
       method:"PUT",
       headers: {
@@ -523,7 +539,7 @@ export class GamePlay extends Phaser.Scene {
       //console.log(res.result.user_highscore);
       if(res.result.user_highscore === undefined){
 
-        this.userHighScore = this.add.text(360, 700, '', {
+        this.userHighScore = this.add.text(360, 670, '', {
           font: 'bold 62px Arial',
           fill: 'white',
           align: 'center'
@@ -541,6 +557,7 @@ export class GamePlay extends Phaser.Scene {
         exitButton.setInteractive();
       }
 
+      preload.destroy();
       this.userHighScore.setOrigin(0.5, 0.5);
       this.userHighScore.setDepth(1);
 

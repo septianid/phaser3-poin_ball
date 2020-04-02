@@ -16,6 +16,7 @@ var agreeButton;
 var disagreeButton;
 var okButton;
 var detailButton;
+var preload;
 
 var clickSFX;
 var closeSFX;
@@ -583,10 +584,29 @@ export class Mainmenu extends Phaser.Scene {
     }
   }
 
+  preloadAnimation(yPos, size, maxFrame, assetKey){
+
+    preload = this.add.sprite(360, yPos, assetKey).setOrigin(0.5 ,0.5);
+    preload.setScale(size);
+    preload.setDepth(1);
+
+    this.anims.create({
+      key: assetKey,
+      frames: this.anims.generateFrameNumbers(assetKey, {
+        start: 1,
+        end: maxFrame
+      }),
+      frameRate: 20,
+      repeat: -1
+    });
+
+    preload.anims.play(assetKey, true);
+  }
+
   postDataOnStart(start, userSession){
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
 
       method:"POST",
       headers: {
@@ -622,55 +642,55 @@ export class Mainmenu extends Phaser.Scene {
 
   getUserData(){
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    this.preloadAnimation(740, 0.5, 19, 'preloader_menu');
+
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
 
     }).then(response => {
 
-      return response.json();
+      if(!response.ok){
+        return response.json().then(error => Promise.reject(error));
+      }
+      else {
+        return response.json();
+      }
     }).then(data => {
 
-      if(data.response == 200){
+      if(data.result.isEmailVerif === false){
 
-        //console.log(data.result);
-        if(data.result.isEmailVerif === false){
-
-          let emailPanel = this.add.sprite(360, 640, 'email_verify').setScale(0.3);
-          emailPanel.setOrigin(0.5, 0.5);
-          emailPanel.setDepth(1);
-        }
-        else {
-
-          userPlayTime = data.result.play_count;
-          tempScore = data.result.gamePoin;
-          tempLimit = data.result.lifePlay;
-          playerStatus = data.result.isLimit;
-          tempUserPoin = data.result.userPoin;
-          this.drawHeart(tempLimit);
-          this.enableMainButton();
-        }
-
+        let emailPanel = this.add.sprite(360, 640, 'email_verify').setScale(0.3);
+        emailPanel.setOrigin(0.5, 0.5);
+        emailPanel.setDepth(1);
+        preload.destroy()
       }
-
       else {
 
-        errorPanel = this.add.sprite(360, 640, 'error_panel').setScale(.7);
-        errorPanel.setOrigin(0.5, 0.5);
-        //console.log(data.result.message);
+        userPlayTime = data.result.play_count;
+        tempScore = data.result.gamePoin;
+        tempLimit = data.result.lifePlay;
+        playerStatus = data.result.isLimit;
+        tempUserPoin = data.result.userPoin;
+        preload.destroy()
+        this.drawHeart(tempLimit);
+        this.enableMainButton();
       }
 
     }).catch(error => {
 
-      //console.log(error);;
+      //console.log(error);
+      preload.destroy();
+      errorPanel = this.add.sprite(360, 640, 'error_panel').setScale(.7);
+      errorPanel.setOrigin(0.5, 0.5);
     });
   }
 
   getUserRank(){
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
     }).then(response => {
@@ -746,8 +766,10 @@ export class Mainmenu extends Phaser.Scene {
 
   getLeaderboardData(posId, posScore, posId2, posScore2){
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    this.preloadAnimation(650, 0.8, 22, 'preloader_leaderboard')
+
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method: "GET",
     }).then(response => {
@@ -757,7 +779,7 @@ export class Mainmenu extends Phaser.Scene {
     }).then(data => {
 
       //console.log(data.result);
-
+      preload.destroy();
       for(let i=0; i<5; i++){
 
         if (i == 0){

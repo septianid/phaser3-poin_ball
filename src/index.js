@@ -25,7 +25,16 @@ window.onload = function(){
         width: 720,
         height: 1280,
       },
-      scene: [Loading, Mainmenu, GamePlay],
+      scene:{
+        sceneConfig: [Loading, Mainmenu, GamePlay],
+        pack:{
+          files: {
+            type: 'image',
+            key: 'background_loading',
+            url: './src/assets/background-menu.png'
+          }
+        }
+      },
       audio:{
         disableWebAudio:true,
       }
@@ -41,13 +50,16 @@ window.onload = function(){
 
       type: Phaser.CANVAS,
       parent: 'game',
+      dom: {
+        createContainer: true
+      },
       scale:{
         mode: Phaser.Scale.ENVELOP,
         autoCenter: Phaser.Scale.NO_CENTER,
         width: 720,
         height: 1280,
       },
-      scene: [Loading, Mainmenu, GamePlay],
+      scene:[Loading, Mainmenu, GamePlay],
       audio:{
         disableWebAudio:true,
       }
@@ -82,6 +94,7 @@ window.onload = function(){
   return "unknown";
 
   window.focus();
+
 }
 
 

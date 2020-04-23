@@ -669,8 +669,8 @@ export class Mainmenu extends Phaser.Scene {
 
     }
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
 
       method:"POST",
       headers: {
@@ -702,8 +702,8 @@ export class Mainmenu extends Phaser.Scene {
 
     this.preloadAnimation(360, 580, 0.5, 19, 'preloader_menu');
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
 
@@ -769,8 +769,8 @@ export class Mainmenu extends Phaser.Scene {
 
   getUserRank(){
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
     }).then(response => {
@@ -848,8 +848,8 @@ export class Mainmenu extends Phaser.Scene {
 
     this.preloadAnimation(360, 650, 0.8, 22, 'preloader_leaderboard')
 
-    //fetch("https://linipoinComickBookmacroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-api.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method: "GET",
     }).then(response => {
@@ -947,8 +947,9 @@ export class Mainmenu extends Phaser.Scene {
 
   getConnectionStatus(){
 
-    //fetch('https://captive-api.macroad.co.id/api/v2/linigames/advertisement/connect/53?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
-    fetch('https://captive-dev.macroad.co.id/api/v2/linigames/advertisement/connect/53?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+    fetch('https://captive-api.macroad.co.id/api/v2/linigames/advertisement/connect/53?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+    //fetch('https://captive-dev.macroad.co.id/api/v2/linigames/advertisement/connect/53?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+
       method: 'GET',
     }).then(response => {
 
@@ -972,8 +973,9 @@ export class Mainmenu extends Phaser.Scene {
     this.disableMainButton(listOfButton);
     //console.log('Tes');
 
-    //fetch('https://captive-api.macroad.co.id/api/v2/linigames/advertisement?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
-    fetch('https://captive-dev.macroad.co.id/api/v2/linigames/advertisement?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+    fetch('https://captive-api.macroad.co.id/api/v2/linigames/advertisement?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+    //fetch('https://captive-dev.macroad.co.id/api/v2/linigames/advertisement?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+
       method: "GET",
     }).then(response => {
 

@@ -1,9 +1,21 @@
 body {
-
   margin: 0;
-  /* overflow: hidden; */
   background-color: #222E61;
+  font-family: "ComickBook", "Newsflash";
 }
+
+/* @font-face {
+  font-family: "Newsflash";
+  font-style: normal;
+  font-weight: 400;
+  src: url("src/assets/font/NewsflashBB.ttf")format("truetype");
+}
+@font-face {
+  font-family: "ComickBook";
+  font-style: normal;
+  font-weight: 400;
+  src: url("src/assets/font/ComickBook_Simple.ttf")format("truetype");
+} */
 
 /* #game {
 

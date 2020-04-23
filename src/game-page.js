@@ -45,7 +45,7 @@ var gameOptions = {
   speed: 1000,
 
   // possible arc colors
-  circleColors: [0x212f61],
+  circleColors: [0xe50e23],
 
   // arc length, in degrees
   arcLength: [10, 90],
@@ -114,15 +114,16 @@ export class GamePlay extends Phaser.Scene {
     this.score = 0;
 
     background_game = this.add.sprite(360, 640, 'game_background');
-    background_game.scaleX = 0.68;
-    background_game.scaleY = 0.68;
+    background_game.scaleX = 0.67;
+    background_game.scaleY = 0.67;
     background_game.setOrigin(0.5, 0.5);
 
-    scoreSign = this.add.sprite(520, 77, 'score').setScale(.8);
-    this.scoreText = this.add.text(660, 82, '0', {
-      font: 'bold 42px Arial',
+    scoreSign = this.add.sprite(570, 70, 'score').setScale(.8);
+    scoreSign.setOrigin(0.5, 0.5)
+    this.scoreText = this.add.text(570, 78, '0', {
+      font: '42px Newsflash',
       fill: 'white',
-      align: 'right',
+      align: 'center',
     });
     this.scoreText.setOrigin(0.5, 0.5);
     // scoreSign.visible = false;
@@ -173,7 +174,7 @@ export class GamePlay extends Phaser.Scene {
       })
 
       // add a sprite representing the landing spot at i-th position of the array
-      this.landingSpots[i] = this.add.sprite(0, 0, "ball").setScale(.6);
+      this.landingSpots[i] = this.add.sprite(0, 0, "ball").setScale(0.11);
 
       // set the landing spot semi-transparent
       this.landingSpots[i].alpha = 0.5;
@@ -186,7 +187,7 @@ export class GamePlay extends Phaser.Scene {
     }
 
     // the ball! The hero of our game
-    this.ball = this.add.sprite(this.circles[0].x, this.circles[0].y, "ball").setScale(.6);
+    this.ball = this.add.sprite(this.circles[0].x, this.circles[0].y, "ball").setScale(0.11);
 
     // the ball too is added to stuffGroup group
     this.stuffGroup.add(this.ball);
@@ -203,7 +204,7 @@ export class GamePlay extends Phaser.Scene {
     this.circles[i].clear();
 
     // set graphic line style choosing a random color
-    this.circles[i].lineStyle(8, 0x212f61, 1);
+    this.circles[i].lineStyle(8, 0xe50e23, 1);
 
     // define a random radius
     let radius = this.randomOption(gameOptions.circleRadiusRange);
@@ -382,7 +383,7 @@ export class GamePlay extends Phaser.Scene {
 
     // if the difference between the distance and the radius is less than ball radius,
     // this means the ball could collide with an arc and we have to investigate
-    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 11) {
+    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 13) {
 
       // determine the angle between the ball and the circle
       let angle = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.circles[i].x, this.circles[i].y, this.ball.x, this.ball.y));
@@ -438,18 +439,17 @@ export class GamePlay extends Phaser.Scene {
   showDialogBox(){
 
     //this.getPLayerHighScore();
-    endPanel = this.add.sprite(360, 620, 'gameover_panel').setScale(.7);
-    //retryButton = this.add.sprite(230, 810, 'retry_button').setScale(.7);
-    exitButton = this.add.sprite(360, 810, 'exit_button').setScale(.7);
+    endPanel = this.add.sprite(360, 620, 'gameover_panel').setScale(.8);
     endPanel.setOrigin(0.5, 0.5);
-    //retryButton.setOrigin(0.5, 0.5);
+    //retryButton = this.add.sprite(230, 810, 'retry_button').setScale(.7);
+    exitButton = this.add.sprite(360, 910, 'exit_button').setScale(.45);
     exitButton.setOrigin(0.5, 0.5);
-    //retryButton.setInteractive();
+
     this.scoreText.visible = false;
     scoreSign.visible = false;
 
     this.finalScoreText = this.add.text(360, 520, ''+this.score, {
-      font: 'bold 62px Arial',
+      font: '120px Newsflash',
       fill: 'white',
       align: 'center'
     });
@@ -502,6 +502,22 @@ export class GamePlay extends Phaser.Scene {
 
   postDataOnFinal(end, userSession){
 
+    let preload = this.add.sprite(360, 780, 'preloader_highscore').setOrigin(0.5 ,0.5);
+    preload.setScale(0.5);
+    preload.setDepth(1);
+
+    this.anims.create({
+      key: 'loading_highscore',
+      frames: this.anims.generateFrameNumbers('preloader_highscore', {
+        start: 1,
+        end: 22
+      }),
+      frameRate: 20,
+      repeat: -1
+    });
+
+    preload.anims.play('loading_highscore', true);
+
     fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
     //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
 
@@ -523,7 +539,7 @@ export class GamePlay extends Phaser.Scene {
       //console.log(res.result.user_highscore);
       if(res.result.user_highscore === undefined){
 
-        this.userHighScore = this.add.text(360, 700, '', {
+        this.userHighScore = this.add.text(360, 670, '', {
           font: 'bold 62px Arial',
           fill: 'white',
           align: 'center'
@@ -532,8 +548,8 @@ export class GamePlay extends Phaser.Scene {
       }
       else if(res.result.user_highscore !== undefined){
 
-        this.userHighScore = this.add.text(360, 700, ''+res.result.user_highscore, {
-          font: 'bold 62px Arial',
+        this.userHighScore = this.add.text(360, 780, ''+res.result.user_highscore, {
+          font: '84px Newsflash',
           fill: 'white',
           align: 'center'
         });
@@ -541,6 +557,7 @@ export class GamePlay extends Phaser.Scene {
         exitButton.setInteractive();
       }
 
+      preload.destroy();
       this.userHighScore.setOrigin(0.5, 0.5);
       this.userHighScore.setDepth(1);
 

@@ -4,18 +4,18 @@ var background_menu;
 var title;
 var banner;
 
+var listOfButton = []
 var playButton;
 var hintButton;
 var leaderButton;
 var tncButton;
 var closeButton;
 var musicButton;
-var musicButtonOff;
-var quitButton;
-var agreeButton;
-var disagreeButton;
 var okButton;
 var detailButton;
+let payPoinButton;
+let watchAdButton;
+var preload;
 
 var clickSFX;
 var closeSFX;
@@ -25,7 +25,6 @@ var errorPanel;
 var detailPanel;
 var leaderboardPanel;
 var hintPanel;
-var confirmPanel;
 var tncPanel;
 var noPoinWarnPanel;
 var limitWarnPanel;
@@ -40,12 +39,19 @@ var userRankText;
 var userCumRankText;
 var userHighScoreText;
 var userCumHighScoreText;
+var videoTimer;
+var advideoTimer;
+var videoTimerEvent
 
 var tempLimit;
 var tempScore;
 var playerStatus;
 var tempUserPoin;
 var tempID;
+var userEmail;
+var userGender;
+var userDOB;
+var userPhone;
 var userPlayTime;
 
 var startTime;
@@ -54,7 +60,8 @@ var graphics;
 var text;
 var zone;
 var mask;
-var content;
+let nextButton;
+let prevButton;
 
 var musicStatus;
 var detailStatus;
@@ -66,12 +73,12 @@ export class Mainmenu extends Phaser.Scene {
 
   constructor() {
 
-    super("Menu");
+    super('Menu');
   }
 
   preload(){
-    bgSound = this.sound.add('music_menu');
 
+    bgSound = this.sound.add('music_menu');
   }
 
   create(){
@@ -79,72 +86,60 @@ export class Mainmenu extends Phaser.Scene {
     clickSFX = this.sound.add('button_click');
     closeSFX = this.sound.add('close_section');
 
-    bgSound.play();
+    //bgSound.play();
     bgSound.loop = true;
-
-    // document.addEventListener('focus', function(){
-    //   console.log('focus');
-    //   bgSound.resume();
-    // }, false);
+    musicStatus = true;
 
     this.game.events.on('hidden',function(){
-      //console.log('Hidden');
       bgSound.pause();
-    },this);
+    });
 
     this.game.events.on('visible', function(){
-
-      //console.log('Visible');
       bgSound.resume();
     })
 
     background_menu = this.add.sprite(360, 640, 'menu-background');
-    background_menu.scaleX = 0.7;
-    background_menu.scaleY = 0.7;
+    background_menu.scaleX = 0.67;
+    background_menu.scaleY = 0.67;
     background_menu.setOrigin(0.5, 0.5);
 
-    title = this.add.sprite(370, 350, 'game-title').setScale(.7);
+    title = this.add.sprite(360, 350, 'game-title').setScale(.6);
     title.setOrigin(0.5, 0.5);
 
-    banner = this.add.sprite(360, 100, 'linipoin-banner').setScale(.5);
-    banner.setOrigin(0.5, 0.5);
+    //banner = this.add.sprite(360, 100, 'linipoin-banner').setScale(.5);
+    //banner.setOrigin(0.5, 0.5);
 
     this.getUserData();
 
-    playButton = this.add.sprite(360, 580, 'play_button').setScale(.6);
-    playButton.setOrigin(0.5, 0.5);
-    playButton.on('pointerdown', () => this.startGame());
-
-    hintButton = this.add.image(240, 830, 'hint_button').setScale(.7);
+    hintButton = this.add.image(230, 870, 'hint_button').setScale(0.65);
     hintButton.setOrigin(0.5, 0.5);
     hintButton.on('pointerdown', () => this.showHint());
 
-    leaderButton = this.add.sprite(238, 920, 'leaderboard_button').setScale(.7);
+    leaderButton = this.add.sprite(hintButton.x, hintButton.y + 110, 'leaderboard_button').setScale(0.65);
     leaderButton.setOrigin(0.5, 0.5);
     leaderButton.on('pointerdown', () => this.showLeaderboard());
 
-    musicButton = this.add.sprite(477, 920, 'music_button on').setScale(.7);
-    musicButton.setOrigin(0.5, 0.5);
-    //musicButton.setInteractive();
-    musicButton.on('pointerdown', () => {
-
-      //musicStatus = !musicStatus;
-      this.toggleSound();
-    });
-
-    tncButton = this.add.sprite(480, 835, 'tnc_button').setScale(.7);
+    tncButton = this.add.sprite(500, hintButton.y, 'tnc_button').setScale(0.65);
     tncButton.setOrigin(0.5, 0.5);
     tncButton.on('pointerdown', () => this.showTnC());
 
-    this.toggleSound();
+    // musicButton = this.add.sprite(tncButton.x, leaderButton.y, 'music_button on').setScale(0.65);
+    // musicButton.setOrigin(0.5, 0.5);
+    if(musicStatus == true){
 
+      bgSound.play();
+      musicButton = this.add.sprite(tncButton.x, leaderButton.y, 'music_button_on').setScale(0.65);
+      musicButton.setOrigin(0.5, 0.5);
+    }
+    else {
 
-    // document.addEventListener('blur', function(){
-    //   console.log('blur');
-    //   bgSound.pause();
-    // }, false);
+      bgSound.resume();
+      musicButton = this.add.sprite(tncButton.x, leaderButton.y, 'music_button_off').setScale(0.65);
+      musicButton.setOrigin(0.5, 0.5);
+    }
 
-
+    //musicButton.setInteractive();
+    musicButton.on('pointerdown', () => this.toggleSound());
   }
 
   update(){
@@ -154,14 +149,15 @@ export class Mainmenu extends Phaser.Scene {
 
   toggleSound(){
 
+    clickSFX.play()
     if(musicStatus == true){
       musicStatus = false;
-      musicButton.setTexture('music_button off');
+      musicButton.setTexture('music_button_off').setScale(0.65);
       bgSound.pause();
     }
     else {
       musicStatus = true;
-      musicButton.setTexture('music_button on')
+      musicButton.setTexture('music_button_on').setScale(0.65);
       bgSound.resume();
     }
   }
@@ -189,228 +185,219 @@ export class Mainmenu extends Phaser.Scene {
 
   }
 
-  enableMainButton(){
+  enableMainButton(buttonList){
 
-    playButton.setInteractive();
-    leaderButton.setInteractive();
-    hintButton.setInteractive();
-    tncButton.setInteractive();
-    musicButton.setInteractive();
+    buttonList.forEach(button => {
+      button.setInteractive()
+    })
   }
 
-  disableMainButton(){
+  disableMainButton(buttonList){
 
-    playButton.disableInteractive();
-    leaderButton.disableInteractive();
-    hintButton.disableInteractive();
-    tncButton.disableInteractive();
-    musicButton.disableInteractive();
+    buttonList.forEach(button => {
+      button.disableInteractive()
+    })
   }
 
   startGame(){
 
-    this.disableMainButton();
+    this.disableMainButton(listOfButton);
 
     clickSFX.play();
 
-    if(tempLimit == 0 && playerStatus == false){
+    if(playerStatus == true){
 
-      // if(userPlayTime >= 10 && userPlayTime < 20){
-      //
-      //   if (tempUserPoin < 100) {
-      //
-      //     noPoinWarnPanel = this.add.sprite(360, 640, 'poin-warn-panel').setScale(.7);
-      //     noPoinWarnPanel.setOrigin(0.5, 0.5);
-      //     okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
-      //     okButton.setOrigin(0.5, 0.5);
-      //     okButton.setInteractive();
-      //     okButton.on('pointerdown', () => {
-      //
-      //       closeSFX.play();
-      //       noPoinWarnPanel.destroy();
-      //       okButton.destroy();
-      //       this.enableMainButton();
-      //     });
-      //     console.log("Poin tidak mencukupi");
-      //   }
-      //   else {
-      //
-      //     confirmPanel = this.add.sprite(360, 640, 'confirm-panel-2').setScale(.7);
-      //     confirmPanel.setOrigin(0.5, 0.5);
-      //
-      //     agreeButton = this.add.sprite(230, 830, 'ok_button').setScale(.7);
-      //     agreeButton.setOrigin(0.5, 0.5);
-      //     agreeButton.setInteractive();
-      //     agreeButton.on('pointerdown', () => this.agreeToPay());
-      //
-      //     disagreeButton = this.add.sprite(490, 835, 'no_button').setScale(.7);
-      //     disagreeButton.setOrigin(0.5, 0.5);
-      //     disagreeButton.setInteractive();
-      //     disagreeButton.on('pointerdown', () => this.disagreeToPay());
-      //   }
-      // }
-
-      // else if(userPlayTime >= 20){
-      //
-      //   if (tempUserPoin < 200) {
-      //
-      //     noPoinWarnPanel = this.add.sprite(360, 640, 'poin-warn-panel').setScale(.7);
-      //     noPoinWarnPanel.setOrigin(0.5, 0.5);
-      //     okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
-      //     okButton.setOrigin(0.5, 0.5);
-      //     okButton.setInteractive();
-      //     okButton.on('pointerdown', () => {
-      //
-      //       closeSFX.play();
-      //       noPoinWarnPanel.destroy();
-      //       okButton.destroy();
-      //       this.enableMainButton();
-      //     });
-      //     console.log("Poin tidak mencukupi");
-      //   }
-      //   else {
-      //
-      //     confirmPanel = this.add.sprite(360, 640, 'confirm-panel-3').setScale(.7);
-      //     confirmPanel.setOrigin(0.5, 0.5);
-      //
-      //     agreeButton = this.add.sprite(230, 830, 'ok_button').setScale(.7);
-      //     agreeButton.setOrigin(0.5, 0.5);
-      //     agreeButton.setInteractive();
-      //     agreeButton.on('pointerdown', () => this.agreeToPay());
-      //
-      //     disagreeButton = this.add.sprite(490, 835, 'no_button').setScale(.7);
-      //     disagreeButton.setOrigin(0.5, 0.5);
-      //     disagreeButton.setInteractive();
-      //     disagreeButton.on('pointerdown', () => this.disagreeToPay());
-      //   }
-      // }
-
-      if (tempUserPoin < 10) {
-
-        noPoinWarnPanel = this.add.sprite(360, 690, 'poin-warn-panel').setScale(.7);
-        noPoinWarnPanel.setOrigin(0.5, 0.5);
-        okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
-        okButton.setOrigin(0.5, 0.5);
-        okButton.setInteractive();
-        okButton.on('pointerdown', () => {
-
-          closeSFX.play();
-          noPoinWarnPanel.destroy();
-          okButton.destroy();
-          this.enableMainButton();
-        });
-        //console.log("Poin tidak mencukupi");
-      }
-      else {
-
-        confirmPanel = this.add.sprite(360, 690, 'confirm-panel-1').setScale(.7);
-        confirmPanel.setOrigin(0.5, 0.5);
-
-        agreeButton = this.add.sprite(230, 870, 'ok_button').setScale(.7);
-        agreeButton.setOrigin(0.5, 0.5);
-        agreeButton.setInteractive();
-        agreeButton.on('pointerdown', () => this.agreeToPay());
-
-        disagreeButton = this.add.sprite(490, 870, 'no_button').setScale(.7);
-        disagreeButton.setOrigin(0.5, 0.5);
-        disagreeButton.setInteractive();
-        disagreeButton.on('pointerdown', () => this.disagreeToPay());
-      }
-
-
-    }
-    else if(playerStatus == true){
-
-      limitWarnPanel = this.add.sprite(360, 640, 'limit-warn-panel').setScale(.7);
-      limitWarnPanel.setOrigin(0.5, 0.5);
-      okButton = this.add.sprite(580, 510, 'close_button').setScale(.5);
-      okButton.setOrigin(0.5, 0.5);
-      okButton.setInteractive();
-      okButton.on('pointerdown', () => {
-
-        closeSFX.play()
-        limitWarnPanel.destroy();
-        okButton.destroy();
-        this.enableMainButton();
-      });
-      //console.log("Telah mencapai limit harian");
+      this.showWarningPanel('limit-warn-panel', 0.8)
     }
     else {
 
       playButton.disableInteractive();
       startTime = new Date();
-      this.postDataOnStart(startTime, myParam);
-      // this.scene.start("PlayGame", {
-      //   session: myParam
-      // });
+      this.postDataOnStart(startTime, myParam, false);
     }
   }
 
-  agreeToPay(){
+  showPlayOptionButton(buttonAsset, poinRequired){
 
-    startTime = new Date();
-    clickSFX.play();
-    agreeButton.disableInteractive();
-    this.postDataOnStart(startTime, myParam);
-    // this.scene.start("PlayGame", {
-    //   session: myParam
-    // });
+    this.disableMainButton(listOfButton)
+
+    payPoinButton = this.add.sprite(250, 650, buttonAsset).setScale(0.3)
+    payPoinButton.setOrigin(0.5, 0.5);
+    payPoinButton.setInteractive();
+    payPoinButton.on('pointerdown', () => {
+
+      if (tempUserPoin < poinRequired) {
+        this.showWarningPanel('poin-warn-panel', 0.8);
+      }
+      else {
+        this.showUserConfirmation('confirm-panel-'+poinRequired, 0.8);
+      }
+    })
+
+    watchAdButton = this.add.sprite(470, 650, 'watch-ad').setScale(0.3);
+    watchAdButton.setOrigin(0.5, 0.5);
+    watchAdButton.setInteractive();
+    watchAdButton.on('pointerdown', () => {
+
+      let adLoadingPanel
+
+      adLoadingPanel = this.add.sprite(360, 640, 'ad-confirm-panel').setScale(0.8)
+      adLoadingPanel.setOrigin(0.5, 0.5);
+      this.preloadAnimation(360, 670, 0.8, 22, 'preloader_highscore');
+
+      this.getConnectionStatus();
+      this.getAdSource();
+    })
   }
 
-  disagreeToPay(){
+  showUserConfirmation(panelAsset, size){
 
-    closeSFX.play();
-    confirmPanel.destroy();
-    agreeButton.destroy();
-    disagreeButton.destroy();
+    var agreeButton;
+    var disagreeButton;
+    var confirmPanel;
 
-    this.enableMainButton();
+    this.disableMainButton(listOfButton);
+
+    confirmPanel = this.add.sprite(360, 690, panelAsset).setScale(size);
+    confirmPanel.setOrigin(0.5, 0.5);
+
+    agreeButton = this.add.sprite(250, 840, 'ok_button').setScale(.3);
+    agreeButton.setOrigin(0.5, 0.5);
+    agreeButton.setInteractive();
+    agreeButton.on('pointerdown', () => {
+
+      this.preloadAnimation(360, 530, 0.3, 22, 'preloader_highscore')
+      startTime = new Date();
+      clickSFX.play();
+      agreeButton.disableInteractive();
+      disagreeButton.disableInteractive();
+      this.postDataOnStart(startTime, myParam, false);
+    });
+
+    disagreeButton = this.add.sprite(470, 840, 'no_button').setScale(.3);
+    disagreeButton.setOrigin(0.5, 0.5);
+    disagreeButton.setInteractive();
+    disagreeButton.on('pointerdown', () => {
+
+      closeSFX.play();
+      confirmPanel.destroy();
+      agreeButton.destroy();
+      disagreeButton.destroy();
+
+      this.enableMainButton(listOfButton);
+    });
+  }
+
+  showWarningPanel(panelAsset, size){
+
+    let warningPanel;
+
+    warningPanel = this.add.sprite(360, 640, panelAsset).setScale(size);
+    warningPanel.setOrigin(0.5, 0.5);
+    okButton = this.add.sprite(560, 430, 'close_button').setScale(0.7);
+    okButton.setOrigin(0.5, 0.5);
+    okButton.setInteractive();
+    okButton.on('pointerdown', () => {
+
+      closeSFX.play();
+      warningPanel.destroy();
+      okButton.destroy();
+      this.enableMainButton(listOfButton);
+    });
   }
 
   showTnC(){
 
-    content = [
-      "1. Kesempatan bermain hanya ",
-      "    diberikan gratis sebanyak",
-      "    3 (tiga) kali per pengguna",
-      "    per hari selama periode event",
-      "2. Jika pengguna bermain lebih dari :",
-      "    3 kali per hari, maka dikenakan",
-      "    pemotongan sebanyak 10 poin",
-      "    dari LINIPOIN",
-      "3. Poin yang didapatkan akan",
-      "    langsung masuk ke dalam",
-      "    LINIPOIN",
-      "4. LINIPOIN berhak membatalkan",
-      "    seluruh poin jika terbukti",
-      "    adanya indikasi kecurangan",
-      "    dalam bentuk apapun",
-      "5. Jika ada pertanyaan lebih lanjut",
-      "    silahkan ajukan ke ‘Pusat",
-      "    Bantuan’, DM Via Instagram",
-      "    @linipoin.id, atau email",
-      "    ke info@linipoin.com",
-    ];
+    let page1;
+    let page2;
+    let page3;
+    let tncContent = [];
+    let selector
+
+    page1 = [
+      "1. Periode event BISCUIT HOOPER",
+      "    berlangsung selama 25 April",
+      "    2020 s/d 25 May 2020",
+      "2. Pemain akan mendapatkan 3 (tiga)",
+      "    kali token gratis untuk bermain",
+      "    setiap harinya (selama periode",
+      "    event berlangsung)",
+      "3. Pemain yang ingin bermain lebih",
+      "    dari 3x per hari akan diwajibkan",
+      "    melihat tayangan iklan atau",
+      "    dapat menukarkan poin dari",
+      "    LINIPOIN dengan ketentuan",
+      "    sebagai berikut:",
+      "     * Permainan ke 4 s/d 10 = 10 poin",
+      "     * Permainan ke 11 s/d 20 = 50 poin",
+      "     * Permainan ke 21 s/d 30 = 100 poin",
+      "     * Permainan ke 31 s/d 40 = 150 poin",
+      "     * Permainan ke 41 dst. = 200 poin",
+      "4. Pemain yang berhasil memindahkan",
+      "    biskuit dari 1 (satu) dinding",
+      "    pembatas ke dinding pembatas",
+      "    lainnya akan mendapatkan 2 (dua)",
+      "    poin, dan berlaku seterusnya.",
+    ]
+    page2 = [
+      "5. Poin yang didapat dari setiap akhir",
+      "    permainan akan langsung",
+      "    ditambahkan ke akumulasi poin",
+      "    pada LINIPOIN anda masing-masing.",
+      "6. LINIPOIN dengan dan/atau tanpa",
+      "    pemberitahuan sebelumnya berhak",
+      "    secara sepihak membatalkan",
+      "    pemenang dan pemberian hadiah",
+      "    apabila ditemukan adanya indikasi",
+      "    apabila ditemukan selama periode",
+      "    event yang merugikan pihak",
+      "    LINIPOIN termasuk namun tidak",
+      "    terbatas pada:",
+      "     * Penggunaan lebih dari 1 (satu)",
+      "        akun oleh 1 (satu) Customer",
+      "        atau kelompok yang sama,",
+      "        dan/atau",
+      "     * Identitas pemilik akun yang",
+      "        sama, dan/atau",
+      "     * Nomor handphone yang sama,",
+      "        dan/atau",
+      "     * Alamat pengiriman yang sama,",
+      "        dan/atau",
+    ]
+    page3 = [
+      "     * Nomor rekening/kartu kredit/",
+      "        debit/identitas pembayaran",
+      "        yang sama, dan/atau",
+      "     * Riwayat transaksi yang sama,",
+      "        dan/atau",
+      "7. Jika ada pertanyaan lebih lanjut",
+      "    silahkan ajukan ke Pusat Bantuan,",
+      "    DM via Instagram @linipoin.id atau",
+      "    email ke info@linipoin.com"
+    ]
+
+    tncContent = [page1, page2, page3]
+    selector = 0
 
     clickSFX.play();
-    tncPanel = this.add.sprite(360, 640, 'tnc_panel').setScale(0.7);
+    tncPanel = this.add.sprite(360, 640, 'tnc_panel').setScale(1);
     tncPanel.setOrigin(0.5, 0.5);
 
     graphics = this.make.graphics();
 
     graphics.fillStyle(0xffffff);
-    graphics.fillRect(130, 400, 500, 550);
+    graphics.fillRect(130, 370, 500, 600);
 
     mask = new Phaser.Display.Masks.GeometryMask(this, graphics);
-    text = this.add.text(140, 400, content, {
-      font: '26px Arial',
-      color: '#ffffff',
+    text = this.add.text(140, 370, tncContent[selector], {
+      font: '20px ComickBook',
+      color: '#606060',
       align: 'left',
       wordWrap: {
         width: 500 } }).setOrigin(0);
     text.setMask(mask);
 
-    zone = this.add.zone(130, 400, 600, 800).setOrigin(0).setInteractive();
+    zone = this.add.zone(130, 370, 600, 800).setOrigin(0).setInteractive();
 
     zone.on('pointermove', function (pointer) {
 
@@ -418,18 +405,44 @@ export class Mainmenu extends Phaser.Scene {
 
           text.y += (pointer.velocity.y / 6);
 
-          text.y = Phaser.Math.Clamp(text.y, 350, 400);
+          text.y = Phaser.Math.Clamp(text.y, 370, 370);
         }
-
-
     });
 
-    closeButton = this.add.sprite(630, 240, 'close_button').setScale(.5);
+    nextButton = this.add.sprite(520, 1010, 'next_button').setScale(0.2)
+    nextButton.setOrigin(0.5, 0.5);
+    nextButton.setInteractive()
+    nextButton.on('pointerdown', () => {
+
+      if(selector >= 2){
+        selector = 2
+      }
+      else {
+        selector += 1
+      }
+      text.setText(tncContent[selector]);
+    })
+
+    prevButton = this.add.sprite(200, 1010, 'prev_button').setScale(0.2)
+    prevButton.setOrigin(0.5, 0.5);
+    prevButton.setInteractive()
+    prevButton.on('pointerdown', () => {
+
+      if(selector <= 0){
+        selector = 0
+      }
+      else {
+        selector -= 1
+      }
+      text.setText(tncContent[selector]);
+    })
+
+    closeButton = this.add.sprite(630, 240, 'close_button').setScale(.7);
     closeButton.setOrigin(0.5, 0.5);
     closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyTnCPanel());
     //tncButton.disableInteractive();
-    this.disableMainButton();
+    this.disableMainButton(listOfButton);
   }
 
   destroyTnCPanel(){
@@ -437,6 +450,8 @@ export class Mainmenu extends Phaser.Scene {
     closeSFX.play();
     tncPanel.destroy();
     closeButton.destroy();
+    nextButton.destroy();
+    prevButton.destroy();
 
     text.destroy();
     graphics.destroy();
@@ -444,7 +459,7 @@ export class Mainmenu extends Phaser.Scene {
     zone.destroy();
 
     tncButton.setInteractive();
-    this.enableMainButton();
+    this.enableMainButton(listOfButton);
   }
 
   showHint(){
@@ -452,15 +467,15 @@ export class Mainmenu extends Phaser.Scene {
     clickSFX.play();
 
     hintPanel = this.add.sprite(360, 640, 'hint_panel');
-    hintPanel.scaleX = 0.7;
-    hintPanel.scaleY = 0.7;
+    hintPanel.scaleX = 1;
+    hintPanel.scaleY = 1;
     hintPanel.setOrigin(0.5, 0.5);
 
-    closeButton = this.add.sprite(630, 240, 'close_button').setScale(.5);
+    closeButton = this.add.sprite(630, 240, 'close_button').setScale(.7);
     closeButton.setOrigin(0.5, 0.5);
     closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyHintPanel());
-    this.disableMainButton();
+    this.disableMainButton(listOfButton);
   }
 
   destroyHintPanel(){
@@ -468,18 +483,18 @@ export class Mainmenu extends Phaser.Scene {
     closeSFX.play();
     hintPanel.destroy();
     closeButton.destroy();
-    this.enableMainButton();
+    this.enableMainButton(listOfButton);
   }
 
   showLeaderboard(){
 
-    var startPosId1 = 360;
+    var startPosId1 = 345;
     var startPosScore1 = startPosId1 + 15;
-    var startPosId2 = 680;
+    var startPosId2 = 640;
     var startPosScore2 = startPosId2 + 15;
 
     clickSFX.play();
-    leaderboardPanel = this.add.sprite(360, 620, 'leaderboard_panel').setScale(.7);
+    leaderboardPanel = this.add.sprite(360, 620, 'leaderboard_panel').setScale(1.1);
     leaderboardPanel.setOrigin(0.5, 0.5);
 
     detailButton = this.add.sprite(580, 210, 'detail_button').setScale(.5);
@@ -493,7 +508,7 @@ export class Mainmenu extends Phaser.Scene {
 
     detailButton.visible = false;
 
-    closeButton = this.add.sprite(630, 220, 'close_button').setScale(.5);
+    closeButton = this.add.sprite(610, 210, 'close_button').setScale(.7);
     closeButton.setOrigin(0.5, 0.5);
     //closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyLeaderBoardPanel());
@@ -501,7 +516,7 @@ export class Mainmenu extends Phaser.Scene {
     this.getUserRank();
     this.getLeaderboardData(startPosId1, startPosScore1, startPosId2, startPosScore2);
     //this.getCumulativeLeaderboardData(startPosId2, startPosScore2);
-    this.disableMainButton();
+    this.disableMainButton(listOfButton);
   }
 
   destroyLeaderBoardPanel(){
@@ -524,14 +539,12 @@ export class Mainmenu extends Phaser.Scene {
 
       if(((idCumTextArr[i] === undefined) || (idCumTextArr[i] === null)) || scoreCumTextArr[i] === undefined){
 
-
       }
       else {
 
         idCumTextArr[i].destroy();
         scoreCumTextArr[i].destroy();
       }
-
     }
 
     userRankText.destroy();
@@ -541,7 +554,7 @@ export class Mainmenu extends Phaser.Scene {
     leaderboardPanel.destroy();
     closeButton.destroy();
     detailButton.destroy();
-    this.enableMainButton();
+    this.enableMainButton(listOfButton);
   }
 
   toggleDetail(){
@@ -569,21 +582,92 @@ export class Mainmenu extends Phaser.Scene {
       for(let i = 1; i <= remainingLife; i++){
 
         if(i == 1){
-
           startPos -= 0;
         }
         else {
-
-          startPos += 60;
+          startPos += 70;
         }
-
-        lifeRemaining = this.add.image(startPos, 740, 'life').setScale(0.16);
+        lifeRemaining = this.add.image(startPos, 590, 'life').setScale(0.6);
         lifeRemaining.setOrigin(0.5, 0.5);
       }
+
+      playButton = this.add.sprite(360, 720, 'play_button').setScale(.7);
+      playButton.setOrigin(0.5, 0.5);
+      playButton.on('pointerdown', () => this.startGame());
+    }
+
+    else {
+
+      if(playerStatus == false){
+
+        //let requiredPoin
+        if(userPlayTime >= 10 && userPlayTime < 20){
+          //requiredPoin = 50
+          this.showPlayOptionButton('pay-poin-50', 50)
+        }
+
+        else if(userPlayTime >= 20 && userPlayTime < 30){
+          //requiredPoin = 100
+          this.showPlayOptionButton('pay-poin-100', 100)
+        }
+
+        else if(userPlayTime >= 30 && userPlayTime < 40){
+          //requiredPoin = 150
+          this.showPlayOptionButton('pay-poin-150', 150)
+        }
+
+        else if(userPlayTime >= 40){
+          //requiredPoin = 200
+          this.showPlayOptionButton('pay-poin-200', 200)
+        }
+
+        else{
+          //requiredPoin = 10
+          this.showPlayOptionButton('pay-poin-10', 10);
+        }
+      }
+
     }
   }
 
-  postDataOnStart(start, userSession){
+  preloadAnimation(xPos, yPos, size, maxFrame, assetKey){
+
+    preload = this.add.sprite(xPos, yPos, assetKey).setOrigin(0.5 ,0.5);
+    preload.setScale(size);
+    preload.setDepth(1);
+
+    this.anims.create({
+      key: assetKey,
+      frames: this.anims.generateFrameNumbers(assetKey, {
+        start: 1,
+        end: maxFrame
+      }),
+      frameRate: 20,
+      repeat: -1
+    });
+
+    preload.anims.play(assetKey, true);
+  }
+
+  postDataOnStart(start, userSession,isWatchAd){
+
+    let data = {
+
+      linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
+      session: userSession,
+      score: 0,
+      game_start: start,
+      user_highscore: 0,
+      total_score: 0,
+    }
+
+    if(isWatchAd === true){
+
+      data.play_video = 'full_played'
+    }
+    else {
+
+    }
 
     fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
     //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
@@ -593,14 +677,7 @@ export class Mainmenu extends Phaser.Scene {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
-        session: userSession,
-        score: 0,
-        game_start: start,
-        user_highscore: 0,
-        total_score: 0,
-      }),
+      body: JSON.stringify(data),
     }).then(response => response.json()).then(res => {
 
       tempID = res.result.id;
@@ -618,9 +695,12 @@ export class Mainmenu extends Phaser.Scene {
 
       console.log(error.json());
     });
+    //console.log(data);
   }
 
   getUserData(){
+
+    this.preloadAnimation(360, 580, 0.5, 19, 'preloader_menu');
 
     fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
     //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
@@ -629,48 +709,68 @@ export class Mainmenu extends Phaser.Scene {
 
     }).then(response => {
 
-      return response.json();
+      if(!response.ok){
+        return response.json().then(error => Promise.reject(error));
+      }
+      else {
+        return response.json();
+      }
     }).then(data => {
 
-      if(data.response == 200){
+      //console.log(data.result);
+      let phoneNumber = data.result.phone_number;
 
-        //console.log(data.result);
-        if(data.result.isEmailVerif === false){
+      if(data.result.isEmailVerif === false){
 
-          let emailPanel = this.add.sprite(360, 640, 'email_verify').setScale(0.3);
-          emailPanel.setOrigin(0.5, 0.5);
-          emailPanel.setDepth(1);
-        }
-        else {
-
-          userPlayTime = data.result.play_count;
-          tempScore = data.result.gamePoin;
-          tempLimit = data.result.lifePlay;
-          playerStatus = data.result.isLimit;
-          tempUserPoin = data.result.userPoin;
-          this.drawHeart(tempLimit);
-          this.enableMainButton();
-        }
-
+        let emailPanel = this.add.sprite(360, 640, 'email_verify').setScale(0.8);
+        emailPanel.setOrigin(0.5, 0.5);
+        emailPanel.setDepth(1);
+        preload.destroy()
       }
-
       else {
 
-        errorPanel = this.add.sprite(360, 640, 'error_panel').setScale(.7);
-        errorPanel.setOrigin(0.5, 0.5);
-        //console.log(data.result.message);
+        userPlayTime = data.result.play_count;
+        userEmail = data.result.email;
+        userPhone = '0' + phoneNumber.substring(3);
+
+        if(data.result.gender === 'm'){
+          userGender = 'male'
+        }
+        else {
+          userGender = 'female'
+        }
+
+        userDOB = data.result.dob;
+        tempScore = data.result.gamePoin;
+        tempLimit = data.result.lifePlay;
+        playerStatus = data.result.isLimit;
+        tempUserPoin = data.result.userPoin;
+
+        preload.destroy()
+        this.drawHeart(tempLimit);
+        //playButton.setInteractive();
+        if(data.result.lifePlay != 0){
+          listOfButton = [playButton, hintButton, leaderButton, tncButton, musicButton]
+        }
+        else {
+          listOfButton = [payPoinButton, watchAdButton, hintButton, leaderButton, tncButton, musicButton]
+        }
+        this.enableMainButton(listOfButton);
       }
 
     }).catch(error => {
 
-      //console.log(error);;
+      console.log(error);
+      preload.destroy();
+      errorPanel = this.add.sprite(360, 640, 'error_panel').setScale(0.8);
+      errorPanel.setOrigin(0.5, 0.5);
     });
   }
 
   getUserRank(){
 
     fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
     }).then(response => {
@@ -682,29 +782,29 @@ export class Mainmenu extends Phaser.Scene {
 
       if(data.result.rank_high_score === 0){
 
-        userRankText = this.add.text(150, 990, '-', {
-          font: 'bold 32px Arial',
-          fill: 'white'
+        userRankText = this.add.text(185, 930, '-', {
+          font: '26px ComickBook',
+          fill: '#606060'
         });
 
-        userHighScoreText = this.add.text(550, userRankText.y, '0', {
-          font: 'bold 24px Arial',
-          fill: 'white',
+        userHighScoreText = this.add.text(510, userRankText.y + 5, '0', {
+          font: '24px ComickBook',
+          fill: '#606060',
         })
       }
 
       else{
 
-        userRankText = this.add.text(145, 1010, '# '+data.result.rank_high_score.ranking, {
-          font: 'bold 21px Arial',
-          fill: 'white',
+        userRankText = this.add.text(180, 950, '# '+data.result.rank_high_score.ranking, {
+          font: '20px ComickBook',
+          fill: '#606060',
           align: 'left'
         });
         userRankText.setOrigin(0, 0.5);
 
-        userHighScoreText = this.add.text(570, userRankText.y, ''+data.result.rank_high_score.user_highscore, {
-          font: 'bold 24px Arial',
-          fill: 'white',
+        userHighScoreText = this.add.text(530, userRankText.y, ''+data.result.rank_high_score.user_highscore, {
+          font: '22px ComickBook',
+          fill: '#606060',
           align: 'right'
         })
         userHighScoreText.setOrigin(1, 0.5);
@@ -712,29 +812,29 @@ export class Mainmenu extends Phaser.Scene {
 
       if(data.result.rank_total_score === 0){
 
-        userCumRankText = this.add.text(150, 1030, '-', {
-          font: 'bold 32px Arial',
-          fill: 'white'
+        userCumRankText = this.add.text(185, 970, '-', {
+          font: '26px ComickBook',
+          fill: '#606060'
         })
 
-        userCumHighScoreText = this.add.text(550, userCumRankText.y, '0', {
-          font: 'bold 24px Arial',
-          fill: 'white',
+        userCumHighScoreText = this.add.text(510, userCumRankText.y + 5, '0', {
+          font: '24px ComickBook',
+          fill: '#606060',
         })
       }
 
       else {
 
-        userCumRankText = this.add.text(145, 1050, '# '+data.result.rank_total_score.ranking, {
-          font: 'bold 21px Arial',
-          fill: 'white',
+        userCumRankText = this.add.text(180, 990, '# '+data.result.rank_total_score.ranking, {
+          font: '20px ComickBook',
+          fill: '#606060',
           align: 'left'
         })
         userCumRankText.setOrigin(0, 0.5);
 
-        userCumHighScoreText = this.add.text(570, userCumRankText.y, ''+data.result.rank_total_score.total_score, {
-          font: 'bold 24px Arial',
-          fill: 'white',
+        userCumHighScoreText = this.add.text(530, userCumRankText.y, ''+data.result.rank_total_score.total_score, {
+          font: '22px ComickBook',
+          fill: '#606060',
           align: 'right'
         })
         userCumHighScoreText.setOrigin(1, 0.5);
@@ -746,7 +846,9 @@ export class Mainmenu extends Phaser.Scene {
 
   getLeaderboardData(posId, posScore, posId2, posScore2){
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    this.preloadAnimation(360, 650, 0.8, 22, 'preloader_leaderboard')
+
+    fetch("https://linipoin-api.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
     //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method: "GET",
@@ -757,7 +859,7 @@ export class Mainmenu extends Phaser.Scene {
     }).then(data => {
 
       //console.log(data.result);
-
+      preload.destroy();
       for(let i=0; i<5; i++){
 
         if (i == 0){
@@ -767,8 +869,8 @@ export class Mainmenu extends Phaser.Scene {
         }
         else{
 
-          posId += 47;
-          posScore += 47;
+          posId += 37;
+          posScore += 37;
         }
 
         let shortname = '';
@@ -780,14 +882,14 @@ export class Mainmenu extends Phaser.Scene {
         else{
           shortname = name;
         }
-        idTextArr[i] = this.add.text(190, posId, ''+shortname, {
-          font: '20px Arial',
-          fill: 'white'
+        idTextArr[i] = this.add.text(210, posId, ''+shortname, {
+          font: '20px ComickBook',
+          fill: '#606060'
         });
 
-        scoreTextArr[i] = this.add.text(560, posScore, ''+data.result.highscore_leaderboard[i].user_highscore, {
-          font: 'bold 26px Arial',
-          fill: 'white',
+        scoreTextArr[i] = this.add.text(520, posScore, ''+data.result.highscore_leaderboard[i].user_highscore, {
+          font: '20px ComickBook',
+          fill: '#606060',
           align: 'right'
         });
         scoreTextArr[i].setOrigin(1, 0.5);
@@ -804,8 +906,8 @@ export class Mainmenu extends Phaser.Scene {
         }
         else {
 
-          posId2 += 47;
-          posScore2 += 47;
+          posId2 += 37;
+          posScore2 += 37;
         }
 
         let shortname = '';
@@ -818,14 +920,14 @@ export class Mainmenu extends Phaser.Scene {
           shortname = name;
         }
 
-        idCumTextArr[i] = this.add.text(190, posId2, ''+shortname, {
-          font: '20px Arial',
-          fill: 'white'
+        idCumTextArr[i] = this.add.text(210, posId2, ''+shortname, {
+          font: '20px ComickBook',
+          fill: '#606060'
         });
 
-        scoreCumTextArr[i] = this.add.text(560, posScore2, ''+data.result.totalscore_leaderboard[i].total_score, {
-          font: 'bold 26px Arial',
-          fill: 'white',
+        scoreCumTextArr[i] = this.add.text(520, posScore2, ''+data.result.totalscore_leaderboard[i].total_score, {
+          font: '20px ComickBook',
+          fill: '#606060',
           align: 'right'
         });
         scoreCumTextArr[i].setOrigin(1, 0.5);
@@ -843,23 +945,116 @@ export class Mainmenu extends Phaser.Scene {
 
   }
 
-  // getCumulativeLeaderboardData(posId2, posScore2){
-  //
-  //    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard?order_by=total_score&order_type=desc&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-  //    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard?lang=en&pagination=false&order_by=total_score&order_type=desc&show_cumulative_score=true&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43&page=5&row=1&include_user=true&grouping=true", {
-  //
-  //      method:"GET"
-  //    }).then(response => {
-  //
-  //     return response.json();
-  //   }).then(data => {
-  //
-  //     //console.log(data.result);
-  //
-  //   }).catch(error => {
-  //
-  //     console.log(error);
-  //   });
-  // }
+  getConnectionStatus(){
+
+    fetch('https://captive-api.macroad.co.id/api/v2/linigames/advertisement/connect/53?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+    //fetch('https://captive-dev.macroad.co.id/api/v2/linigames/advertisement/connect/53?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+
+      method: 'GET',
+    }).then(response => {
+
+      if(!response.ok){
+        return response.json().then(error => Promise.reject(error));
+      }
+      else {
+        return response.json();
+      }
+    }).then(data => {
+
+      //console.log(data.result.message);
+    }).catch(error => {
+
+      console.log(error);
+    })
+  }
+
+  getAdSource(){
+
+    this.disableMainButton(listOfButton);
+    //console.log('Tes');
+
+    fetch('https://captive-api.macroad.co.id/api/v2/linigames/advertisement?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+    //fetch('https://captive-dev.macroad.co.id/api/v2/linigames/advertisement?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+
+      method: "GET",
+    }).then(response => {
+
+      if(!response.ok){
+        return response.json().then(error => Promise.reject(error));
+      }
+      else {
+        return response.json();
+      }
+    }).then(data => {
+
+      //console.log(data.result);
+      let video = document.createElement('video');
+      let headerImage = document.createElement('img');
+      let adVideo;
+      let adHeader;
+      let adHeaderImg;
+
+      videoTimer = data.result.duration
+
+      video.src = data.result.main_source;
+      video.playsinline = true;
+      video.width = 720;
+      video.height = 1280;
+      video.autoplay = true;
+
+      headerImage.src = data.result.header_source;
+      headerImage.width = 300;
+      headerImage.height = 70;
+
+      bgSound.stop();
+
+      video.addEventListener('play', (event) => {
+
+        adHeader = this.add.dom(360, 360, 'div', {
+          'background-color' : data.result.header_bg_color,
+          'width' : '720px',
+          'height' : '170px'
+        }).setDepth(1);
+
+        advideoTimer = this.add.dom(680, 10, 'p', {
+          'font-family' : 'Arial',
+          'font-size' : '2.1em',
+          //'font-weight' : '',
+          'color' : 'white'
+        }, '').setDepth(1);
+
+        adHeaderImg = this.add.dom(360, 360, headerImage).setDepth(1);
+
+        adVideo = this.add.dom(360, 640, video, {
+          'background-color': 'black'
+        });
+
+        videoTimerEvent = this.time.addEvent({
+          delay: 1000,
+          callback: this.onPlay,
+          loop: true
+        })
+
+      })
+
+      video.addEventListener('ended', (event) => {
+
+        this.postDataOnStart(startTime, myParam, true);
+      })
+    })
+  }
+
+  onPlay(){
+
+    videoTimer--
+    advideoTimer.setText(videoTimer)
+    //console.log(videoTimerText.text);
+
+    if(videoTimer === 0){
+
+      advideoTimer.destroy()
+      videoTimerEvent.remove(false);
+    }
+  }
 
 }

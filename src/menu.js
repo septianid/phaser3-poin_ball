@@ -219,12 +219,13 @@ export class Mainmenu extends Phaser.Scene {
 
   showPlayOptionButton(buttonAsset, poinRequired){
 
+    this.disableMainButton(listOfButton)
+
     payPoinButton = this.add.sprite(250, 650, buttonAsset).setScale(0.3)
     payPoinButton.setOrigin(0.5, 0.5);
     payPoinButton.setInteractive();
     payPoinButton.on('pointerdown', () => {
 
-      this.disableMainButton(listOfButton)
       if (tempUserPoin < poinRequired) {
         this.showWarningPanel('poin-warn-panel', 0.8);
       }
@@ -237,6 +238,12 @@ export class Mainmenu extends Phaser.Scene {
     watchAdButton.setOrigin(0.5, 0.5);
     watchAdButton.setInteractive();
     watchAdButton.on('pointerdown', () => {
+
+      let adLoadingPanel
+
+      adLoadingPanel = this.add.sprite(360, 640, 'ad-confirm-panel').setScale(0.8)
+      adLoadingPanel.setOrigin(0.5, 0.5);
+      this.preloadAnimation(360, 670, 0.8, 22, 'preloader_highscore');
 
       this.getConnectionStatus();
       this.getAdSource();
@@ -259,7 +266,7 @@ export class Mainmenu extends Phaser.Scene {
     agreeButton.setInteractive();
     agreeButton.on('pointerdown', () => {
 
-      this.preloadAnimation(530, 0.3, 22, 'preloader_highscore')
+      this.preloadAnimation(360, 530, 0.3, 22, 'preloader_highscore')
       startTime = new Date();
       clickSFX.play();
       agreeButton.disableInteractive();
@@ -379,7 +386,7 @@ export class Mainmenu extends Phaser.Scene {
     graphics = this.make.graphics();
 
     graphics.fillStyle(0xffffff);
-    graphics.fillRect(130, 370, 500, 580);
+    graphics.fillRect(130, 370, 500, 600);
 
     mask = new Phaser.Display.Masks.GeometryMask(this, graphics);
     text = this.add.text(140, 370, tncContent[selector], {
@@ -398,7 +405,7 @@ export class Mainmenu extends Phaser.Scene {
 
           text.y += (pointer.velocity.y / 6);
 
-          text.y = Phaser.Math.Clamp(text.y, -450, 400);
+          text.y = Phaser.Math.Clamp(text.y, 370, 370);
         }
     });
 
@@ -623,9 +630,9 @@ export class Mainmenu extends Phaser.Scene {
     }
   }
 
-  preloadAnimation(yPos, size, maxFrame, assetKey){
+  preloadAnimation(xPos, yPos, size, maxFrame, assetKey){
 
-    preload = this.add.sprite(360, yPos, assetKey).setOrigin(0.5 ,0.5);
+    preload = this.add.sprite(xPos, yPos, assetKey).setOrigin(0.5 ,0.5);
     preload.setScale(size);
     preload.setDepth(1);
 
@@ -693,7 +700,7 @@ export class Mainmenu extends Phaser.Scene {
 
   getUserData(){
 
-    this.preloadAnimation(580, 0.5, 19, 'preloader_menu');
+    this.preloadAnimation(360, 580, 0.5, 19, 'preloader_menu');
 
     //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
     fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
@@ -839,7 +846,7 @@ export class Mainmenu extends Phaser.Scene {
 
   getLeaderboardData(posId, posScore, posId2, posScore2){
 
-    this.preloadAnimation(650, 0.8, 22, 'preloader_leaderboard')
+    this.preloadAnimation(360, 650, 0.8, 22, 'preloader_leaderboard')
 
     //fetch("https://linipoinComickBookmacroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
     fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
@@ -997,6 +1004,8 @@ export class Mainmenu extends Phaser.Scene {
       headerImage.width = 300;
       headerImage.height = 70;
 
+      bgSound.stop();
+
       video.addEventListener('play', (event) => {
 
         adHeader = this.add.dom(360, 360, 'div', {
@@ -1005,12 +1014,12 @@ export class Mainmenu extends Phaser.Scene {
           'height' : '170px'
         }).setDepth(1);
 
-        advideoTimer = this.add.dom(360, 840, 'p', {
+        advideoTimer = this.add.dom(680, 10, 'p', {
           'font-family' : 'Arial',
-          'font-size' : '1.8em',
-          'font-weight' : 'bold',
+          'font-size' : '2.1em',
+          //'font-weight' : '',
           'color' : 'white'
-        }, '``').setDepth(1);
+        }, '').setDepth(1);
 
         adHeaderImg = this.add.dom(360, 360, headerImage).setDepth(1);
 
@@ -1041,6 +1050,7 @@ export class Mainmenu extends Phaser.Scene {
 
     if(videoTimer === 0){
 
+      advideoTimer.destroy()
       videoTimerEvent.remove(false);
     }
   }

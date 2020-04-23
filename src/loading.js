@@ -62,6 +62,7 @@ export class Loading extends Phaser.Scene{
       frameWidth: 128,
       frameHeight: 128
     });
+    this.load.image('ad-confirm-panel', "./src/assets/ad_loading_panel.png");
     this.load.image('confirm-panel-10', "./src/assets/confirm_panel_10.png");
     this.load.image('confirm-panel-50', "./src/assets/confirm_panel_50.png");
     this.load.image('confirm-panel-100', "./src/assets/confirm_panel_100.png");

@@ -518,8 +518,8 @@ export class GamePlay extends Phaser.Scene {
 
     preload.anims.play('loading_highscore', true);
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
 
       method:"PUT",
       headers: {

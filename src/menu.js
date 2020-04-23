@@ -693,9 +693,8 @@ export class Mainmenu extends Phaser.Scene {
 
     }).catch(error => {
 
-      console.log(error.json());
+      //console.log(error.json());
     });
-    //console.log(data);
   }
 
   getUserData(){
@@ -760,7 +759,7 @@ export class Mainmenu extends Phaser.Scene {
 
     }).catch(error => {
 
-      console.log(error);
+      //console.log(error);
       preload.destroy();
       errorPanel = this.add.sprite(360, 640, 'error_panel').setScale(0.8);
       errorPanel.setOrigin(0.5, 0.5);
@@ -964,7 +963,7 @@ export class Mainmenu extends Phaser.Scene {
       //console.log(data.result.message);
     }).catch(error => {
 
-      console.log(error);
+      //console.log(error);
     })
   }
 

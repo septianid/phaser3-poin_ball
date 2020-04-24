@@ -221,7 +221,7 @@ export class Mainmenu extends Phaser.Scene {
 
     this.disableMainButton(listOfButton)
 
-    payPoinButton = this.add.sprite(250, 650, buttonAsset).setScale(0.3)
+    payPoinButton = this.add.sprite(360, 670, buttonAsset).setScale(0.7)
     payPoinButton.setOrigin(0.5, 0.5);
     payPoinButton.setInteractive();
     payPoinButton.on('pointerdown', () => {
@@ -236,18 +236,19 @@ export class Mainmenu extends Phaser.Scene {
 
     watchAdButton = this.add.sprite(470, 650, 'watch-ad').setScale(0.3);
     watchAdButton.setOrigin(0.5, 0.5);
-    watchAdButton.setInteractive();
-    watchAdButton.on('pointerdown', () => {
-
-      let adLoadingPanel
-
-      adLoadingPanel = this.add.sprite(360, 640, 'ad-confirm-panel').setScale(0.8)
-      adLoadingPanel.setOrigin(0.5, 0.5);
-      this.preloadAnimation(360, 670, 0.8, 22, 'preloader_highscore');
-
-      this.getConnectionStatus();
-      this.getAdSource();
-    })
+    watchAdButton.visible = false;
+    // watchAdButton.setInteractive();
+    // watchAdButton.on('pointerdown', () => {
+    //
+    //   let adLoadingPanel
+    //
+    //   adLoadingPanel = this.add.sprite(360, 640, 'ad-confirm-panel').setScale(0.8)
+    //   adLoadingPanel.setOrigin(0.5, 0.5);
+    //   this.preloadAnimation(360, 670, 0.8, 22, 'preloader_highscore');
+    //
+    //   this.getConnectionStatus();
+    //   this.getAdSource();
+    // })
   }
 
   showUserConfirmation(panelAsset, size){
@@ -603,27 +604,27 @@ export class Mainmenu extends Phaser.Scene {
         //let requiredPoin
         if(userPlayTime >= 10 && userPlayTime < 20){
           //requiredPoin = 50
-          this.showPlayOptionButton('pay-poin-50', 50)
+          this.showPlayOptionButton('play_button', 50)
         }
 
         else if(userPlayTime >= 20 && userPlayTime < 30){
           //requiredPoin = 100
-          this.showPlayOptionButton('pay-poin-100', 100)
+          this.showPlayOptionButton('play_button', 100)
         }
 
         else if(userPlayTime >= 30 && userPlayTime < 40){
           //requiredPoin = 150
-          this.showPlayOptionButton('pay-poin-150', 150)
+          this.showPlayOptionButton('play_button', 150)
         }
 
         else if(userPlayTime >= 40){
           //requiredPoin = 200
-          this.showPlayOptionButton('pay-poin-200', 200)
+          this.showPlayOptionButton('play_button', 200)
         }
 
         else{
           //requiredPoin = 10
-          this.showPlayOptionButton('pay-poin-10', 10);
+          this.showPlayOptionButton('play_button', 10);
         }
       }
 

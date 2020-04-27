@@ -489,7 +489,7 @@ export class Mainmenu extends Phaser.Scene {
 
   showLeaderboard(){
 
-    var startPosId1 = 345;
+    var startPosId1 = 340;
     var startPosScore1 = startPosId1 + 15;
     var startPosId2 = 640;
     var startPosScore2 = startPosId2 + 15;
@@ -670,8 +670,8 @@ export class Mainmenu extends Phaser.Scene {
 
     }
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
 
       method:"POST",
       headers: {
@@ -702,8 +702,8 @@ export class Mainmenu extends Phaser.Scene {
 
     this.preloadAnimation(360, 580, 0.5, 19, 'preloader_menu');
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/?lang=en&session="+myParam+"&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
 
@@ -769,8 +769,10 @@ export class Mainmenu extends Phaser.Scene {
 
   getUserRank(){
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    this.preloadAnimation(360, 650, 0.8, 22, 'preloader_leaderboard')
+
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
     }).then(response => {
@@ -780,14 +782,14 @@ export class Mainmenu extends Phaser.Scene {
 
       //console.log(data.result);
 
-      if(data.result.rank_high_score === 0){
+      if(data.result.rank_high_score === "-"){
 
-        userRankText = this.add.text(185, 930, '-', {
+        userRankText = this.add.text(180, 930, '-', { // x = +5 y = -20
           font: '26px ComickBook',
           fill: '#606060'
         });
 
-        userHighScoreText = this.add.text(510, userRankText.y + 5, '0', {
+        userHighScoreText = this.add.text(510, userRankText.y + 5, '0', {  // x = -20
           font: '24px ComickBook',
           fill: '#606060',
         })
@@ -795,7 +797,7 @@ export class Mainmenu extends Phaser.Scene {
 
       else{
 
-        userRankText = this.add.text(180, 950, '# '+data.result.rank_high_score.ranking, {
+        userRankText = this.add.text(175, 950, '# '+data.result.rank_high_score.ranking, {
           font: '20px ComickBook',
           fill: '#606060',
           align: 'left'
@@ -810,14 +812,14 @@ export class Mainmenu extends Phaser.Scene {
         userHighScoreText.setOrigin(1, 0.5);
       }
 
-      if(data.result.rank_total_score === 0){
+      if(data.result.rank_total_score === "-"){
 
-        userCumRankText = this.add.text(185, 970, '-', {
+        userCumRankText = this.add.text(180, 970, '-', { // x = +5 y = -20
           font: '26px ComickBook',
           fill: '#606060'
         })
 
-        userCumHighScoreText = this.add.text(510, userCumRankText.y + 5, '0', {
+        userCumHighScoreText = this.add.text(510, userCumRankText.y + 5, '0', { // x = -20
           font: '24px ComickBook',
           fill: '#606060',
         })
@@ -825,7 +827,7 @@ export class Mainmenu extends Phaser.Scene {
 
       else {
 
-        userCumRankText = this.add.text(180, 990, '# '+data.result.rank_total_score.ranking, {
+        userCumRankText = this.add.text(175, 990, '# '+data.result.rank_total_score.ranking, {
           font: '20px ComickBook',
           fill: '#606060',
           align: 'left'
@@ -846,10 +848,9 @@ export class Mainmenu extends Phaser.Scene {
 
   getLeaderboardData(posId, posScore, posId2, posScore2){
 
-    this.preloadAnimation(360, 650, 0.8, 22, 'preloader_leaderboard')
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method: "GET",
     }).then(response => {
@@ -860,7 +861,7 @@ export class Mainmenu extends Phaser.Scene {
 
       //console.log(data.result);
       preload.destroy();
-      for(let i=0; i<5; i++){
+      for(let i= 0; i < data.result.highscore_leaderboard.length; i++){
 
         if (i == 0){
 
@@ -887,7 +888,7 @@ export class Mainmenu extends Phaser.Scene {
           fill: '#606060'
         });
 
-        scoreTextArr[i] = this.add.text(520, posScore, ''+data.result.highscore_leaderboard[i].user_highscore, {
+        scoreTextArr[i] = this.add.text(530, posScore, ''+data.result.highscore_leaderboard[i].user_highscore, {
           font: '20px ComickBook',
           fill: '#606060',
           align: 'right'
@@ -897,7 +898,7 @@ export class Mainmenu extends Phaser.Scene {
         //closeButton.setInteractive();
       }
 
-      for(let i=0; i < 5; i++){
+      for(let i= 0; i < data.result.totalscore_leaderboard.length; i++){
 
         if(i == 0){
 
@@ -925,7 +926,7 @@ export class Mainmenu extends Phaser.Scene {
           fill: '#606060'
         });
 
-        scoreCumTextArr[i] = this.add.text(520, posScore2, ''+data.result.totalscore_leaderboard[i].total_score, {
+        scoreCumTextArr[i] = this.add.text(530, posScore2, ''+data.result.totalscore_leaderboard[i].total_score, {
           font: '20px ComickBook',
           fill: '#606060',
           align: 'right'

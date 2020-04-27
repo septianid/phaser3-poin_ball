@@ -18,6 +18,7 @@ var collideBall;
 var tempDataID;
 var tempSession;
 var tempDataScore;
+var userLog = []
 //var lastHighScore;
 
 var isCollide;
@@ -54,10 +55,25 @@ var gameOptions = {
   arcsOnCircle: 3
 }
 
-window.onbeforeunload = () => {
+// window.onbeforeunload = () => {
+//
+//   return "Do you really want to leave our application?";
+// }
 
-  return "Do you really want to leave our application?";
-}
+window.addEventListener('beforeunload', (e) => {
+
+  e.preventDefault();
+  var message = 'Are You Sure?'
+
+  if (typeof e == 'undefined') {
+    e = window.event
+  }
+  if (e) {
+    e.returnValue = message
+  }
+
+  return message;
+})
 
 export class GamePlay extends Phaser.Scene {
 
@@ -352,6 +368,7 @@ export class GamePlay extends Phaser.Scene {
 
               // at the end of the tween, save bottomCircle value
               let currentCircle = this.bottomCircle;
+              let date = new Date()
 
               // update bottomCircle value
               this.bottomCircle = Phaser.Math.Wrap(this.bottomCircle + 1, 0, gameOptions.numCircles);
@@ -367,6 +384,13 @@ export class GamePlay extends Phaser.Scene {
               scoreSign.visible = true;
               this.scoreText.visible = true;
               this.scoreText.text = "" +this.score;
+
+              userLog.push({
+
+                time: date,
+                score: this.score
+              })
+              //console.log(userLog);
             }
           })
         }
@@ -470,6 +494,7 @@ export class GamePlay extends Phaser.Scene {
   exitGame(){
 
     tempDataID = 0;
+    userLog = []
     this.scene.start("Menu");
   }
 
@@ -518,8 +543,8 @@ export class GamePlay extends Phaser.Scene {
 
     preload.anims.play('loading_highscore', true);
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
 
       method:"PUT",
       headers: {
@@ -533,6 +558,7 @@ export class GamePlay extends Phaser.Scene {
         session: userSession,
         game_end: end,
         score: this.score,
+        log: userLog
       }),
     }).then(response => response.json()).then(res => {
 
@@ -563,7 +589,7 @@ export class GamePlay extends Phaser.Scene {
 
     }).catch(error => {
 
-      console.log(error.json());
+      //console.log(error.json());
     });
   }
 }

@@ -161,7 +161,7 @@ export class Loading extends Phaser.Scene{
     });
 
     this.load.on('complete', () => {
-      // this.sound.play('music_menu');
+
       loadingText.destroy();
       progressBox.setDepth(1);
       progressBar.fillStyle(0xFFBC00, 1)
@@ -196,13 +196,9 @@ export class Loading extends Phaser.Scene{
     this.input.on("pointerdown", () => {
 
       this.scene.start("Menu");
+      
     })
-    // window.addEventListener('load', function () {
-    // window.focus();
-    // document.body.addEventListener('click',function(e) {
-    //     window.focus();
-    //   },false);
-    // });
+
   }
 
 }

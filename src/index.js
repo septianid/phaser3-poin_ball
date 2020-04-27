@@ -7,6 +7,7 @@ import {Mainmenu} from './menu.js';
 window.onload = function(){
 
   //console.log(this.device.os)
+
   var config;
   var game;
   var userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -92,6 +93,7 @@ window.onload = function(){
   }
 
   return "unknown";
+
 
   window.focus();
 

@@ -797,8 +797,8 @@ export class Mainmenu extends Phaser.Scene {
 
       else{
 
-        userRankText = this.add.text(175, 950, '# '+data.result.rank_high_score.ranking, {
-          font: '20px ComickBook',
+        userRankText = this.add.text(170, 950, '# '+data.result.rank_high_score.ranking, {
+          font: '15px ComickBook',
           fill: '#606060',
           align: 'left'
         });
@@ -827,10 +827,10 @@ export class Mainmenu extends Phaser.Scene {
 
       else {
 
-        userCumRankText = this.add.text(175, 990, '# '+data.result.rank_total_score.ranking, {
-          font: '20px ComickBook',
+        userCumRankText = this.add.text(170, 990, '# '+data.result.rank_total_score.ranking, {
+          font: '15px ComickBook',
           fill: '#606060',
-          align: 'left'
+          align: 'left',
         })
         userCumRankText.setOrigin(0, 0.5);
 
@@ -841,6 +841,8 @@ export class Mainmenu extends Phaser.Scene {
         })
         userCumHighScoreText.setOrigin(1, 0.5);
       }
+
+      preload.destroy();
 
       closeButton.setInteractive();
     })
@@ -855,12 +857,17 @@ export class Mainmenu extends Phaser.Scene {
       method: "GET",
     }).then(response => {
 
-      return response.json();
+      if(!response.ok){
+        return response.json().then(error => Promise.reject(error));
+      }
+      else {
+        return response.json();
+      }
 
     }).then(data => {
 
       //console.log(data.result);
-      preload.destroy();
+      //preload.destroy();
       for(let i= 0; i < data.result.highscore_leaderboard.length; i++){
 
         if (i == 0){

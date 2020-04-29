@@ -76,7 +76,7 @@ export class Loading extends Phaser.Scene{
     this.load.image('watch-ad', "./src/assets/watch_ad_button.png");
     this.load.image('ok_button', "./src/assets/ok_button.png");
     this.load.image('no_button', "./src/assets/no_button.png");
-
+    this.load.image('data-required-warn', "./src/assets/data_required_warn.png");
     this.load.image('poin-warn-panel', "./src/assets/no_poin_panel.png");
     this.load.image('limit-warn-panel', "./src/assets/play_limit_panel.png");
     this.load.image('email_verify', './src/assets/email_verify.png');
@@ -196,7 +196,7 @@ export class Loading extends Phaser.Scene{
     this.input.on("pointerdown", () => {
 
       this.scene.start("Menu");
-      
+
     })
 
   }

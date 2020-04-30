@@ -23,7 +23,7 @@ var userLog = []
 
 var isCollide;
 
-
+var CryptoJS = require('crypto-js')
 // global object containing all configurable options
 var gameOptions = {
 
@@ -543,23 +543,28 @@ export class GamePlay extends Phaser.Scene {
 
     preload.anims.play('loading_highscore', true);
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
+    let final = {
 
-      method:"PUT",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-
+      datas: CryptoJS.AES.encrypt(JSON.stringify({
         linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
         id: tempDataID,
         session: userSession,
         game_end: end,
         score: this.score,
         log: userLog
-      }),
+      }), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
+    }
+
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score/",{
+    //fetch("https://9b2caf6f.ngrok.io/api/v1.0/leaderboard/score/",{
+
+      method:"PUT",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(final)
     }).then(response => response.json()).then(res => {
 
       //console.log(res.result.user_highscore);

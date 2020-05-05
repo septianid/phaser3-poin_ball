@@ -25,6 +25,7 @@ export class Loading extends Phaser.Scene{
     //this.cameras.main.setBackgroundColor('#222E61');
     this.add.image(360, 640, 'background_loading').setScale(0.67);
     this.add.image(360, 350, 'game-title').setScale(.6);
+    this.load.image('warn-text', "./src/assets/warn_text.png");
     this.load.image('quit_button', "./src/assets/quit_button.png");
     this.load.image('play_button', "./src/assets/play_button.png");
     this.load.image('hint_button', "./src/assets/hint_button.png");

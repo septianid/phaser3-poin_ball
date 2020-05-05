@@ -62,6 +62,9 @@ var zone;
 var mask;
 let nextButton;
 let prevButton;
+let warnText;
+let warnContent = [];
+let i;
 
 var musicStatus;
 var detailStatus;
@@ -87,6 +90,14 @@ export class Mainmenu extends Phaser.Scene {
 
     clickSFX = this.sound.add('button_click');
     closeSFX = this.sound.add('close_section');
+    // i = 0
+    // warnContent = [
+    //
+    //   'Bagi pemain yang terindikasi melakukan kecurangan, pihak LINIPOIN akan mengambil tindakan tegas',
+    //   'Selamat bermain LINIGAMES: BISCUIT HOPPER. Seluruh pemain dianggap telah memahami dan mematuhi T&C permainan.',
+    //   'Selamat bermain LINIGAMES: BISCUIT HOPPER. Apabila kamu menemukan adanya kecurangan, silahkan laporkan ke Pusat Bantuan LINIPOIN.',
+    //   'Terima kasih kepada pemain LINIGAMES: BISCUIT HOPPER yang telah menjaga sportifitas dalam permainan.'
+    // ]
 
     //bgSound.play();
     bgSound.loop = true;
@@ -105,11 +116,19 @@ export class Mainmenu extends Phaser.Scene {
     background_menu.scaleY = 0.67;
     background_menu.setOrigin(0.5, 0.5);
 
+    var warningBG = this.add.graphics();
+    warningBG.fillStyle(0xFFF6E8, 1)
+    warningBG.fillRect(0, 0, 720, 50)
+
+    warnText = this.add.sprite(6500, 25, 'warn-text').setScale(0.35)
+    warnText.setOrigin(1, 0.5)
+    // warnText = this.add.text(2300, 25, ''+ warnContent[i],{
+    //   font: 'bold 28px Arial',
+    //   fill: '#C52A27',
+    // }).setOrigin(1, 0.5)
+
     title = this.add.sprite(360, 350, 'game-title').setScale(.6);
     title.setOrigin(0.5, 0.5);
-
-    //banner = this.add.sprite(360, 100, 'linipoin-banner').setScale(.5);
-    //banner.setOrigin(0.5, 0.5);
 
     this.getUserData();
 
@@ -146,7 +165,12 @@ export class Mainmenu extends Phaser.Scene {
 
   update(){
 
+    warnText.x -= 1
+    if(warnText.x <= 0){
 
+      //warnText.setOrigin(0, 0.5);
+      warnText.x = 6500
+    }
   }
 
   toggleSound(){
@@ -162,29 +186,6 @@ export class Mainmenu extends Phaser.Scene {
       musicButton.setTexture('music_button_on').setScale(0.65);
       bgSound.resume();
     }
-  }
-
-  quitGame(){
-
-    // switch(this.getMobileOperatingSystem()){
-    //
-    //   case 'Android':
-    //     urlLink1 = "linipoin://";
-    //     window.location.href = urlLink1;
-    //     break;
-    //   case 'iOS':
-    //     urlLink1 = "linipoin://";
-    //     window.location.href = urlLink1;
-    //     break;
-    //   default:
-    //     top.location.href = urlLink1;
-    //     console.log(urlLink1);
-    //     break;
-    //   }
-
-    window.open("linipoin://tabs/home");
-    //ttes.writeHead(302, { Location: 'linipoin://tabs/home' });
-
   }
 
   enableMainButton(buttonList){
@@ -654,9 +655,9 @@ export class Mainmenu extends Phaser.Scene {
 
   postDataOnStart(start, userSession, isWatchAd){
 
-    let final
+    let final;
+    let requestID = CryptoJS.AES.encrypt('LG'+'+66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43+'+Date.now(), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
     let data = {
-
       linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
       session: userSession,
       score: 0,
@@ -680,16 +681,15 @@ export class Mainmenu extends Phaser.Scene {
       }
     }
 
-    //console.log(data);
-
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
-    //fetch("https://9b2caf6f.ngrok.io/api/v1.0/leaderboard/", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
+    //fetch("https://f9c4bb3b.ngrok.io/api/v1.0/leaderboard/", {
 
       method:"POST",
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'request-id' : requestID
       },
       body: JSON.stringify(final),
     }).then(response => {
@@ -703,7 +703,6 @@ export class Mainmenu extends Phaser.Scene {
     }).then(res => {
 
       tempID = res.result.id;
-      //console.log(tempID);
       if(res.result.id >= 0){
 
         this.scene.start("PlayGame", {
@@ -715,7 +714,7 @@ export class Mainmenu extends Phaser.Scene {
 
     }).catch(error => {
 
-      //console.log(error);
+      console.log(error.result);
     });
   }
 
@@ -731,8 +730,8 @@ export class Mainmenu extends Phaser.Scene {
       }), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
     }
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
     //fetch("https://9b2caf6f.ngrok.io/api/v1.0/leaderboard/check_user_limit/", {
 
       method: "POST",
@@ -814,8 +813,8 @@ export class Mainmenu extends Phaser.Scene {
 
     this.preloadAnimation(360, 650, 0.8, 22, 'preloader_leaderboard')
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
     }).then(response => {
@@ -894,8 +893,8 @@ export class Mainmenu extends Phaser.Scene {
   getLeaderboardData(posId, posScore, posId2, posScore2){
 
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method: "GET",
     }).then(response => {

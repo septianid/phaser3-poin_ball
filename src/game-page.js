@@ -278,17 +278,17 @@ export class GamePlay extends Phaser.Scene {
     // this is a speed divider to apply to tween duration
     // this way it will range from 1/0.3 to 1/0.5 seconds
 
-    if(this.score >= 0){
+    if(this.score >= 0 && this.score < 24){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.15, 0.28);
       // console.log(this.arcTweens[i].timeScale);
     }
 
-    if (this.score >= 15){
+    if (this.score >= 24 && this.score < 36){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.35, 0.48);
       // console.log(this.arcTweens[i].timeScale);
     }
 
-    if(this.score >= 30){
+    if(this.score >= 36 && this.score < 50){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.55, 0.68);
       // console.log(this.arcTweens[i].timeScale);
     }
@@ -498,33 +498,6 @@ export class GamePlay extends Phaser.Scene {
     this.scene.start("Menu");
   }
 
-  // postDataOnStart(start, userSession){
-  //
-  //   fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
-  //   //fetch("https://1f584819.ngrok.io/api/v1.0/leaderboard/",{
-  //
-  //     method:"POST",
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //       linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
-  //       session: userSession,
-  //       score: 0,
-  //       game_start: start,
-  //       user_highscore: 0,
-  //       total_score: 0,
-  //     }),
-  //   }).then(response => response.json()).then(res => {
-  //
-  //     tempID = res.result.id;
-  //   }).catch(error => {
-  //
-  //     console.log(error.json());
-  //   });
-  // }
-
   postDataOnFinal(end, userSession){
 
     let preload = this.add.sprite(360, 780, 'preloader_highscore').setOrigin(0.5 ,0.5);
@@ -543,6 +516,7 @@ export class GamePlay extends Phaser.Scene {
 
     preload.anims.play('loading_highscore', true);
 
+    let requestID = CryptoJS.AES.encrypt('LG'+'+66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43+'+Date.now(), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
     let final = {
 
       datas: CryptoJS.AES.encrypt(JSON.stringify({
@@ -555,14 +529,15 @@ export class GamePlay extends Phaser.Scene {
       }), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
     }
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score/",{
-    //fetch("https://9b2caf6f.ngrok.io/api/v1.0/leaderboard/score/",{
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score/",{
+    //fetch("https://f9c4bb3b.ngrok.io/api/v1.0/leaderboard/score/",{
 
       method:"PUT",
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'request-id' : requestID
       },
       body: JSON.stringify(final)
     }).then(response => response.json()).then(res => {

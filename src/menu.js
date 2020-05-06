@@ -15,12 +15,8 @@ var okButton;
 var detailButton;
 let payPoinButton;
 let watchAdButton;
-var preload;
-
-var clickSFX;
-var closeSFX;
-var bgSound;
-
+let nextButton;
+let prevButton;
 var errorPanel;
 var detailPanel;
 var leaderboardPanel;
@@ -29,6 +25,8 @@ var tncPanel;
 var noPoinWarnPanel;
 var limitWarnPanel;
 
+
+var preload;
 var idTextArr = [];
 var scoreTextArr = [];
 var idCumTextArr = [];
@@ -43,32 +41,32 @@ var videoTimer;
 var advideoTimer;
 var videoTimerEvent
 
-var tempLimit;
-var tempScore;
-var playerStatus;
-var tempUserPoin;
 var tempID;
-var userEmail;
-var userGender;
-var userDOB;
-var userPhone;
-var userPlayTime;
-
-var startTime;
+// var tempLimit;
+// var tempScore;
+// var playerStatus;
+// var tempUserPoin;
+// var userEmail;
+// var userGender;
+// var userDOB;
+// var userPhone;
+// var userPlayTime;
+var whoAmI = {};
 
 var graphics;
 var text;
 var zone;
 var mask;
-let nextButton;
-let prevButton;
 let warnText;
 let warnContent = [];
-let i;
 
+var clickSFX;
+var closeSFX;
+var bgSound;
 var musicStatus;
 var detailStatus;
 
+var whatTimeIsIt;
 var urlParams = new URLSearchParams(window.location.search);
 var myParam = urlParams.get('session');
 
@@ -130,7 +128,7 @@ export class Mainmenu extends Phaser.Scene {
     title = this.add.sprite(360, 350, 'game-title').setScale(.6);
     title.setOrigin(0.5, 0.5);
 
-    this.getUserData();
+    this.iGotAmnesia();
 
     hintButton = this.add.image(230, 870, 'hint_button').setScale(0.65);
     hintButton.setOrigin(0.5, 0.5);
@@ -144,8 +142,6 @@ export class Mainmenu extends Phaser.Scene {
     tncButton.setOrigin(0.5, 0.5);
     tncButton.on('pointerdown', () => this.showTnC());
 
-    // musicButton = this.add.sprite(tncButton.x, leaderButton.y, 'music_button on').setScale(0.65);
-    // musicButton.setOrigin(0.5, 0.5);
     if(musicStatus == true){
 
       bgSound.play();
@@ -159,7 +155,6 @@ export class Mainmenu extends Phaser.Scene {
       musicButton.setOrigin(0.5, 0.5);
     }
 
-    //musicButton.setInteractive();
     musicButton.on('pointerdown', () => this.toggleSound());
   }
 
@@ -202,21 +197,21 @@ export class Mainmenu extends Phaser.Scene {
     })
   }
 
-  startGame(){
+  passIt(){
 
     this.disableMainButton(listOfButton);
 
     clickSFX.play();
 
-    if(playerStatus == true){
+    if(whoAmI.canIPlay == true){
 
       this.showWarningPanel('limit-warn-panel', 0.8)
     }
     else {
 
       playButton.disableInteractive();
-      startTime = new Date();
-      this.postDataOnStart(startTime, myParam, false);
+      whatTimeIsIt = new Date();
+      this.someoneWantsToMeetYou(whatTimeIsIt, myParam, false);
     }
   }
 
@@ -229,7 +224,7 @@ export class Mainmenu extends Phaser.Scene {
     payPoinButton.setInteractive();
     payPoinButton.on('pointerdown', () => {
 
-      if (tempUserPoin < poinRequired) {
+      if (whoAmI.wealthLevel < poinRequired) {
         this.showWarningPanel('poin-warn-panel', 0.8);
       }
       else {
@@ -271,11 +266,11 @@ export class Mainmenu extends Phaser.Scene {
     agreeButton.on('pointerdown', () => {
 
       this.preloadAnimation(360, 530, 0.3, 22, 'preloader_highscore')
-      startTime = new Date();
+      whatTimeIsIt = new Date();
       clickSFX.play();
       agreeButton.disableInteractive();
       disagreeButton.disableInteractive();
-      this.postDataOnStart(startTime, myParam, false);
+      this.someoneWantsToMeetYou(whatTimeIsIt, myParam, false);
     });
 
     disagreeButton = this.add.sprite(470, 840, 'no_button').setScale(.3);
@@ -517,8 +512,8 @@ export class Mainmenu extends Phaser.Scene {
     //closeButton.setInteractive();
     closeButton.on('pointerdown', () => this.destroyLeaderBoardPanel());
 
-    this.getUserRank();
-    this.getLeaderboardData(startPosId1, startPosScore1, startPosId2, startPosScore2);
+    this.amIWorthy();
+    this.myFellowChampions(startPosId1, startPosScore1, startPosId2, startPosScore2);
     //this.getCumulativeLeaderboardData(startPosId2, startPosScore2);
     this.disableMainButton(listOfButton);
   }
@@ -577,7 +572,7 @@ export class Mainmenu extends Phaser.Scene {
     }
   }
 
-  drawHeart(remainingLife){
+  thinkIMACat(remainingLife){
 
     let startPos = 300;
 
@@ -597,30 +592,30 @@ export class Mainmenu extends Phaser.Scene {
 
       playButton = this.add.sprite(360, 720, 'play_button').setScale(.7);
       playButton.setOrigin(0.5, 0.5);
-      playButton.on('pointerdown', () => this.startGame());
+      playButton.on('pointerdown', () => this.passIt());
     }
 
     else {
 
-      if(playerStatus == false){
+      if(whoAmI.canIPlay == false){
 
         //let requiredPoin
-        if(userPlayTime >= 10 && userPlayTime < 20){
+        if(whoAmI.iPlayXth >= 10 && whoAmI.iPlayXth < 20){
           //requiredPoin = 50
           this.showPlayOptionButton('play_button', 50)
         }
 
-        else if(userPlayTime >= 20 && userPlayTime < 30){
+        else if(whoAmI.iPlayXth >= 20 && whoAmI.iPlayXth < 30){
           //requiredPoin = 100
           this.showPlayOptionButton('play_button', 100)
         }
 
-        else if(userPlayTime >= 30 && userPlayTime < 40){
+        else if(whoAmI.iPlayXth >= 30 && whoAmI.iPlayXth < 40){
           //requiredPoin = 150
           this.showPlayOptionButton('play_button', 150)
         }
 
-        else if(userPlayTime >= 40){
+        else if(whoAmI.iPlayXth >= 40){
           //requiredPoin = 200
           this.showPlayOptionButton('play_button', 200)
         }
@@ -653,15 +648,15 @@ export class Mainmenu extends Phaser.Scene {
     preload.anims.play(assetKey, true);
   }
 
-  postDataOnStart(start, userSession, isWatchAd){
+  someoneWantsToMeetYou(noteTheTime, idCard, isWatchAd){
 
     let final;
     let requestID = CryptoJS.AES.encrypt('LG'+'+66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43+'+Date.now(), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
     let data = {
       linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
-      session: userSession,
+      session: idCard,
       score: 0,
-      game_start: start,
+      game_start: noteTheTime,
       user_highscore: 0,
       total_score: 0,
     }
@@ -681,8 +676,8 @@ export class Mainmenu extends Phaser.Scene {
       }
     }
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
     //fetch("https://f9c4bb3b.ngrok.io/api/v1.0/leaderboard/", {
 
       method:"POST",
@@ -708,7 +703,7 @@ export class Mainmenu extends Phaser.Scene {
         this.scene.start("PlayGame", {
           session: myParam,
           id: tempID,
-          score: tempScore,
+          score: whoAmI.obeyTheCommittee,
         });
       }
 
@@ -718,7 +713,7 @@ export class Mainmenu extends Phaser.Scene {
     });
   }
 
-  getUserData(){
+  iGotAmnesia(){
 
     this.preloadAnimation(360, 580, 0.5, 19, 'preloader_menu');
 
@@ -730,8 +725,8 @@ export class Mainmenu extends Phaser.Scene {
       }), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
     }
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
     //fetch("https://9b2caf6f.ngrok.io/api/v1.0/leaderboard/check_user_limit/", {
 
       method: "POST",
@@ -750,7 +745,7 @@ export class Mainmenu extends Phaser.Scene {
       }
     }).then(data => {
 
-      //console.log(data);
+      //console.log(data.result);
       let phoneNumber = data.result.phone_number;
 
       if(data.result.isEmailVerif === false){
@@ -762,26 +757,29 @@ export class Mainmenu extends Phaser.Scene {
       }
       else {
 
-        userPlayTime = data.result.play_count;
-        userEmail = data.result.email;
-        userPhone = '0' + phoneNumber.substring(3);
-
-        if(data.result.gender === 'm'){
-          userGender = 'male'
-        }
-        else {
-          userGender = 'female'
-        }
-
-        userDOB = data.result.dob;
-        tempScore = data.result.gamePoin;
-        tempLimit = data.result.lifePlay;
-        playerStatus = data.result.isLimit;
-        tempUserPoin = data.result.userPoin;
+        // userEmail = data.result.email;
+        // userDOB = data.result.dob;
+        // userPhone = '0' + phoneNumber.substring(3);
+        // if(data.result.gender === 'm'){
+        //   userGender = 'male'
+        // }
+        // else {
+        //   userGender = 'female'
+        // }
+        // userDOB = data.result.dob;
+        // tempScore = data.result.gamePoin;
+        // tempLimit = data.result.lifePlay;
+        // playerStatus = data.result.isLimit;
+        // tempUserPoin = data.result.userPoin;
+        whoAmI.iPlayXth = data.result.play_count;
+        whoAmI.obeyTheCommittee = data.result.gamePoin;
+        whoAmI.iPlayFreely = data.result.lifePlay;
+        whoAmI.canIPlay = data.result.isLimit;
+        whoAmI.wealthLevel = data.result.userPoin;
 
         preload.destroy()
-        this.drawHeart(tempLimit);
-        //playButton.setInteractive();
+        this.thinkIMACat(whoAmI.iPlayFreely);
+
         if(data.result.lifePlay != 0){
           listOfButton = [playButton, hintButton, leaderButton, tncButton, musicButton]
         }
@@ -793,7 +791,7 @@ export class Mainmenu extends Phaser.Scene {
 
     }).catch(error => {
 
-      //console.log(error);
+      console.log(error);
       if(error.result.code === 'LGPV020'){
 
         errorPanel = this.add.sprite(360, 640, 'data-required-warn').setScale(0.8);
@@ -809,12 +807,12 @@ export class Mainmenu extends Phaser.Scene {
     });
   }
 
-  getUserRank(){
+  amIWorthy(){
 
     this.preloadAnimation(360, 650, 0.8, 22, 'preloader_leaderboard')
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
     }).then(response => {
@@ -890,11 +888,11 @@ export class Mainmenu extends Phaser.Scene {
     })
   }
 
-  getLeaderboardData(posId, posScore, posId2, posScore2){
+  myFellowChampions(posId, posScore, posId2, posScore2){
 
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method: "GET",
     }).then(response => {
@@ -995,116 +993,116 @@ export class Mainmenu extends Phaser.Scene {
 
   }
 
-  getConnectionStatus(){
+  // getConnectionStatus(){
+  //
+  //   //fetch('https://captive-api.macroad.co.id/api/v2/linigames/advertisement/connect/53?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+  //   fetch('https://captive-dev.macroad.co.id/api/v2/linigames/advertisement/connect/53?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+  //
+  //     method: 'GET',
+  //   }).then(response => {
+  //
+  //     if(!response.ok){
+  //       return response.json().then(error => Promise.reject(error));
+  //     }
+  //     else {
+  //       return response.json();
+  //     }
+  //   }).then(data => {
+  //
+  //     //console.log(data.result.message);
+  //   }).catch(error => {
+  //
+  //     //console.log(error);
+  //   })
+  // }
 
-    //fetch('https://captive-api.macroad.co.id/api/v2/linigames/advertisement/connect/53?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
-    fetch('https://captive-dev.macroad.co.id/api/v2/linigames/advertisement/connect/53?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+  // getAdSource(){
+  //
+  //   this.disableMainButton(listOfButton);
+  //   //console.log('Tes');
+  //
+  //   //fetch('https://captive-api.macroad.co.id/api/v2/linigames/advertisement?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+  //   fetch('https://captive-dev.macroad.co.id/api/v2/linigames/advertisement?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
+  //
+  //     method: "GET",
+  //   }).then(response => {
+  //
+  //     if(!response.ok){
+  //       return response.json().then(error => Promise.reject(error));
+  //     }
+  //     else {
+  //       return response.json();
+  //     }
+  //   }).then(data => {
+  //
+  //     //console.log(data.result);
+  //     let video = document.createElement('video');
+  //     let headerImage = document.createElement('img');
+  //     let adVideo;
+  //     let adHeader;
+  //     let adHeaderImg;
+  //
+  //     videoTimer = data.result.duration
+  //
+  //     video.src = data.result.main_source;
+  //     video.playsinline = true;
+  //     video.width = 720;
+  //     video.height = 1280;
+  //     video.autoplay = true;
+  //
+  //     headerImage.src = data.result.header_source;
+  //     headerImage.width = 300;
+  //     headerImage.height = 70;
+  //
+  //     bgSound.stop();
+  //
+  //     video.addEventListener('play', (event) => {
+  //
+  //       adHeader = this.add.dom(360, 360, 'div', {
+  //         'background-color' : data.result.header_bg_color,
+  //         'width' : '720px',
+  //         'height' : '170px'
+  //       }).setDepth(1);
+  //
+  //       advideoTimer = this.add.dom(680, 10, 'p', {
+  //         'font-family' : 'Arial',
+  //         'font-size' : '2.1em',
+  //         //'font-weight' : '',
+  //         'color' : 'white'
+  //       }, '').setDepth(1);
+  //
+  //       adHeaderImg = this.add.dom(360, 360, headerImage).setDepth(1);
+  //
+  //       adVideo = this.add.dom(360, 640, video, {
+  //         'background-color': 'black'
+  //       });
+  //
+  //       videoTimerEvent = this.time.addEvent({
+  //         delay: 1000,
+  //         callback: this.onPlay,
+  //         loop: true
+  //       })
+  //
+  //     })
+  //
+  //     video.addEventListener('ended', (event) => {
+  //
+  //       this.someoneWantsToMeetYou(whatTimeIsIt, myParam, true);
+  //     })
+  //   })
+  // }
 
-      method: 'GET',
-    }).then(response => {
-
-      if(!response.ok){
-        return response.json().then(error => Promise.reject(error));
-      }
-      else {
-        return response.json();
-      }
-    }).then(data => {
-
-      //console.log(data.result.message);
-    }).catch(error => {
-
-      //console.log(error);
-    })
-  }
-
-  getAdSource(){
-
-    this.disableMainButton(listOfButton);
-    //console.log('Tes');
-
-    //fetch('https://captive-api.macroad.co.id/api/v2/linigames/advertisement?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
-    fetch('https://captive-dev.macroad.co.id/api/v2/linigames/advertisement?email='+userEmail+'&dob='+userDOB+'&gender='+userGender+'&phone_number='+userPhone, {
-
-      method: "GET",
-    }).then(response => {
-
-      if(!response.ok){
-        return response.json().then(error => Promise.reject(error));
-      }
-      else {
-        return response.json();
-      }
-    }).then(data => {
-
-      //console.log(data.result);
-      let video = document.createElement('video');
-      let headerImage = document.createElement('img');
-      let adVideo;
-      let adHeader;
-      let adHeaderImg;
-
-      videoTimer = data.result.duration
-
-      video.src = data.result.main_source;
-      video.playsinline = true;
-      video.width = 720;
-      video.height = 1280;
-      video.autoplay = true;
-
-      headerImage.src = data.result.header_source;
-      headerImage.width = 300;
-      headerImage.height = 70;
-
-      bgSound.stop();
-
-      video.addEventListener('play', (event) => {
-
-        adHeader = this.add.dom(360, 360, 'div', {
-          'background-color' : data.result.header_bg_color,
-          'width' : '720px',
-          'height' : '170px'
-        }).setDepth(1);
-
-        advideoTimer = this.add.dom(680, 10, 'p', {
-          'font-family' : 'Arial',
-          'font-size' : '2.1em',
-          //'font-weight' : '',
-          'color' : 'white'
-        }, '').setDepth(1);
-
-        adHeaderImg = this.add.dom(360, 360, headerImage).setDepth(1);
-
-        adVideo = this.add.dom(360, 640, video, {
-          'background-color': 'black'
-        });
-
-        videoTimerEvent = this.time.addEvent({
-          delay: 1000,
-          callback: this.onPlay,
-          loop: true
-        })
-
-      })
-
-      video.addEventListener('ended', (event) => {
-
-        this.postDataOnStart(startTime, myParam, true);
-      })
-    })
-  }
-
-  onPlay(){
-
-    videoTimer--
-    advideoTimer.setText(videoTimer)
-    //console.log(videoTimerText.text);
-
-    if(videoTimer === 0){
-
-      advideoTimer.destroy()
-      videoTimerEvent.remove(false);
-    }
-  }
+  // onPlay(){
+  //
+  //   videoTimer--
+  //   advideoTimer.setText(videoTimer)
+  //   //console.log(videoTimerText.text);
+  //
+  //   if(videoTimer === 0){
+  //
+  //     advideoTimer.destroy()
+  //     videoTimerEvent.remove(false);
+  //   }
+  // }
 
 }

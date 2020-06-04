@@ -25,6 +25,7 @@ export class Loading extends Phaser.Scene{
     //this.cameras.main.setBackgroundColor('#222E61');
     this.add.image(360, 640, 'background_loading').setScale(0.67);
     this.add.image(360, 350, 'game-title').setScale(.6);
+    this.load.image('warn-text', "./src/assets/warn_text.png");
     this.load.image('quit_button', "./src/assets/quit_button.png");
     this.load.image('play_button', "./src/assets/play_button.png");
     this.load.image('hint_button', "./src/assets/hint_button.png");
@@ -45,10 +46,6 @@ export class Loading extends Phaser.Scene{
     this.load.image('next_button', "./src/assets/next_button.png");
     this.load.image('prev_button', "./src/assets/prev_button.png");
     this.load.image('life', "./src/assets/life.png");
-    // this.load.spritesheet('tap_sign', "./src/assets/tap_to_start.png", {
-    //   frameWidth: 672,
-    //   frameHeight: 228
-    // });
     this.load.image('tap_sign', "./src/assets/tap_to_start.png");
     this.load.spritesheet('preloader_menu', "./src/assets/preload_menu.png", {
       frameWidth: 128,
@@ -76,7 +73,7 @@ export class Loading extends Phaser.Scene{
     this.load.image('watch-ad', "./src/assets/watch_ad_button.png");
     this.load.image('ok_button', "./src/assets/ok_button.png");
     this.load.image('no_button', "./src/assets/no_button.png");
-
+    this.load.image('data-required-warn', "./src/assets/data_required_warn.png");
     this.load.image('poin-warn-panel', "./src/assets/no_poin_panel.png");
     this.load.image('limit-warn-panel', "./src/assets/play_limit_panel.png");
     this.load.image('email_verify', './src/assets/email_verify.png');
@@ -170,9 +167,9 @@ export class Loading extends Phaser.Scene{
       // title_loading = this.add.sprite(370, 350, 'game-title').setScale(.7);
       // title_loading.setOrigin(0.5, 0.5);
 
-      this.sound.on('decoded',  ()=> {
-        console.log('AUDIO BERHASIL DI LOAD CUX');
-      });
+      // this.sound.on('decoded',  ()=> {
+      //   console.log('AUDIO BERHASIL DI LOAD CUX');
+      // });
     });
   }
 
@@ -196,9 +193,7 @@ export class Loading extends Phaser.Scene{
     this.input.on("pointerdown", () => {
 
       this.scene.start("Menu");
-      
+
     })
-
   }
-
 }

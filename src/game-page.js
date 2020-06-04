@@ -6,24 +6,20 @@ var scoreText;
 var scoreSign;
 var finalScoreText;
 var userHighScore;
-var score;
 var endPanel;
-// var retryButton;
 var exitButton;
 
 var popBall;
 var collideBall;
 
-//var startTime;
-var tempDataID;
-var tempSession;
-var tempDataScore;
-var userLog = []
-//var lastHighScore;
+var damnIt;
+var worthyMeter;
+var leaveMeAlone = []
+var iSignIt;
+var imExist;
+var committeeRule;
 
-var isCollide;
-
-
+var CryptoJS = require('crypto-js')
 // global object containing all configurable options
 var gameOptions = {
 
@@ -83,51 +79,28 @@ export class GamePlay extends Phaser.Scene {
 
   init(data){
 
-    tempSession = data.session;
-    tempDataID = data.id;
-    tempDataScore = data.score;
+    imExist = data.session;
+    iSignIt = data.id;
+    committeeRule = data.score;
   }
 
 
   preload() {
-    // this.load.image('game_background', "./src/assets/background-game.jpg");
-    // this.load.image('ball', "./src/assets/ball.png");
-    // this.load.image('gameover_panel', "./src/assets/end_panel.png");
-    // this.load.image('exit_button', "./src/assets/exit_button.png");
-    // this.load.image('score', "./src/assets/score.png");
+
+
   }
 
   create() {
 
-    // var PhaserGlobal = {
-    //   stopFocus: true
-    // }
-    // if (window['focus']) {
-    //
-    //   if (!window['PhaserGlobal'] || (window['PhaserGlobal'] && !window['PhaserGlobal'].stopFocus)){
-    //
-    //     window.focus();
-    //   }
-    // }
-    isCollide = false;
+    damnIt = false;
 
     this.finalScoreText = '';
     this.userHighScore = '';
 
-    // this.game.events.on('hidden',function(){
-    //   console.log('hidden');
-    // },this);
-
-    // this.game.events.on('hidden',function(){
-    //   console.log('Visible cok')
-    //     this.sound.resume('music_menu');
-    // },this);
-
-
     popBall = this.sound.add('pop-ball');
     collideBall = this.sound.add('lose-ball');
 
-    this.score = 0;
+    this.worthyMeter = 0;
 
     background_game = this.add.sprite(360, 640, 'game_background');
     background_game.scaleX = 0.67;
@@ -199,7 +172,7 @@ export class GamePlay extends Phaser.Scene {
       this.stuffGroup.add(this.landingSpots[i]);
 
       // this method will draw a random circle
-      this.drawCircle(i);
+      this.paintThatShit(i);
     }
 
     // the ball! The hero of our game
@@ -209,12 +182,12 @@ export class GamePlay extends Phaser.Scene {
     this.stuffGroup.add(this.ball);
 
     // wait for player input then call shootBall method
-    this.input.on("pointerdown", () => this.shootBall());
+    this.input.on("pointerdown", () => this.blastOffBlyat());
 
   }
 
   // method to draw a circle along with its landing area
-  drawCircle(i) {
+  paintThatShit(i) {
 
     // clear the graphic object
     this.circles[i].clear();
@@ -278,24 +251,28 @@ export class GamePlay extends Phaser.Scene {
     // this is a speed divider to apply to tween duration
     // this way it will range from 1/0.3 to 1/0.5 seconds
 
-    if(this.score >= 0){
+    if(this.worthyMeter >= 0 && this.worthyMeter < 24){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.15, 0.28);
       // console.log(this.arcTweens[i].timeScale);
     }
 
-    if (this.score >= 15){
+    else if (this.worthyMeter >= 24 && this.worthyMeter < 36){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.35, 0.48);
       // console.log(this.arcTweens[i].timeScale);
     }
 
-    if(this.score >= 30){
+    else if(this.worthyMeter >= 36 && this.worthyMeter < 50){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.55, 0.68);
       // console.log(this.arcTweens[i].timeScale);
     }
 
-    if(this.score >= 50){
+    else if(this.worthyMeter >= 50 && this.worthyMeter < 80){
       this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.72, 0.85);
       // console.log(this.arcTweens[i].timeScale);
+    }
+
+    else {
+      this.arcTweens[i].timeScale = Phaser.Math.RND.realInRange(0.86, 0.95);
     }
   }
 
@@ -305,8 +282,7 @@ export class GamePlay extends Phaser.Scene {
   }
 
   // method to shoot the ball
-  shootBall() {
-
+  blastOffBlyat() {
 
     // if the player can shoot...
     if (this.canShoot) {
@@ -334,15 +310,13 @@ export class GamePlay extends Phaser.Scene {
         // at each update call checkCollision method looking for collision with the circle at the
         // bottom of the screen and the circle immediately above it, the one at the top of the screen
         onUpdate: function() {
-          this.checkCollision(this.bottomCircle);
-          this.checkCollision(Phaser.Math.Wrap(this.bottomCircle + 1, 0, gameOptions.numCircles));
-          if(isCollide === true){
+          this.didIPunchSomething(this.bottomCircle);
+          this.didIPunchSomething(Phaser.Math.Wrap(this.bottomCircle + 1, 0, gameOptions.numCircles));
+          if(damnIt === true){
 
-            //console.log('test');
-            //console.log(tempDataID);
-            let endTime = new Date();
-            this.postDataOnFinal(endTime, tempSession);
-            this.showDialogBox();
+            let deadSecond = new Date();
+            this.weHaveTheChampion(deadSecond, imExist);
+            this.yourEndIsNear();
           }
         },
 
@@ -374,23 +348,22 @@ export class GamePlay extends Phaser.Scene {
               this.bottomCircle = Phaser.Math.Wrap(this.bottomCircle + 1, 0, gameOptions.numCircles);
 
               // redraw the bottom target to be placed at the top
-              this.drawCircle(Phaser.Math.Wrap(currentCircle, 0, gameOptions.numCircles))
+              this.paintThatShit(Phaser.Math.Wrap(currentCircle, 0, gameOptions.numCircles))
 
               // player can shoot again
               this.canShoot = true;
 
-              this.score += tempDataScore;
+              this.worthyMeter += committeeRule;
 
               scoreSign.visible = true;
               this.scoreText.visible = true;
-              this.scoreText.text = "" +this.score;
+              this.scoreText.text = "" +this.worthyMeter;
 
-              userLog.push({
+              leaveMeAlone.push({
 
                 time: date,
-                score: this.score
+                score: this.worthyMeter
               })
-              //console.log(userLog);
             }
           })
         }
@@ -399,7 +372,7 @@ export class GamePlay extends Phaser.Scene {
   }
 
   // method to check collision between the ball and the arcs on the i-th circle
-  checkCollision(i) {
+  didIPunchSomething(i) {
 
     //console.log(i);
     // calculate the distance between the circle and the ball
@@ -441,7 +414,7 @@ export class GamePlay extends Phaser.Scene {
           // shake the camera
           this.cameras.main.shake(500, 0.01);
           collideBall.play();
-          isCollide = true;
+          damnIt = true;
 
 
 
@@ -460,7 +433,7 @@ export class GamePlay extends Phaser.Scene {
   }
 
 
-  showDialogBox(){
+  yourEndIsNear(){
 
     //this.getPLayerHighScore();
     endPanel = this.add.sprite(360, 620, 'gameover_panel').setScale(.8);
@@ -472,60 +445,25 @@ export class GamePlay extends Phaser.Scene {
     this.scoreText.visible = false;
     scoreSign.visible = false;
 
-    this.finalScoreText = this.add.text(360, 520, ''+this.score, {
+    this.finalScoreText = this.add.text(360, 520, ''+this.worthyMeter, {
       font: '120px Newsflash',
       fill: 'white',
       align: 'center'
     });
     this.finalScoreText.setOrigin(0.5, 0.5);
 
-    exitButton.on('pointerdown', () => this.exitGame());
+    exitButton.on('pointerdown', () => this.sayonaraMadafaka());
 
   }
 
-  destroyDialogBox(){
+  sayonaraMadafaka(){
 
-    endPanel.destroy();
-    exitButton.destroy();
-    this.finalScoreText.text = ''
-    this.userHighScore.text = ''
-  }
-
-  exitGame(){
-
-    tempDataID = 0;
-    userLog = []
+    iSignIt = 0;
+    leaveMeAlone = []
     this.scene.start("Menu");
   }
 
-  // postDataOnStart(start, userSession){
-  //
-  //   fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
-  //   //fetch("https://1f584819.ngrok.io/api/v1.0/leaderboard/",{
-  //
-  //     method:"POST",
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //       linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
-  //       session: userSession,
-  //       score: 0,
-  //       game_start: start,
-  //       user_highscore: 0,
-  //       total_score: 0,
-  //     }),
-  //   }).then(response => response.json()).then(res => {
-  //
-  //     tempID = res.result.id;
-  //   }).catch(error => {
-  //
-  //     console.log(error.json());
-  //   });
-  // }
-
-  postDataOnFinal(end, userSession){
+  weHaveTheChampion(over, userSession){
 
     let preload = this.add.sprite(360, 780, 'preloader_highscore').setOrigin(0.5 ,0.5);
     preload.setScale(0.5);
@@ -543,23 +481,30 @@ export class GamePlay extends Phaser.Scene {
 
     preload.anims.play('loading_highscore', true);
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score",{
+    let requestID = CryptoJS.AES.encrypt('LG'+'+66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43+'+Date.now(), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
+    let final = {
+
+      datas: CryptoJS.AES.encrypt(JSON.stringify({
+        linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
+        id: iSignIt,
+        session: userSession,
+        game_end: over,
+        score: this.worthyMeter,
+        log: leaveMeAlone
+      }), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
+    }
+
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score/",{
+    //fetch("https://f9c4bb3b.ngrok.io/api/v1.0/leaderboard/score/",{
 
       method:"PUT",
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'request-id' : requestID
       },
-      body: JSON.stringify({
-
-        linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43',
-        id: tempDataID,
-        session: userSession,
-        game_end: end,
-        score: this.score,
-        log: userLog
-      }),
+      body: JSON.stringify(final)
     }).then(response => response.json()).then(res => {
 
       //console.log(res.result.user_highscore);

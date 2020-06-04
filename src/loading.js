@@ -46,10 +46,6 @@ export class Loading extends Phaser.Scene{
     this.load.image('next_button', "./src/assets/next_button.png");
     this.load.image('prev_button', "./src/assets/prev_button.png");
     this.load.image('life', "./src/assets/life.png");
-    // this.load.spritesheet('tap_sign', "./src/assets/tap_to_start.png", {
-    //   frameWidth: 672,
-    //   frameHeight: 228
-    // });
     this.load.image('tap_sign', "./src/assets/tap_to_start.png");
     this.load.spritesheet('preloader_menu', "./src/assets/preload_menu.png", {
       frameWidth: 128,
@@ -171,9 +167,9 @@ export class Loading extends Phaser.Scene{
       // title_loading = this.add.sprite(370, 350, 'game-title').setScale(.7);
       // title_loading.setOrigin(0.5, 0.5);
 
-      this.sound.on('decoded',  ()=> {
-        console.log('AUDIO BERHASIL DI LOAD CUX');
-      });
+      // this.sound.on('decoded',  ()=> {
+      //   console.log('AUDIO BERHASIL DI LOAD CUX');
+      // });
     });
   }
 
@@ -199,7 +195,5 @@ export class Loading extends Phaser.Scene{
       this.scene.start("Menu");
 
     })
-
   }
-
 }

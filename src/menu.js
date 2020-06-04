@@ -18,7 +18,6 @@ let watchAdButton;
 let nextButton;
 let prevButton;
 var errorPanel;
-var detailPanel;
 var leaderboardPanel;
 var hintPanel;
 var tncPanel;
@@ -69,6 +68,13 @@ var detailStatus;
 var whatTimeIsIt;
 var urlParams = new URLSearchParams(window.location.search);
 var myParam = urlParams.get('session');
+var latitude;
+var longitude;
+
+navigator.geolocation.getCurrentPosition((xCoord) => {
+  latitude = xCoord.coords.latitude;
+  longitude = xCoord.coords.longitude
+})
 
 var CryptoJS = require('crypto-js')
 
@@ -88,16 +94,7 @@ export class Mainmenu extends Phaser.Scene {
 
     clickSFX = this.sound.add('button_click');
     closeSFX = this.sound.add('close_section');
-    // i = 0
-    // warnContent = [
-    //
-    //   'Bagi pemain yang terindikasi melakukan kecurangan, pihak LINIPOIN akan mengambil tindakan tegas',
-    //   'Selamat bermain LINIGAMES: BISCUIT HOPPER. Seluruh pemain dianggap telah memahami dan mematuhi T&C permainan.',
-    //   'Selamat bermain LINIGAMES: BISCUIT HOPPER. Apabila kamu menemukan adanya kecurangan, silahkan laporkan ke Pusat Bantuan LINIPOIN.',
-    //   'Terima kasih kepada pemain LINIGAMES: BISCUIT HOPPER yang telah menjaga sportifitas dalam permainan.'
-    // ]
 
-    //bgSound.play();
     bgSound.loop = true;
     musicStatus = true;
 
@@ -109,17 +106,19 @@ export class Mainmenu extends Phaser.Scene {
       bgSound.resume();
     })
 
+    this.iGotAmnesia()
+
     background_menu = this.add.sprite(360, 640, 'menu-background');
     background_menu.scaleX = 0.67;
     background_menu.scaleY = 0.67;
     background_menu.setOrigin(0.5, 0.5);
 
-    var warningBG = this.add.graphics();
-    warningBG.fillStyle(0xFFF6E8, 1)
-    warningBG.fillRect(0, 0, 720, 50)
+    // var warningBG = this.add.graphics();
+    // warningBG.fillStyle(0xFFF6E8, 1)
+    // warningBG.fillRect(0, 0, 720, 50)
 
-    warnText = this.add.sprite(6500, 25, 'warn-text').setScale(0.35)
-    warnText.setOrigin(1, 0.5)
+    // warnText = this.add.sprite(6500, 25, 'warn-text').setScale(0.35)
+    // warnText.setOrigin(1, 0.5)
     // warnText = this.add.text(2300, 25, ''+ warnContent[i],{
     //   font: 'bold 28px Arial',
     //   fill: '#C52A27',
@@ -127,8 +126,6 @@ export class Mainmenu extends Phaser.Scene {
 
     title = this.add.sprite(360, 350, 'game-title').setScale(.6);
     title.setOrigin(0.5, 0.5);
-
-    this.iGotAmnesia();
 
     hintButton = this.add.image(230, 870, 'hint_button').setScale(0.65);
     hintButton.setOrigin(0.5, 0.5);
@@ -160,12 +157,12 @@ export class Mainmenu extends Phaser.Scene {
 
   update(){
 
-    warnText.x -= 1
-    if(warnText.x <= 0){
-
-      //warnText.setOrigin(0, 0.5);
-      warnText.x = 6500
-    }
+    // warnText.x -= 1
+    // if(warnText.x <= 0){
+    //
+    //   //warnText.setOrigin(0, 0.5);
+    //   warnText.x = 6500
+    // }
   }
 
   toggleSound(){
@@ -556,22 +553,6 @@ export class Mainmenu extends Phaser.Scene {
     this.enableMainButton(listOfButton);
   }
 
-  toggleDetail(){
-
-    if (detailStatus == true){
-
-      detailPanel = this.add.sprite(365, 470, 'detail_panel').setScale(.6);
-      detailPanel.setOrigin(0.5, 0.5);
-      detailPanel.setDepth(1);
-      closeButton.disableInteractive();
-    }
-    else {
-
-      closeButton.setInteractive();
-      detailPanel.destroy();
-    }
-  }
-
   thinkIMACat(remainingLife){
 
     let startPos = 300;
@@ -676,8 +657,8 @@ export class Mainmenu extends Phaser.Scene {
       }
     }
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/",{
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/",{
     //fetch("https://f9c4bb3b.ngrok.io/api/v1.0/leaderboard/", {
 
       method:"POST",
@@ -717,17 +698,22 @@ export class Mainmenu extends Phaser.Scene {
 
     this.preloadAnimation(360, 580, 0.5, 19, 'preloader_menu');
 
-    let final = {
+    let final
 
+    //console.log(latitude);
+
+    final = {
       datas: CryptoJS.AES.encrypt(JSON.stringify({
+        lat: latitude,
+        long: longitude,
         session: myParam,
         linigame_platform_token: '66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43'
       }), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
     }
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
-    //fetch("https://9b2caf6f.ngrok.io/api/v1.0/leaderboard/check_user_limit/", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/check_user_limit/", {
+    //fetch("https://ac11015e.ngrok.io/api/v1.0/leaderboard/check_user_limit/", {
 
       method: "POST",
       headers: {
@@ -791,7 +777,7 @@ export class Mainmenu extends Phaser.Scene {
 
     }).catch(error => {
 
-      console.log(error);
+      //console.log(error);
       if(error.result.code === 'LGPV020'){
 
         errorPanel = this.add.sprite(360, 640, 'data-required-warn').setScale(0.8);
@@ -811,8 +797,8 @@ export class Mainmenu extends Phaser.Scene {
 
     this.preloadAnimation(360, 650, 0.8, 22, 'preloader_leaderboard')
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/get_user_rank/?session="+myParam+"&limit=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method:"GET",
     }).then(response => {
@@ -891,8 +877,8 @@ export class Mainmenu extends Phaser.Scene {
   myFellowChampions(posId, posScore, posId2, posScore2){
 
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token=66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43", {
 
       method: "GET",
     }).then(response => {

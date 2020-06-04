@@ -494,8 +494,8 @@ export class GamePlay extends Phaser.Scene {
       }), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
     }
 
-    //fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
-    fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score/",{
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
+    //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score/",{
     //fetch("https://f9c4bb3b.ngrok.io/api/v1.0/leaderboard/score/",{
 
       method:"PUT",

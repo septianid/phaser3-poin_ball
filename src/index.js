@@ -1,8 +1,7 @@
 import Phaser from "phaser";
 import {GamePlay} from "./game-page.js";
-import {Boot} from "./boot.js";
 import {Loading} from './loading.js';
-import {Mainmenu} from './menu.js';
+import {Menu} from './main_menu.js';
 
 window.onload = function(){
 
@@ -27,7 +26,7 @@ window.onload = function(){
         height: 1280,
       },
       scene:{
-        sceneConfig: [Loading, Mainmenu, GamePlay],
+        sceneConfig: [Loading, Menu, GamePlay],
         pack:{
           files: {
             type: 'image',
@@ -55,12 +54,12 @@ window.onload = function(){
         createContainer: true
       },
       scale:{
-        mode: Phaser.Scale.ENVELOP,
-        autoCenter: Phaser.Scale.NO_CENTER,
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
         width: 720,
         height: 1280,
       },
-      scene:[Loading, Mainmenu, GamePlay],
+      scene:[Loading, Menu, GamePlay],
       audio:{
         disableWebAudio:true,
       }
@@ -83,7 +82,7 @@ window.onload = function(){
         width: 720,
         height: 1280,
       },
-      scene: [Loading, Mainmenu, GamePlay],
+      scene: [Loading, Menu, GamePlay],
       audio:{
         disableWebAudio:true,
       }

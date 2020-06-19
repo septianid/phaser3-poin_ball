@@ -18,6 +18,7 @@ var leaveMeAlone = []
 var iSignIt;
 var imExist;
 var committeeRule;
+var soundData
 
 var CryptoJS = require('crypto-js')
 // global object containing all configurable options
@@ -42,7 +43,7 @@ var gameOptions = {
   speed: 1000,
 
   // possible arc colors
-  circleColors: [0xe50e23],
+  circleColors: [0x222E61],
 
   // arc length, in degrees
   arcLength: [10, 90],
@@ -81,7 +82,8 @@ export class GamePlay extends Phaser.Scene {
 
     imExist = data.session;
     iSignIt = data.id;
-    committeeRule = data.score;
+    committeeRule = data.game_score;
+    soundData = data.sound_status
   }
 
 
@@ -97,24 +99,24 @@ export class GamePlay extends Phaser.Scene {
     this.finalScoreText = '';
     this.userHighScore = '';
 
-    popBall = this.sound.add('pop-ball');
-    collideBall = this.sound.add('lose-ball');
+    popBall = this.sound.add('POP');
+    collideBall = this.sound.add('FAIL');
 
     this.worthyMeter = 0;
 
-    background_game = this.add.sprite(360, 640, 'game_background');
+    background_game = this.add.sprite(360, 640, 'GAME_BG');
     background_game.scaleX = 0.67;
     background_game.scaleY = 0.67;
     background_game.setOrigin(0.5, 0.5);
 
-    scoreSign = this.add.sprite(570, 70, 'score').setScale(.8);
+    scoreSign = this.add.sprite(540, 70, 'PG_SCORE').setScale(.8);
     scoreSign.setOrigin(0.5, 0.5)
-    this.scoreText = this.add.text(570, 78, '0', {
-      font: '42px Newsflash',
+    this.scoreText = this.add.text(700, 73, '0', {
+      font: 'bold 45px Arial',
       fill: 'white',
-      align: 'center',
+      align: 'right',
     });
-    this.scoreText.setOrigin(0.5, 0.5);
+    this.scoreText.setOrigin(1, 0.5);
     // scoreSign.visible = false;
     // this.scoreText.visible = false;
 
@@ -163,7 +165,7 @@ export class GamePlay extends Phaser.Scene {
       })
 
       // add a sprite representing the landing spot at i-th position of the array
-      this.landingSpots[i] = this.add.sprite(0, 0, "ball").setScale(0.11);
+      this.landingSpots[i] = this.add.sprite(0, 0, "BALL").setScale(0.56);
 
       // set the landing spot semi-transparent
       this.landingSpots[i].alpha = 0.5;
@@ -176,7 +178,7 @@ export class GamePlay extends Phaser.Scene {
     }
 
     // the ball! The hero of our game
-    this.ball = this.add.sprite(this.circles[0].x, this.circles[0].y, "ball").setScale(0.11);
+    this.ball = this.add.sprite(this.circles[0].x, this.circles[0].y, "BALL").setScale(0.56);
 
     // the ball too is added to stuffGroup group
     this.stuffGroup.add(this.ball);
@@ -193,7 +195,7 @@ export class GamePlay extends Phaser.Scene {
     this.circles[i].clear();
 
     // set graphic line style choosing a random color
-    this.circles[i].lineStyle(8, 0xe50e23, 1);
+    this.circles[i].lineStyle(8, 0x222E61, 1);
 
     // define a random radius
     let radius = this.randomOption(gameOptions.circleRadiusRange);
@@ -360,7 +362,6 @@ export class GamePlay extends Phaser.Scene {
               this.scoreText.text = "" +this.worthyMeter;
 
               leaveMeAlone.push({
-
                 time: date,
                 score: this.worthyMeter
               })
@@ -380,7 +381,7 @@ export class GamePlay extends Phaser.Scene {
 
     // if the difference between the distance and the radius is less than ball radius,
     // this means the ball could collide with an arc and we have to investigate
-    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 13) {
+    if (Math.abs(distance - this.circles[i].radius) < this.ball.width / 10) {
 
       // determine the angle between the ball and the circle
       let angle = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.circles[i].x, this.circles[i].y, this.ball.x, this.ball.y));
@@ -416,9 +417,6 @@ export class GamePlay extends Phaser.Scene {
           collideBall.play();
           damnIt = true;
 
-
-
-
           // restart the game in two seconds
           this.time.addEvent({
             delay: 500,
@@ -436,17 +434,17 @@ export class GamePlay extends Phaser.Scene {
   yourEndIsNear(){
 
     //this.getPLayerHighScore();
-    endPanel = this.add.sprite(360, 620, 'gameover_panel').setScale(.8);
+    endPanel = this.add.sprite(360, 620, 'PG_END').setScale(.65);
     endPanel.setOrigin(0.5, 0.5);
     //retryButton = this.add.sprite(230, 810, 'retry_button').setScale(.7);
-    exitButton = this.add.sprite(360, 910, 'exit_button').setScale(.45);
+    exitButton = this.add.sprite(360, 810, 'BG_EX').setScale(0.7);
     exitButton.setOrigin(0.5, 0.5);
 
     this.scoreText.visible = false;
     scoreSign.visible = false;
 
     this.finalScoreText = this.add.text(360, 520, ''+this.worthyMeter, {
-      font: '120px Newsflash',
+      font: 'bold 60px Arial',
       fill: 'white',
       align: 'center'
     });
@@ -460,26 +458,28 @@ export class GamePlay extends Phaser.Scene {
 
     iSignIt = 0;
     leaveMeAlone = []
-    this.scene.start("Menu");
+    this.scene.start("MainMenu", {
+      sound_status: soundData
+    });
   }
 
   weHaveTheChampion(over, userSession){
 
-    let preload = this.add.sprite(360, 780, 'preloader_highscore').setOrigin(0.5 ,0.5);
+    let preload = this.add.sprite(360, 690, 'PRE_ANIM3').setOrigin(0.5 ,0.5);
     preload.setScale(0.5);
     preload.setDepth(1);
 
     this.anims.create({
-      key: 'loading_highscore',
-      frames: this.anims.generateFrameNumbers('preloader_highscore', {
+      key: 'PRE_ANIM3',
+      frames: this.anims.generateFrameNumbers('PRE_ANIM3', {
         start: 1,
-        end: 22
+        end: 8
       }),
       frameRate: 20,
       repeat: -1
     });
 
-    preload.anims.play('loading_highscore', true);
+    preload.anims.play('PRE_ANIM3', true);
 
     let requestID = CryptoJS.AES.encrypt('LG'+'+66cfbe9876ff5097bc861dc8b8fce03ccfe3fb43+'+Date.now(), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
     let final = {
@@ -494,7 +494,7 @@ export class GamePlay extends Phaser.Scene {
       }), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
     }
 
-    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score",{
+    fetch("https://linipoin-api.macroad.co.id/api/v1.0/leaderboard/score/",{
     //fetch("https://linipoin-dev.macroad.co.id/api/v1.0/leaderboard/score/",{
     //fetch("https://f9c4bb3b.ngrok.io/api/v1.0/leaderboard/score/",{
 
@@ -510,8 +510,8 @@ export class GamePlay extends Phaser.Scene {
       //console.log(res.result.user_highscore);
       if(res.result.user_highscore === undefined){
 
-        this.userHighScore = this.add.text(360, 670, '', {
-          font: 'bold 62px Arial',
+        this.userHighScore = this.add.text(360, 690, '', {
+          font: 'bold 80px Arial',
           fill: 'white',
           align: 'center'
         });
@@ -519,8 +519,8 @@ export class GamePlay extends Phaser.Scene {
       }
       else if(res.result.user_highscore !== undefined){
 
-        this.userHighScore = this.add.text(360, 780, ''+res.result.user_highscore, {
-          font: '84px Newsflash',
+        this.userHighScore = this.add.text(360, 690, ''+res.result.user_highscore, {
+          font: 'bold 80px Arial',
           fill: 'white',
           align: 'center'
         });

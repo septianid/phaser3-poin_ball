@@ -2,8 +2,6 @@ import Phaser from "phaser";
 
 var progressBar;
 var progressBox;
-var background_loading;
-var title_loading;
 var tapSign;
 
 export class Loading extends Phaser.Scene{
@@ -13,100 +11,90 @@ export class Loading extends Phaser.Scene{
       key: 'LoadGame',
       pack: {
         files: [
-          { type: 'image', key: 'background_loading', url: 'src/assets/background-loading.png'},
-          { type: 'image', key: 'game-title', url: './src/assets/title.png'}
+          { type: 'image', key: 'MENU_BG', url: 'src/assets/MENU_BG.png'},
+          { type: 'image', key: 'TITLE', url: './src/assets/TITLE.png'},
+          { type: 'image', key: 'BANNER', url: './src/assets/BANNER.png'},
         ]
       }
     });
   }
 
   preload(){
-    //this.load.image('loading-background', "./src/assets/background-loading.jpg");
     //this.cameras.main.setBackgroundColor('#222E61');
-    this.add.image(360, 640, 'background_loading').setScale(0.67);
-    this.add.image(360, 350, 'game-title').setScale(.6);
-    this.load.image('warn-text', "./src/assets/warn_text.png");
-    this.load.image('quit_button', "./src/assets/quit_button.png");
-    this.load.image('play_button', "./src/assets/play_button.png");
-    this.load.image('hint_button', "./src/assets/hint_button.png");
-    this.load.image('error_panel', "./src/assets/error_panel.png");
-    this.load.image('leaderboard_button', "./src/assets/leaderboard_button.png");
-    this.load.image('music_button_on', "./src/assets/sound_button_on.png");
-    this.load.image('music_button_off', "./src/assets/sound_button_off.png");
-    this.load.image('menu-background', './src/assets/background-menu.png');
-    this.load.image('leaderboard_panel', "./src/assets/leaderboard_panel.png");
-    this.load.image('hint_panel', "./src/assets/instruction_panel.png");
     //this.load.image('game-title', "./src/assets/title.png");
-    this.load.image('linipoin-banner', "./src/assets/linipoin_banner.png");
-    this.load.image('close_button', "./src/assets/close_button.png");
-    this.load.image('detail_button', "./src/assets/detail_button.png");
-    this.load.image('detail_panel', "./src/assets/detail_panel.png");
-    this.load.image('tnc_button', "./src/assets/tnc_button.png");
-    this.load.image('tnc_panel', "./src/assets/tnc_panel.png");
+    this.add.image(360, 350, 'TITLE').setScale(.6).setDepth(1);
+    this.add.image(360, 640, 'MENU_BG').setScale(0.67);
+    this.add.sprite(360, 80, 'BANNER').setScale(0.4)
+    this.load.image('GAME_BG', "./src/assets/GAME_BG.png");
+    this.load.image('BANNER', "./src/assets/BANNER.png");
+    this.load.image('BALL', "./src/assets/BALL.png");
+    this.load.image('BM_1P', "./src/assets/BM_1P.png");
+    this.load.image('BM_2I', "./src/assets/BM_2I.png");
+    this.load.image('BM_3TC', "./src/assets/BM_3TC.png");
+    this.load.image('BM_4LD', "./src/assets/BM_4LD.png");
+    this.load.image('BM_5N', "./src/assets/BM_5N.png");
+    this.load.image('BM_5F', "./src/assets/BM_5F.png");
+    this.load.image('BM_GEXB', "./src/assets/BM_GEXB.png");
+    this.load.image('BM_1AAD', "./src/assets/BM_1AAD.png");
+    this.load.image('BM_1BPP10', "./src/assets/BM_1BPP10.png");
+    this.load.image('BM_CPP', "./src/assets/BM_CPP.png");
+    this.load.image('BM_DPP', "./src/assets/BM_DPP.png");
+    this.load.image('BG_EX', "./src/assets/BG_EX.png");
+    this.load.image('DM_ADL', "./src/assets/DM_ADL.png");
+    this.load.image('PM_1I', "./src/assets/PM_1I.png");
+    this.load.image('PM_2TC', "./src/assets/PM_2TC.png");
+    this.load.image('PM_3LD', "./src/assets/PM_3LD.png");
+    this.load.image('PM_PY', "./src/assets/PM_PY.png");
+    this.load.image('PG_END', "./src/assets/PG_END.png");
+    this.load.image('PG_SCORE', "./src/assets/PG_SCORE.png");
+    this.load.image('LIFE', "./src/assets/LIFE.png");
+    this.load.image('DM_PP10', "./src/assets/DM_PP10.png");
+    this.load.image('DM_PW', "./src/assets/DM_PW.png");
+    this.load.image('WM_SE', "./src/assets/WM_SE.png");
+    this.load.image('WM_EVW', './src/assets/WM_EVW.png');
     this.load.image('next_button', "./src/assets/next_button.png");
     this.load.image('prev_button', "./src/assets/prev_button.png");
-    this.load.image('life', "./src/assets/life.png");
-    this.load.image('tap_sign', "./src/assets/tap_to_start.png");
-    this.load.spritesheet('preloader_menu', "./src/assets/preload_menu.png", {
+    this.load.spritesheet('L_ANIM', "./src/assets/L_ANIM.png", {
+      frameWidth: 672,
+      frameHeight: 228
+    });
+    this.load.spritesheet('PRE_ANIM1', "./src/assets/PRE_ANIM1.png", {
       frameWidth: 128,
       frameHeight: 60
     });
-    this.load.spritesheet('preloader_leaderboard', "./src/assets/preload_leaderboard.png", {
+    this.load.spritesheet('PRE_ANIM2', "./src/assets/PRE_ANIM2.png", {
       frameWidth: 128,
       frameHeight: 128
     });
-    this.load.spritesheet('preloader_highscore', "./src/assets/preload_game.png", {
+    this.load.spritesheet('PRE_ANIM3', "./src/assets/PRE_ANIM3.png", {
       frameWidth: 128,
       frameHeight: 128
     });
-    this.load.image('ad-confirm-panel', "./src/assets/ad_loading_panel.png");
-    this.load.image('confirm-panel-10', "./src/assets/confirm_panel_10.png");
-    this.load.image('confirm-panel-50', "./src/assets/confirm_panel_50.png");
-    this.load.image('confirm-panel-100', "./src/assets/confirm_panel_100.png");
-    this.load.image('confirm-panel-150', "./src/assets/confirm_panel_150.png");
-    this.load.image('confirm-panel-200', "./src/assets/confirm_panel_200.png");
-    this.load.image('pay-poin-10', "./src/assets/pay_10_button.png");
-    this.load.image('pay-poin-50', "./src/assets/pay_50_button.png");
-    this.load.image('pay-poin-100', "./src/assets/pay_100_button.png");
-    this.load.image('pay-poin-150', "./src/assets/pay_150_button.png");
-    this.load.image('pay-poin-200', "./src/assets/pay_200_button.png");
-    this.load.image('watch-ad', "./src/assets/watch_ad_button.png");
-    this.load.image('ok_button', "./src/assets/ok_button.png");
-    this.load.image('no_button', "./src/assets/no_button.png");
     this.load.image('data-required-warn', "./src/assets/data_required_warn.png");
-    this.load.image('poin-warn-panel', "./src/assets/no_poin_panel.png");
-    this.load.image('limit-warn-panel', "./src/assets/play_limit_panel.png");
-    this.load.image('email_verify', './src/assets/email_verify.png');
-    this.load.image('game_background', "./src/assets/background-game.png");
-    this.load.image('ball', "./src/assets/ball.png");
-    this.load.image('gameover_panel', "./src/assets/end_panel.png");
-    this.load.image('exit_button', "./src/assets/exit_button.png");
-    this.load.image('score', "./src/assets/score.png");
-
-    this.load.audio('music_menu', [
-      "./src/assets/audio/menu-music.ogg",
-      "./src/assets/audio/menu-music.mp3"
+    this.load.audio('MENU_SOUND', [
+      "./src/assets/audio/MENU_SOUND.ogg",
+      "./src/assets/audio/MENU_SOUND.mp3"
     ]);
-    this.load.audio('button_click', [
-      "./src/assets/audio/button_click.ogg",
-      "./src/assets/audio/button_click.mp3"
+    this.load.audio('CLICK_SOUND', [
+      "./src/assets/audio/CLICK_SOUND.ogg",
+      "./src/assets/audio/CLICK_SOUND.mp3"
     ]);
-    this.load.audio('close_section', [
-      "./src/assets/audio/close_click.ogg",
-      "./src/assets/audio/close_click.mp3"
+    this.load.audio('CLOSE_SOUND', [
+      "./src/assets/audio/CLOSE_SOUND.ogg",
+      "./src/assets/audio/CLOSE_SOUND.mp3"
     ]);
-    this.load.audio('pop-ball', [
-      "./src/assets/audio/ball_pop.ogg",
-      "./src/assets/audio/ball_pop.mp3"
+    this.load.audio('POP', [
+      "./src/assets/audio/POP_SOUND.ogg",
+      "./src/assets/audio/POP_SOUND.mp3"
     ]);
-    this.load.audio('lose-ball', [
-      "./src/assets/audio/ball_fail.ogg",
-      "./src/assets/audio/ball_fail.mp3"
+    this.load.audio('FAIL', [
+      "./src/assets/audio/FAIL_SOUND.ogg",
+      "./src/assets/audio/FAIL_SOUND.mp3"
     ]);
 
     progressBar = this.add.graphics();
     progressBox = this.add.graphics();
-    progressBox.fillStyle(0x9EB6EA, 0.8);
+    progressBox.fillStyle(0xFFBC00, 0.8);
     progressBox.fillRect(200, 640, 320, 50);
 
     var width = this.cameras.main.width;
@@ -116,8 +104,8 @@ export class Loading extends Phaser.Scene{
       y: height / 2 - 50,
       text: 'Loading...',
       style: {
-        font: '36px monospace',
-        fill: '#FFBC00'
+        font: 'bold 36px Arial',
+        fill: '#222E61'
       }
     });
     loadingText.setOrigin(0.5, 0.5);
@@ -127,19 +115,18 @@ export class Loading extends Phaser.Scene{
     y: height / 2 + 80,
     text: '0%',
     style: {
-        font: '36px monospace',
-        fill: '#FFBC00'
+        font: 'bold 36px Arial',
+        fill: '#222E61'
       }
     });
     percentText.setOrigin(0.5, 0.5);
-
     var assetText = this.make.text({
     x: width / 2,
     y: height / 2 + 100,
     text: '',
     style: {
-        font: '30px monospace',
-        fill: '#FFBC00'
+        font: 'bold 30px Arial',
+        fill: '#222E61'
       }
     });
     assetText.setOrigin(0.5, 0.5);
@@ -148,7 +135,7 @@ export class Loading extends Phaser.Scene{
       progressBar.clear();
 
       percentText.setText(parseInt(value * 100) + '%');
-      progressBar.fillStyle(0xFFBC00, 1);
+      progressBar.fillStyle(0x222E61, 1);
       progressBar.setDepth(1);
       progressBar.fillRect(210, 650, 300 * value, 30);
     });
@@ -161,7 +148,7 @@ export class Loading extends Phaser.Scene{
 
       loadingText.destroy();
       progressBox.setDepth(1);
-      progressBar.fillStyle(0xFFBC00, 1)
+      progressBar.fillStyle(0x222E61, 1)
       progressBar.fillRect(210, 650, 300, 30).setDepth(1);
 
       // title_loading = this.add.sprite(370, 350, 'game-title').setScale(.7);
@@ -174,25 +161,23 @@ export class Loading extends Phaser.Scene{
   }
 
   create(){
+    tapSign = this.add.sprite(360, 900, 'L_ANIM').setScale(0.6);
 
+    this.anims.create({
+      key: 'blink',
+      frames: this.anims.generateFrameNumbers('L_ANIM', {
+        start: 0,
+        end: 1
+      }),
+      frameRate: 10,
+      repeat: -1
+    });
 
-    tapSign = this.add.sprite(360, 900, 'tap_sign').setScale(.6);
-
-    // this.anims.create({
-    //   key: 'blink',
-    //   frames: this.anims.generateFrameNumbers('tap_sign', {
-    //     start: 0,
-    //     end: 1
-    //   }),
-    //   frameRate: 10,
-    //   repeat: -1
-    // });
-
-    //tapSign.anims.play('blink', true);
+    tapSign.anims.play('blink', true);
 
     this.input.on("pointerdown", () => {
 
-      this.scene.start("Menu");
+      this.scene.start("MainMenu");
 
     })
   }

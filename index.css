@@ -1,13 +1,13 @@
 body {
-  background-color: #FFF6E8;
+  background-color: #222E61;
 }
 
 canvas {
   margin: 0;
-  font-family: "ComickBook", "Newsflash";
+  /* font-family: "ComickBook", "Newsflash"; */
 }
 
-@font-face {
+/* @font-face {
   font-family: "Newsflash";
   font-style: normal;
   font-weight: 400;
@@ -24,16 +24,4 @@ canvas {
   font-style: normal;
   font-weight: 400;
   src: url("src/assets/font/MYRIADPRO-SEMIBOLD.woff")
-}
-/* @font-face {
-  font-family: "Newsflash";
-  font-style: normal;
-  font-weight: 400;
-  src: url("src/assets/font/NewsflashBB.ttf")format("truetype");
-}
-@font-face {
-  font-family: "ComickBook";
-  font-style: normal;
-  font-weight: 400;
-  src: url("src/assets/font/ComickBook_Simple.ttf")format("truetype");
 } */
